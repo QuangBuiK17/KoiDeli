@@ -10,7 +10,7 @@ namespace KoiDeli.Domain.Entities
     {
         public Type? BoxType { get; set; }
         public Int64 BoxCapacity { get; set; }
-        public Int64 BoxWeight { get; set; }
+        public Int64 BoxVolume { get; set; }
         public Int64 BoxPrice { get; set; }
 
 
