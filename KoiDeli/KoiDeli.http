@@ -1,0 +1,6 @@
+@KoiDeli_HostAddress = http://localhost:5043
+
+GET {{KoiDeli_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
