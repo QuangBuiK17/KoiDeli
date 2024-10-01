@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KoiDeli.Repositories
+namespace KoiDeli.Services.MiddleWares
 {
-    public class DBInitializer
+    public class UserStatusMiddleware
     {
     }
 }

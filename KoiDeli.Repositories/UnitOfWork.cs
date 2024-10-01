@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Repositories
 {
-    internal class UnitOfWork
+    public class UnitOfWork
     {
     }
 }

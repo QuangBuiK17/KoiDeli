@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KoiDeli.Services.Injection
+namespace KoiDeli.Repositories.Common
 {
-    internal class DependencyInjection
+    public class Pagination
     {
     }
 }
