@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Domain.Entities
 {
-    public class BoxOption
+    public class BoxOption: BaseEntity
     {
-        public string Description { get; set; }
-        public Boolean IsChecked { get; set; }
+        public int FishID { get; set; }
+        public int BoxID { get; set; }
+        public string? Description { get; set; }
+        public bool IsChecked { get; set; } = false;
         
     }
 }

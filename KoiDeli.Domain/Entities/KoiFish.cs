@@ -10,7 +10,7 @@ namespace KoiDeli.Domain.Entities
     {
         public Int64 Size { get; set; }
         public Int64 FishWeight { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
     }
 }

@@ -8,7 +8,7 @@ namespace KoiDeli.Domain.Entities
 {
     public class Box: BaseEntity
     {
-        public Type BoxType { get; set; }
+        public Type? BoxType { get; set; }
         public Int64 BoxCapacity { get; set; }
         public Int64 BoxWeight { get; set; }
         public Int64 BoxPrice { get; set; }
