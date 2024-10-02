@@ -13,5 +13,10 @@ namespace KoiDeli.Domain.Entities
         public DateTime EndTime { get; set; }
         public Int64 VehicleVolume { get; set; }
 
+        //Relation
+
+        public virtual ICollection<TimelineDelivery>? TimelineDeliveries { get; set; }
+
+
     }
 }

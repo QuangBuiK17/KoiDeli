@@ -27,7 +27,10 @@ namespace KoiDeli.Domain.Entities
         public DateTime? ShippingStart { get;set; }
         public DateTime? ShippingEnd { get; set; }
 
-
+        //Relation
+        public virtual Payment? Payment { get; set; }
+        public virtual User? User { get; set; }
+        public virtual ICollection<Feedback>? Feedbacks {  get; set; } 
 
     }
 }

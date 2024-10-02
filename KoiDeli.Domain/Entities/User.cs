@@ -17,5 +17,10 @@ namespace KoiDeli.Domain.Entities
         public string? ConfirmationToken { get; set; }
         public bool IsConfirmed { get; set; }
         public int OrderID { get; set; }
+
+        //Relation
+        public virtual Role? Role { get; set; }
+        public virtual ICollection<Order>? Orders { get; set; }
+
     }
 }

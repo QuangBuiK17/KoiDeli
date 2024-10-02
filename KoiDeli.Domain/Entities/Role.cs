@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Domain.Entities
 {
-    public class Branch : BaseEntity
+    public class Role
     {
         public string? Name { get; set; }
-        public string? StartPoint { get; set; }
-        public string? EndPoint { get; set; }
 
         //Relation
-
-        public virtual ICollection<TimelineDelivery>? TimelineDeliveries { get; set; }
-
+        public virtual ICollection<User>? Users { get; set; }
     }
 }

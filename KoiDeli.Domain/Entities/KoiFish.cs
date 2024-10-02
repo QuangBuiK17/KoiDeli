@@ -12,5 +12,9 @@ namespace KoiDeli.Domain.Entities
         public Int64 FishWeight { get; set; }
         public string? Description { get; set; }
 
+        //Relation
+        public virtual ICollection<BoxOption>? BoxOptions { get; set; }
+
+
     }
 }

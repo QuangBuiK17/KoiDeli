@@ -15,7 +15,7 @@ namespace KoiDeli.Domain.Entities
 
         //relations
 
-        public virtual User User { get; set; }
-        public virtual ICollection<Transaction> Transactions { get; set; }
+        public virtual User? User { get; set; }
+        public virtual ICollection<Transaction>? Transactions { get; set; }
     }
 }

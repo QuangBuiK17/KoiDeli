@@ -13,6 +13,9 @@ namespace KoiDeli.Domain.Entities
         public Int64 BoxVolume { get; set; }
         public Int64 BoxPrice { get; set; }
 
+        //Relation
+        public virtual ICollection<BoxOption>? BoxOptions { get; set; }
+
 
     }
 }
