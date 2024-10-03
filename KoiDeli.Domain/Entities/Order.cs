@@ -8,12 +8,11 @@ namespace KoiDeli.Domain.Entities
 {
     public class Order: BaseEntity
     {
-        public int CustomerId { get; set; }
-        public int PaymentId { get; set; }
         public int FeedbackId { get; set; }
+        public int DistanceId { get; set; }
         //receive 
         public string? ReceiverName { get; set; }
-        public string? ReceiverAddress { get; set; }= string.Empty;
+        public string? ReceiverAddress { get; set; }
         public string? ReceiverPhone { get; set; }
         //cost
         public Int64 TotalShipment {  get; set; }
@@ -32,7 +31,6 @@ namespace KoiDeli.Domain.Entities
         public virtual User? User { get; set; }
         public virtual ICollection<Feedback>? Feedbacks {  get; set; } 
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
-        public virtual ICollection<TransactionDetail>? TransactionDetails { get; set; }
         
 
     }

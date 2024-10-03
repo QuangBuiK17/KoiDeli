@@ -1,6 +1,7 @@
 ﻿using KoiDeli.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace KoiDeli.Repositories
@@ -26,7 +27,6 @@ namespace KoiDeli.Repositories
         public DbSet<PartnerShipment> PartnerShipment { get; set; }
         public DbSet<TimelineDelivery> TimelineDelivery { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
-        public DbSet<TransactionDetail> TransactionDetail { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace KoiDeli.Repositories
 
             //config Boxoption
             modelBuilder.Entity<BoxOption>()
-           .HasKey(ps => new { ps.BoxId, ps.FishId });
+           .HasKey(ps => ps.Id);
 
             modelBuilder.Entity<BoxOption>()
             .HasOne(s => s.Box)
@@ -57,7 +57,7 @@ namespace KoiDeli.Repositories
 
             //config TimelineDelivery
             modelBuilder.Entity<TimelineDelivery>()
-           .HasKey(ps => new { ps.BranchId, ps.VehicleId });
+           .HasKey(ps => ps.Id);
 
             modelBuilder.Entity<TimelineDelivery>()
             .HasOne(s => s.Branch)
@@ -72,6 +72,8 @@ namespace KoiDeli.Repositories
             .OnDelete(DeleteBehavior.Restrict);
 
             //config OrderTimeline
+            modelBuilder.Entity<OrderTimeline>()
+           .HasKey(ps => ps.Id);
 
             modelBuilder.Entity<OrderTimeline>()
             .HasOne(s => s.OrderDetail)
@@ -86,12 +88,29 @@ namespace KoiDeli.Repositories
             .OnDelete(DeleteBehavior.Restrict);
 
             //config OrderDetail
+
+            modelBuilder.Entity<OrderDetail>()
+           .HasKey(ps => ps.Id);
+
             modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
            .HasOne(s => s.BoxOption)
            .WithMany(ps => ps.OrderDetails)
-           .HasForeignKey(s => s.BoxId)
+           .HasForeignKey(s => s.BoxOptionId)
            .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Order>() // BoxOption vs OrD
+           .HasOne(s => s.Distance)
+           .WithOne(ps => ps.Order)
+           .HasForeignKey<Order>(s => s.DistanceId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
+          .HasOne(s => s.PartnerShipment)
+          .WithOne(ps => ps.OrderDetail)
+          .HasForeignKey<OrderDetail>(s => s.ParnerShipmentId)
+          .OnDelete(DeleteBehavior.Restrict);
+
+           
 
         }
 

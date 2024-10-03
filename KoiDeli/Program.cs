@@ -1,4 +1,18 @@
+using KoiDeli.Repositories;
+using KoiDeli.Repositories.Common;
+using Microsoft.EntityFrameworkCore;
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var configuration = builder.Configuration.Get<AppConfiguration>() ?? new AppConfiguration();
+// CONNECT TO DATABASE
+builder.Services.AddDbContext<KoiDeliDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
 
 // Add services to the container.
 
