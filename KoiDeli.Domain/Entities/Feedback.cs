@@ -12,5 +12,6 @@ namespace KoiDeli.Domain.Entities
 
         //Relation
         public virtual Order? Order { get; set; }
+
     }
 }

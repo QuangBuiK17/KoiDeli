@@ -17,6 +17,9 @@ namespace KoiDeli.Domain.Entities
         public int DistanceID { get; set;}
         public bool IsComplete { get; set;} = false;
 
+        //relation
+        public virtual PartnerShipment? PartnerShipment { get; set;}
+        public virtual ICollection<OrderTimeline>? OrderTimelines { get; set;}
 
     }
 }

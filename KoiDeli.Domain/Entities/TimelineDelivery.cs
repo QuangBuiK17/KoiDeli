@@ -20,7 +20,8 @@ namespace KoiDeli.Domain.Entities
         //Relation
 
         public virtual Vehicle? Vehicle { get; set; }
-        public virtual Branch? Branch { get; set; }  
+        public virtual Branch? Branch { get; set; }        
+        public virtual ICollection<OrderTimeline>? OrderTimelines { get; set; }
 
     }
 }

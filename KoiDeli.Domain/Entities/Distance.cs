@@ -10,5 +10,9 @@ namespace KoiDeli.Domain.Entities
     {
         public Int64 RangeDistance { get; set; }
         public Int64 Price {get; set; }
+
+        //relation
+        public virtual Order? Order { get; set; }
+
     }
 }
