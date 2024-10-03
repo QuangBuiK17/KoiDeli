@@ -39,6 +39,7 @@ namespace KoiDeli.Repositories
             }
             //Config N-N realationship
 
+            //config Boxoption
             modelBuilder.Entity<BoxOption>()
            .HasKey(ps => new { ps.BoxId, ps.FishId });
 
@@ -54,6 +55,42 @@ namespace KoiDeli.Repositories
             .HasForeignKey(s => s.FishId)
             .OnDelete(DeleteBehavior.Restrict);
 
+            //config TimelineDelivery
+            modelBuilder.Entity<TimelineDelivery>()
+           .HasKey(ps => new { ps.BranchId, ps.VehicleId });
+
+            modelBuilder.Entity<TimelineDelivery>()
+            .HasOne(s => s.Branch)
+            .WithMany(ps => ps.TimelineDeliveries)
+            .HasForeignKey(s => s.BranchId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TimelineDelivery>()
+            .HasOne(p => p.Vehicle)
+            .WithMany(ps => ps.TimelineDeliveries)
+            .HasForeignKey(s => s.VehicleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            //config OrderTimeline
+
+            modelBuilder.Entity<OrderTimeline>()
+            .HasOne(s => s.OrderDetail)
+            .WithMany(ps => ps.OrderTimelines)
+            .HasForeignKey(s => s.OrderDetailId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderTimeline>()
+            .HasOne(p => p.TimelineDelivery)
+            .WithMany(ps => ps.OrderTimelines)
+            .HasForeignKey(s => s.TimelineDeliveryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            //config OrderDetail
+            modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
+           .HasOne(s => s.BoxOption)
+           .WithMany(ps => ps.OrderDetails)
+           .HasForeignKey(s => s.BoxId)
+           .OnDelete(DeleteBehavior.Restrict);
 
 
         }

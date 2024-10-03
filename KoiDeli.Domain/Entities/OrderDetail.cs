@@ -20,6 +20,8 @@ namespace KoiDeli.Domain.Entities
         //relation
         public virtual PartnerShipment? PartnerShipment { get; set;}
         public virtual ICollection<OrderTimeline>? OrderTimelines { get; set;}
+        public virtual BoxOption? BoxOption { get; set;}
+        public virtual Order? Order { get; set;}
 
     }
 }
