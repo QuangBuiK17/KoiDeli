@@ -8,9 +8,9 @@ namespace KoiDeli.Domain.Entities
 {
     public class Order: BaseEntity
     {
-        public int CustomerID { get; set; }
-        public int PaymentID { get; set; }
-        public int FeedbackID { get; set; }
+        public int CustomerId { get; set; }
+        public int PaymentId { get; set; }
+        public int FeedbackId { get; set; }
         //receive 
         public string? ReceiverName { get; set; }
         public string? ReceiverAddress { get; set; }= string.Empty;

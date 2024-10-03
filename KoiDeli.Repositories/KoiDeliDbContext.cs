@@ -39,6 +39,23 @@ namespace KoiDeli.Repositories
             }
             //Config N-N realationship
 
+            modelBuilder.Entity<BoxOption>()
+           .HasKey(ps => new { ps.BoxId, ps.FishId });
+
+            modelBuilder.Entity<BoxOption>()
+            .HasOne(s => s.Box)
+            .WithMany(ps => ps.BoxOptions)
+            .HasForeignKey(s => s.BoxId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BoxOption>()
+            .HasOne(p => p.Fish)
+            .WithMany(ps => ps.BoxOptions)
+            .HasForeignKey(s => s.FishId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+
         }
 
 
