@@ -1,14 +1,12 @@
 ﻿
+using FluentValidation.AspNetCore;
 using KoiDeli.Domain.Entities;
+using KoiDeli.MiddleWares;
 using KoiDeli.Repositories;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Mapper;
-using KoiDeli.Services.MiddleWares;
-using MailKit;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace KoiDeli.Injection
@@ -34,17 +32,24 @@ namespace KoiDeli.Injection
             services.AddHttpContextAccessor();
             services.AddAutoMapper(typeof(MapperConfigProfile).Assembly);
             services.AddScoped<IClaimsService, ClaimsService>();
-           
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+            services.AddHealthChecks();
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddMemoryCache();
+
             // add repositories
-            
+
 
             // add generic repositories
-            
+
 
             // add signInManager
-           
+
             // add services
-            
+
 
             // add unitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
