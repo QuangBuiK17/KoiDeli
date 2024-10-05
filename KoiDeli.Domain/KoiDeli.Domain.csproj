@@ -21,7 +21,6 @@
     <Folder Include="DTOs\PartnerShipmentDTOs\" />
     <Folder Include="DTOs\OrderDetailDTOs\" />
     <Folder Include="DTOs\OrderDTOs\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 
   <ItemGroup>

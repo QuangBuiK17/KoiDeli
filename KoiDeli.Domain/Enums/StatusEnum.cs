@@ -4,9 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KoiDeli.Services.Mapper
+namespace KoiDeli.Domain.Enums
 {
-    public class MapperConfigProfile
+    enum StatusEnum
     {
+    Pending,   
+    Approved,   
+    Rejected,   
+    Completed,  
+    Cancelled   
     }
 }

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KoiDeli.Services.Mapper
+namespace KoiDeli.Repositories.Interfaces
 {
-    public class MapperConfigProfile
+    public interface ICurrentTime
     {
+        public DateTime GetCurrentTime();
     }
 }

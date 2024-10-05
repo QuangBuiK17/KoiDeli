@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KoiDeli.Repositories\KoiDeli.Repositories.csproj" />
+    <ProjectReference Include="..\KoiDeli.Services\KoiDeli.Services.csproj" />
   </ItemGroup>
 
 </Project>
