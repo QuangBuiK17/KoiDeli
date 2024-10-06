@@ -2,7 +2,10 @@ using KoiDeli.Injection;
 using KoiDeli.MiddleWares;
 using KoiDeli.Repositories;
 using KoiDeli.Repositories.Common;
+using KoiDeli.Repositories.Implementations;
 using KoiDeli.Repositories.Interfaces;
+using KoiDeli.Services.Implementations;
+using KoiDeli.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +31,11 @@ builder.Services.AddSingleton<IClaimsService, ClaimsService>();
 builder.Services.ServicesInjection(builder.Configuration);
 
 builder.Services.AddSingleton(configuration);
+//////////////////////////
+//builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+//////////////////////////
 
 
 builder.Services.AddControllers();
