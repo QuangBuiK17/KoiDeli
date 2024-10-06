@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\AccountDTOs\" />
     <Folder Include="DTOs\BoxDTOs\" />
     <Folder Include="DTOs\KoiFishDTOs\" />
     <Folder Include="DTOs\DistanceDTOs\" />

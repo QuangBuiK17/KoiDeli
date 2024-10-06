@@ -26,7 +26,7 @@ namespace KoiDeli.MiddleWares
 
                 var token = context.Request.Query["token"];
 
-/*                if (!string.IsNullOrEmpty(token))
+                if (!string.IsNullOrEmpty(token))
                 {
                     var user = await unitOfWork.AccountRepository.GetUserByConfirmationToken(token);
 
@@ -40,7 +40,7 @@ namespace KoiDeli.MiddleWares
                         await context.Response.WriteAsync("Email has been confirmed successfully!");
                         return;
                     }
-                }*/
+                }
             }
 
             await _next(context);

@@ -6,15 +6,20 @@ namespace KoiDeli.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
+        // khai bao IRepository vao day
         private readonly KoiDeliDbContext _koiDeliDbContext;
+        private readonly IAccountRepository _accountRepository;
 
-        public UnitOfWork(KoiDeliDbContext koiDeliDbContext)
+
+        // add vao UnitOfWork
+        public UnitOfWork(KoiDeliDbContext koiDeliDbContext, IAccountRepository accountRepository)
         {
             _koiDeliDbContext = koiDeliDbContext;
+            _accountRepository = accountRepository;
         }
 
 
-
+        public IAccountRepository AccountRepository => _accountRepository;
 
 
         //save changes

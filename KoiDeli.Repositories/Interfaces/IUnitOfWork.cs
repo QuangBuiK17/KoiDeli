@@ -8,7 +8,8 @@ namespace KoiDeli.Repositories.Interfaces
 {
     public interface IUnitOfWork
     {
-
+        // add Interface vao day
+        IAccountRepository AccountRepository { get; }
 
 
         Task<int> SaveChangeAsync();

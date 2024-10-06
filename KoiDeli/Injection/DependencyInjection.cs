@@ -5,7 +5,10 @@ using KoiDeli.MiddleWares;
 using KoiDeli.Repositories;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
+using KoiDeli.Repositories.Repositories;
+using KoiDeli.Services.Interfaces;
 using KoiDeli.Services.Mapper;
+using KoiDeli.Services.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
@@ -41,15 +44,16 @@ namespace KoiDeli.Injection
             services.AddMemoryCache();
 
             // add repositories
+            services.AddScoped<IAccountRepository,AccountRepository >();
 
 
             // add generic repositories
-
+            services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
 
             // add signInManager
 
             // add services
-
+            services.AddScoped<IAuthenticationService, AuthenticationService >();
 
             // add unitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
