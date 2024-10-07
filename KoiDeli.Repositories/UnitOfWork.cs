@@ -12,13 +12,18 @@ namespace KoiDeli.Repositories
         private readonly IBoxRepository _boxRepository;
         private readonly IBoxOptionRepository _boxOptionRepository;
         private readonly IKoiFishRepository _koiFishRepository;
-        private readonly IPartnerShipmentRepository _partnerShipmentRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly IVehicleRepository _vehicleRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IOrderTimelineRepository _orderTimelineRepository;
         private readonly ITimelineDeliveryRepository _timelineDeliveryRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IDistanceRepository _distanceRepository;
+        private readonly IPartnerShipmentRepository _partnerShipmentRepository;
+        private readonly IWalletRepository _walletRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IUserRepository _userRepository;
 
         // add vao UnitOfWork
         public UnitOfWork(KoiDeliDbContext koiDeliDbContext,
@@ -26,13 +31,18 @@ namespace KoiDeli.Repositories
             IBoxRepository boxRepository,
             IBoxOptionRepository boxOptionRepository,
             IKoiFishRepository koiFishRepository,
-            IPartnerShipmentRepository partnerShipmentRepository,
             IVehicleRepository vehicleRepository,
             IBranchRepository branchRepository,
             IOrderRepository orderRepository,
             IOrderDetailRepository orderDetailRepository,
             IOrderTimelineRepository orderTimelineRepository,
-            ITimelineDeliveryRepository timelineDeliveryRepository)
+            ITimelineDeliveryRepository timelineDeliveryRepository,
+            IRoleRepository roleRepository,
+            IDistanceRepository distanceRepository,
+            IPartnerShipmentRepository partnerShipmentRepository,
+            IWalletRepository walletRepository,
+            ITransactionRepository transactionRepository,
+            IUserRepository userRepository)
         {
             _koiDeliDbContext = koiDeliDbContext;
             _accountRepository = accountRepository;
@@ -46,6 +56,12 @@ namespace KoiDeli.Repositories
             _orderDetailRepository = orderDetailRepository;
             _timelineDeliveryRepository = timelineDeliveryRepository;
             _orderTimelineRepository = orderTimelineRepository;
+            _roleRepository = roleRepository;
+            _distanceRepository = distanceRepository;
+            _partnerShipmentRepository = partnerShipmentRepository;
+            _walletRepository = walletRepository;
+            _transactionRepository = transactionRepository;
+            _userRepository = userRepository;
         }
 
 
@@ -55,13 +71,17 @@ namespace KoiDeli.Repositories
         public IKoiFishRepository KoiFishRepository => _koiFishRepository;
         public IBranchRepository BranchRepository => _branchRepository;
         public IVehicleRepository VehicleRepository => _vehicleRepository;
-        public IPartnerShipmentRepository PartnerShipmentRepository => _partnerShipmentRepository;
-
         public IOrderDetailRepository OrderDetailRepository => _orderDetailRepository;
         public IOrderRepository OrderRepository => _orderRepository;
 
         public IOrderTimelineRepository OrderTimelineRepository => _orderTimelineRepository;
         public ITimelineDeliveryRepository TimelineDeliveryRepository => _timelineDeliveryRepository;
+        public IRoleRepository RoleRepository => _roleRepository;
+        public IDistanceRepository DistanceRepository => _distanceRepository;
+        public IPartnerShipmentRepository PartnerShipmentRepository => _partnerShipmentRepository;
+        public IWalletRepository WalletRepository => _walletRepository;
+        public ITransactionRepository TransactionRepository => _transactionRepository;
+        public IUserRepository UserRepository => _userRepository;
 
 
 

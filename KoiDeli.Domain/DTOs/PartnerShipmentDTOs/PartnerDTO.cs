@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Domain.DTOs.PartnerShipmentDTOs
 {
-    public class PartnerShipmentUpdateDTO
+    public class PartnerDTO
     {
-        public string? Name { get; set; }
+        public int id {  get; set; }
+        public bool isDeleted { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
         public bool IsCompleted { get; set; } = false;

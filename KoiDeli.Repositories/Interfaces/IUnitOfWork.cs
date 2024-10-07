@@ -16,14 +16,18 @@ namespace KoiDeli.Repositories.Interfaces
 
         IVehicleRepository VehicleRepository { get; }
         IBranchRepository BranchRepository { get; }
-        IPartnerShipmentRepository PartnerShipmentRepository { get; }
-
         IOrderRepository OrderRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }
 
         ITimelineDeliveryRepository TimelineDeliveryRepository { get; }
         IOrderTimelineRepository OrderTimelineRepository { get; }
-       
+        IRoleRepository RoleRepository { get; }
+        IDistanceRepository DistanceRepository { get; }
+        IPartnerShipmentRepository PartnerShipmentRepository { get; }
+        IWalletRepository WalletRepository { get; }
+        ITransactionRepository TransactionRepository { get; }
+        IUserRepository UserRepository { get; }
+
 
 
         Task<int> SaveChangeAsync();

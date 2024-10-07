@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\DistanceDTOs\" />
     <Folder Include="DTOs\FeedbackDTOs\" />
     <Folder Include="DTOs\PaymentDTOs\" />
   </ItemGroup>

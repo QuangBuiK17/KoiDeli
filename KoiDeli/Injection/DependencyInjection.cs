@@ -50,13 +50,19 @@ namespace KoiDeli.Injection
             services.AddScoped<IBoxOptionRepository, BoxOptionRepository >();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
-            services.AddScoped<IPartnerShipmentRepository, PartnerShipmentRepository>();
 
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
             services.AddScoped<IOrderTimelineRepository, OrderTimelineRepository>();
             services.AddScoped<ITimelineDeliveryRepository, TimelineDeliveryRepository>();
+
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IDistanceRepository, DistanceRepository>();
+            services.AddScoped<IPartnerShipmentRepository, PartnerShipmentRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
 
             // add generic repositories
@@ -66,13 +72,19 @@ namespace KoiDeli.Injection
             services.AddScoped<IGenericRepository<KoiFish>, GenericRepository<KoiFish>>();
             services.AddScoped<IGenericRepository<Vehicle>, GenericRepository<Vehicle>>();
             services.AddScoped<IGenericRepository<Branch>, GenericRepository<Branch>>();
-            services.AddScoped<IGenericRepository<PartnerShipment>, GenericRepository<PartnerShipment>>();
 
             services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
             services.AddScoped<IGenericRepository<OrderDetail>, GenericRepository<OrderDetail>>();
 
             services.AddScoped<IGenericRepository<TimelineDelivery>, GenericRepository<TimelineDelivery>>();
             services.AddScoped<IGenericRepository<OrderTimeline>, GenericRepository<OrderTimeline>>();
+
+            services.AddScoped<IGenericRepository<Role>, GenericRepository<Role>>();
+            services.AddScoped<IGenericRepository<Distance>, GenericRepository<Distance>>();
+            services.AddScoped<IGenericRepository<PartnerShipment>, GenericRepository<PartnerShipment>>();
+            services.AddScoped<IGenericRepository<Wallet>, GenericRepository<Wallet>>();
+            services.AddScoped<IGenericRepository<Transaction>, GenericRepository<Transaction>>();
+            services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
 
             // add signInManager
 
@@ -81,7 +93,6 @@ namespace KoiDeli.Injection
             services.AddScoped<IPackingService, PackingService>();
             services.AddScoped<IBoxService, BoxService>();
             services.AddScoped<IKoiFishService, KoiFishService>();
-            services.AddScoped<IPartnerShipmentService, PartnerShipmentService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<IBoxOptionService, BoxOptionService>();
@@ -90,6 +101,13 @@ namespace KoiDeli.Injection
 
             services.AddScoped<IOrderTimelineService, OrderTimelineService>();
             services.AddScoped<ITimelineDeliveryService, TimelineDeliveryService>();
+
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IDistanceService, DistanceService>();
+            services.AddScoped<IPartnerShipmentService, PartnerShipmentService>();
+            services.AddScoped<IWalletService, WalletService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IUserService, UserService>();
 
 
             // add unitOfWork

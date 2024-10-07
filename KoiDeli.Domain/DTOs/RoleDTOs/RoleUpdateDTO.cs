@@ -8,8 +8,8 @@ namespace KoiDeli.Domain.DTOs.RoleDTOs
 {
     public class RoleUpdateDTO
     {
-        public int Id { get; set; }
-        public bool IsDeleted { get; set; }
-        public string? RoleName { get; set; }
+        //public bool IsDeleted { get; set; }
+
+        public string? Name { get; set; }
     }
 }

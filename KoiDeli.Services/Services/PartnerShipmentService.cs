@@ -1,238 +1,285 @@
-﻿using AutoMapper;
+﻿using Arch.EntityFrameworkCore.UnitOfWork;
+using AutoMapper;
+using Azure;
+using KoiDeli.Domain.DTOs.DistanceDTOs;
 using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
+using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.Entities;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IUnitOfWork = KoiDeli.Repositories.Interfaces.IUnitOfWork;
 
 namespace KoiDeli.Services.Services
 {
     public class PartnerShipmentService : IPartnerShipmentService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ICurrentTime _currentTime;
-        private readonly AppConfiguration _configuration;
         private readonly IMapper _mapper;
-
-        public PartnerShipmentService(
-            IUnitOfWork unitOfWork,
-            ICurrentTime currentTime,
-            AppConfiguration configuration,
-            IMapper mapper
-        )
+        private readonly IUnitOfWork _unitOfWork;
+        public PartnerShipmentService(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
-            _currentTime = currentTime;
-            _configuration = configuration;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<ApiResult<PartnerShipmentDTO>> CreatePartnerShipmentAsync(PartnerShipmentCreateDTO partnerShipmentDto)
+        public async Task<ApiResult<PartnerDTO>> CreatePartnerAsync(PartnerCreateDTO createDTO)
         {
-            var response = new ApiResult<PartnerShipmentDTO>();
-
+            var response = new ApiResult<PartnerDTO>();
             try
             {
-                var entity = _mapper.Map<PartnerShipment>(partnerShipmentDto);
-
-                await _unitOfWork.PartnerShipmentRepository.AddAsync(entity);
-
+                var partner = _mapper.Map<PartnerShipment>(createDTO);
+                await _unitOfWork.PartnerShipmentRepository.AddAsync(partner);
                 if (await _unitOfWork.SaveChangeAsync() > 0)
                 {
-                    response.Data = _mapper.Map<PartnerShipmentDTO>(entity);
+                    response.Data = _mapper.Map<PartnerDTO>(partner);
                     response.Success = true;
-                    response.Message = "PartnerShipment created successfully.";
+                    response.Message = "Create new Partner successfully";
+                    return response;
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = "Failed to create PartnerShipment.";
+                    response.Message = "Create new Partner fail";
+                    return response;
                 }
             }
             catch (Exception ex)
             {
                 response.Success = false;
                 response.ErrorMessages = new List<string> { ex.Message };
+                return response;
             }
-
-            return response;
         }
 
-        public async Task<ApiResult<PartnerShipmentDTO>> DeletePartnerShipmentAsync(int id)
+        public async Task<ApiResult<PartnerDTO>> DeletePartnerAsync(int id)
         {
-            var response = new ApiResult<PartnerShipmentDTO>();
-            var partnerShipment = await _unitOfWork.PartnerShipmentRepository.GetByIdAsync(id);
-
-            if (partnerShipment != null)
+            var response = new ApiResult<PartnerDTO>();
+            var partner = await _unitOfWork.PartnerShipmentRepository.GetByIdAsync(id);
+            if (partner == null)
             {
-                _unitOfWork.PartnerShipmentRepository.SoftRemove(partnerShipment);
-
+                response.Success = false;
+                response.Message = "Partner not found!";
+                return response;
+            }
+            else 
+            {
+                _unitOfWork.PartnerShipmentRepository.SoftRemove(partner);
                 if (await _unitOfWork.SaveChangeAsync() > 0)
                 {
-                    response.Data = _mapper.Map<PartnerShipmentDTO>(partnerShipment);
+                    response.Data = _mapper.Map<PartnerDTO>(partner);
                     response.Success = true;
-                    response.Message = "PartnerShipment deleted successfully.";
+                    response.Message = "Delete partner successfully";
+                    return response;
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = "Failed to delete PartnerShipment.";
+                    response.Message = "Delete partner fail";
+                    return response;
                 }
+                
             }
-            else
-            {
-                response.Success = false;
-                response.Message = "PartnerShipment not found.";
-            }
-
-            return response;
         }
 
-        public async Task<ApiResult<PartnerShipmentDTO>> GetPartnerShipmentByIdAsync(int id)
+        public async Task<ApiResult<PartnerDTO>> GetPartnerByIdAsync(int id)
         {
-            var response = new ApiResult<PartnerShipmentDTO>();
-
+            //throw new NotImplementedException();
+            var response = new ApiResult<PartnerDTO>();
             try
             {
-                var partnerShipment = await _unitOfWork.PartnerShipmentRepository.GetByIdAsync(id);
-
-                if (partnerShipment != null)
+                var partner = await _unitOfWork.PartnerShipmentRepository.GetByIdAsync(id);
+                if (partner == null)
                 {
-                    response.Data = _mapper.Map<PartnerShipmentDTO>(partnerShipment);
-                    response.Success = true;
-                    response.Message = "PartnerShipment retrieved successfully.";
+                    response.Success = false;
+                    response.Message = "partner ID doesn't exit!";
+                    return response;
                 }
                 else
                 {
-                    response.Success = false;
-                    response.Message = "PartnerShipment not found.";
+                    response.Data = _mapper.Map<PartnerDTO>(partner);
+                    response.Success = true;
+                    response.Message = "Partner ID is valid";
+                    return response;
                 }
             }
             catch (Exception ex)
             {
                 response.Success = false;
                 response.ErrorMessages = new List<string> { ex.Message };
+                return response;
             }
-
-            return response;
         }
 
-        public async Task<ApiResult<List<PartnerShipmentDTO>>> GetPartnerShipmentsAsync()
+        public async Task<ApiResult<List<PartnerDTO>>> GetPartnersAsync()
         {
-            var response = new ApiResult<List<PartnerShipmentDTO>>();
-            List<PartnerShipmentDTO> partnerShipmentDTOs = new List<PartnerShipmentDTO>();
-
+            var response = new ApiResult<List<PartnerDTO>>();
+            List<PartnerDTO> PartnerDTOs = new List<PartnerDTO>();
             try
             {
-                var partnerShipments = await _unitOfWork.PartnerShipmentRepository.GetAllAsync();
-
-                foreach (var partnerShipment in partnerShipments)
+                var partners = await _unitOfWork.PartnerShipmentRepository.GetAllAsync();
+                foreach (var partner in partners)
                 {
-                    var partnerShipmentDto = _mapper.Map<PartnerShipmentDTO>(partnerShipment);
-                    partnerShipmentDTOs.Add(partnerShipmentDto);
+                    var partnerDto= _mapper.Map<PartnerDTO>(partner);
+                    // distanceDto.RangeDistance = distance.RangeDistance;
+                    //distanceDto.Price = distance.Price;
+                    PartnerDTOs.Add(partnerDto);
                 }
-
-                if (partnerShipmentDTOs.Count > 0)
+                if (PartnerDTOs.Count > 0)
                 {
-                    response.Data = partnerShipmentDTOs;
+                    response.Data = PartnerDTOs;
                     response.Success = true;
-                    response.Message = $"Found {partnerShipmentDTOs.Count} PartnerShipments.";
+                    response.Message = $"Have {PartnerDTOs.Count} partner.";
+                    response.Error = "No error";
+
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = "No PartnerShipments found.";
+                    response.Message = "No partner created";
+                    response.Error = "No error";
                 }
             }
             catch (Exception ex)
             {
                 response.Success = false;
+                response.Error = "Exception";
                 response.ErrorMessages = new List<string> { ex.Message };
             }
-
             return response;
         }
 
-        public async Task<ApiResult<List<PartnerShipmentDTO>>> SearchPartnerShipmentByNameAsync(string name)
+        public async Task<ApiResult<List<PartnerDTO>>> GetPartnersEnabledAsync()
         {
-            var response = new ApiResult<List<PartnerShipmentDTO>>();
-            List<PartnerShipmentDTO> partnerShipmentDTOs = new List<PartnerShipmentDTO>();
-
+            var response = new ApiResult<List<PartnerDTO>>();
+            List<PartnerDTO> PartnerDTOs = new List<PartnerDTO>();
             try
             {
-                var partnerShipments = await _unitOfWork.PartnerShipmentRepository.SearchAsync(p => p.Name.Contains(name));
-
-                foreach (var partnerShipment in partnerShipments)
+                var partners = await _unitOfWork.PartnerShipmentRepository.GetPartnerEnabledAsync();
+                foreach (var partner in partners)
                 {
-                    var partnerShipmentDto = _mapper.Map<PartnerShipmentDTO>(partnerShipment);
-                    partnerShipmentDTOs.Add(partnerShipmentDto);
+                    var partnerDto = _mapper.Map<PartnerDTO>(partner);
+                    // distanceDto.RangeDistance = distance.RangeDistance;
+                    //distanceDto.Price = distance.Price;
+                    PartnerDTOs.Add(partnerDto);
                 }
-
-                if (partnerShipmentDTOs.Count > 0)
+                if (PartnerDTOs.Count > 0)
                 {
-                    response.Data = partnerShipmentDTOs;
+                    response.Data = PartnerDTOs;
                     response.Success = true;
-                    response.Message = $"{partnerShipmentDTOs.Count} PartnerShipments found with the name '{name}'.";
+                    response.Message = $"Have {PartnerDTOs.Count} partner enabled.";
+                    response.Error = "No error";
+
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = $"No PartnerShipments found with the name '{name}'.";
+                    response.Message = "No partner created";
+                    response.Error = "No error";
                 }
             }
             catch (Exception ex)
             {
                 response.Success = false;
+                response.Error = "Exception";
                 response.ErrorMessages = new List<string> { ex.Message };
             }
-
             return response;
         }
 
-        public async Task<ApiResult<PartnerShipmentDTO>> UpdatePartnerShipmentAsync(int id, PartnerShipmentUpdateDTO updateDto)
+        public async Task<ApiResult<PartnerDTO>> UpdatePartnerAsync(int id, PartnerUpdateDTO updateDto)
         {
-            var response = new ApiResult<PartnerShipmentDTO>();
+            var response = new ApiResult<PartnerDTO>();
 
             try
             {
-                var partnerShipment = await _unitOfWork.PartnerShipmentRepository.GetByIdAsync(id);
+                var enityById = await _unitOfWork.PartnerShipmentRepository.GetByIdAsync(id);
 
-                if (partnerShipment != null)
+                if (enityById != null)
                 {
-                    _mapper.Map(updateDto, partnerShipment);
-                    _unitOfWork.PartnerShipmentRepository.Update(partnerShipment);
-
+                    var newb = _mapper.Map(updateDto, enityById);
+                    var bAfter = _mapper.Map<PartnerShipment>(newb);
+                    _unitOfWork.PartnerShipmentRepository.Update(bAfter);
                     if (await _unitOfWork.SaveChangeAsync() > 0)
                     {
-                        response.Data = _mapper.Map<PartnerShipmentDTO>(partnerShipment);
                         response.Success = true;
-                        response.Message = "PartnerShipment updated successfully.";
+                        response.Data = _mapper.Map<PartnerDTO>(bAfter);
+                        response.Message = $"Successfull for update partner.";
+                        return response;
                     }
                     else
                     {
                         response.Success = false;
-                        response.Message = "Failed to update PartnerShipment.";
+                        response.Error = "Save update failed";
+                        return response;
                     }
+
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = "PartnerShipment not found.";
+                    response.Message = $"Have no partner.";
+                    response.Error = "Not have a partner";
+                    return response;
                 }
+
             }
             catch (Exception ex)
             {
                 response.Success = false;
                 response.ErrorMessages = new List<string> { ex.Message };
+                return response;
             }
-
-            return response;
         }
 
+        public async Task<ApiResult<PartnerDTO>> UpdatePartnerCompleteAsync(int id, PartnerUpdateCompleteDTO updateDto)
+        {
+            var response = new ApiResult<PartnerDTO>();
+
+            try
+            {
+                var enityById = await _unitOfWork.PartnerShipmentRepository.GetByIdAsync(id);
+
+                if (enityById != null)
+                {
+                    var newb = _mapper.Map(updateDto, enityById);
+                    var bAfter = _mapper.Map<PartnerShipment>(newb);
+                    _unitOfWork.PartnerShipmentRepository.Update(bAfter);
+                    if (await _unitOfWork.SaveChangeAsync() > 0)
+                    {
+                        response.Success = true;
+                        response.Data = _mapper.Map<PartnerDTO>(bAfter);
+                        response.Message = $"Successfull for update partner status complete.";
+                        return response;
+                    }
+                    else
+                    {
+                        response.Success = false;
+                        response.Error = "Save update failed";
+                        return response;
+                    }
+
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"Have no partner.";
+                    response.Error = "Not have a partner";
+                    return response;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+                return response;
+            }
+        }
     }
 }

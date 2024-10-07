@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Repositories.Interfaces
 {
-    public interface IPartnerShipmentRepository : IGenericRepository<PartnerShipment>
+    public interface IUserRepository : IGenericRepository<User>
     {
-        Task<List<PartnerShipment>> GetPartnerEnabledAsync();
     }
 }

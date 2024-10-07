@@ -3,13 +3,18 @@ using KoiDeli.Domain.DTOs.AccountDTOs;
 using KoiDeli.Domain.DTOs.BoxDTOs;
 using KoiDeli.Domain.DTOs.BoxOptionDTOs;
 using KoiDeli.Domain.DTOs.BranchDTOs;
+using KoiDeli.Domain.DTOs.DistanceDTOs;
 using KoiDeli.Domain.DTOs.KoiFishDTOs;
 using KoiDeli.Domain.DTOs.OrderDetailDTOs;
 using KoiDeli.Domain.DTOs.OrderDTOs;
 using KoiDeli.Domain.DTOs.OrderTimelineDTOs;
 using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
+using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.DTOs.TimelineDeliveryDTOs;
+using KoiDeli.Domain.DTOs.TransactionDTOs;
+using KoiDeli.Domain.DTOs.UserDTOs;
 using KoiDeli.Domain.DTOs.VehicleDTOs;
+using KoiDeli.Domain.DTOs.WalletDTOs;
 using KoiDeli.Domain.Entities;
 using KoiDeli.Repositories.Common;
 using System;
@@ -31,7 +36,6 @@ namespace KoiDeli.Services.Mapper
             CreateMap<User, AccountDTO>().ReverseMap();
             CreateMap<Box, BoxDTO>().ReverseMap();
             CreateMap<KoiFish, KoiFishDTO>().ReverseMap();
-            CreateMap<PartnerShipment, PartnerShipmentDTO>().ReverseMap();
             CreateMap<Vehicle, VehicleDTO>().ReverseMap();
             CreateMap<Branch, BranchDTO>().ReverseMap();
             CreateMap<BoxOption, BoxOptionDTO>().ReverseMap();
@@ -39,12 +43,17 @@ namespace KoiDeli.Services.Mapper
             CreateMap<OrderDetail, OrderDetailDTO>().ReverseMap();
             CreateMap<OrderTimeline, OrderTimelineDTO>().ReverseMap();
             CreateMap<TimelineDelivery, TimelineDeliveryDTO>().ReverseMap();
+            CreateMap<Role, RoleDTO>().ReverseMap();
+            CreateMap<Distance, DistanceDTO>().ReverseMap();
+            CreateMap<PartnerShipment, PartnerDTO>().ReverseMap();
+            CreateMap<Wallet, WalletDTO>().ReverseMap();
+            CreateMap<Transaction, TransactionDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
 
 
             //Create
             CreateMap<Box, BoxCreateDTO>().ReverseMap();
             CreateMap<KoiFish, KoiFishCreateDTO>().ReverseMap();
-            CreateMap<PartnerShipment, PartnerShipmentCreateDTO>().ReverseMap();
             CreateMap<Vehicle, VehicleCreateDTO>().ReverseMap();
             CreateMap<Branch, BranchCreateDTO>().ReverseMap();
             CreateMap<BoxOption, BoxOptionCreateDTO>().ReverseMap();
@@ -52,6 +61,12 @@ namespace KoiDeli.Services.Mapper
             CreateMap<OrderDetail, OrderDetailCreateDTO>().ReverseMap();
             CreateMap<OrderTimeline, OrderTimelineCreateDTO>().ReverseMap();
             CreateMap<TimelineDelivery, TimelineDeliveryCreateDTO>().ReverseMap();
+            CreateMap<Role, RoleCreateDTO>().ReverseMap();
+            CreateMap<Distance, DistanceCreateDTO>().ReverseMap();
+            CreateMap<PartnerShipment, PartnerCreateDTO>().ReverseMap();
+            CreateMap<Wallet, WalletCreateDTO>().ReverseMap();
+            CreateMap<Transaction, TransactionCreateDTO>().ReverseMap();
+            CreateMap<User, UserCreateDTO>().ReverseMap();
 
             //Update
             CreateMap<User, AccountUpdateDTO>().ReverseMap();
@@ -59,12 +74,18 @@ namespace KoiDeli.Services.Mapper
             CreateMap<KoiFish, KoiFishUpdateDTO>().ReverseMap();
             CreateMap<Vehicle, VehicleUpdateDTO>().ReverseMap();
             CreateMap<Branch, BranchUpdateDTO>().ReverseMap();
-            CreateMap<PartnerShipment, PartnerShipmentUpdateDTO>().ReverseMap();
             CreateMap<BoxOption, BoxOptionUpdateDTO>().ReverseMap();
             CreateMap<Order, OrderUpdateDTO>().ReverseMap();
             CreateMap<OrderDetail, OrderDetailUpdateDTO>().ReverseMap();
             CreateMap<OrderTimeline, OrderTimelineUpdateDTO>().ReverseMap();
             CreateMap<TimelineDelivery, TimelineDeliveryUpdateDTO>().ReverseMap();
+            CreateMap<Role, RoleUpdateDTO>().ReverseMap();
+            CreateMap<Distance, DistanceUpdateDTO>().ReverseMap();
+            CreateMap<PartnerShipment, PartnerUpdateDTO>().ReverseMap();
+            CreateMap<PartnerShipment, PartnerUpdateCompleteDTO>().ReverseMap();
+            CreateMap<Wallet, WalletUpdateDTO>().ReverseMap();
+            CreateMap<Transaction, TransactionUpdateDTO>().ReverseMap();
+            CreateMap<User, UserUpdateDTO>().ReverseMap();
             //Delete ko can
 
             //Pagination
