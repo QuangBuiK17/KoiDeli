@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Mapper\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KoiDeli.Domain\KoiDeli.Domain.csproj" />
     <ProjectReference Include="..\KoiDeli.Repositories\KoiDeli.Repositories.csproj" />
   </ItemGroup>
 

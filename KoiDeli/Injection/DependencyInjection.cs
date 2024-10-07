@@ -5,10 +5,7 @@ using KoiDeli.MiddleWares;
 using KoiDeli.Repositories;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
-using KoiDeli.Repositories.Repositories;
-using KoiDeli.Services.Interfaces;
 using KoiDeli.Services.Mapper;
-using KoiDeli.Services.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 

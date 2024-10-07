@@ -11,7 +11,6 @@ using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
 using KoiDeli.Domain.DTOs.TimelineDeliveryDTOs;
 using KoiDeli.Domain.DTOs.VehicleDTOs;
 using KoiDeli.Domain.Entities;
-using KoiDeli.Repositories.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

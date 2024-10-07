@@ -6,7 +6,6 @@ namespace KoiDeli.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        // khai bao IRepository vao day
         private readonly KoiDeliDbContext _koiDeliDbContext;
         private readonly IAccountRepository _accountRepository;
         private readonly IBoxRepository _boxRepository;
