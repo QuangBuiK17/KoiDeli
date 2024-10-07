@@ -17,7 +17,9 @@ namespace KoiDeli.Repositories
                 var roles = new List<Role>
                 {
                     new Role { Name = "User" },
-                    new Role { Name = "Admin" }
+                    new Role { Name = "Admin" },
+                    new Role { Name = "Staff" },
+                    new Role { Name = "Manager" }
                 };
 
                 foreach (var role in roles)
