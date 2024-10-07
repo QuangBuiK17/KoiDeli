@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/KoiDeliapi/apis/KoiDeli",
+      "type": "apis.azure"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/KoiDeli/providers/Microsoft.ServiceLinker/linkers/AzureKoiDeliConnStr_E9F66ACC90",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/koidelidbserver/databases/KoiDeli_db",
+      "type": "mssql.azure",
+      "connectionId": "AzureKoiDeliConnStr"
+    }
+  }
+}
