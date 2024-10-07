@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using KoiDeli.Domain.DTOs.BoxDTOs;
 using KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs;
+using KoiDeli.Domain.DTOs.KoiFishDTOs;
 using KoiDeli.Domain.Entities;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
@@ -76,15 +78,6 @@ namespace KoiDeli.Services.Services
                             }
                             boxWithDetails.Fishes.Add(fish);
 
-                            // Thêm BoxOption
-                            var boxOption = new BoxOption
-                            {
-                                FishId = fish.Id,
-                                BoxId = box.Id,
-                                IsChecked = true
-                            };
-                            await _unitOfWork.BoxOptionRepository.AddAsync(boxOption);
-
                             placed = true;
                             break;
                         }
@@ -92,7 +85,7 @@ namespace KoiDeli.Services.Services
 
                     if (!placed)
                     {
-                        // Nếu không có hộp nào phù hợp, tạo hộp mới
+                        // Nếu không có hộp nào phù hợp, tạo hộp mới (chỉ trên bộ nhớ)
                         var newBox = new Box
                         {
                             MaxVolume = sortedBoxList.First().MaxVolume,
@@ -106,41 +99,22 @@ namespace KoiDeli.Services.Services
                         };
                         boxWithDetails.Fishes.Add(fish);
                         usedBoxes.Add(boxWithDetails);
-
-                        // Thêm BoxOption
-                        var newBoxOption = new BoxOption
-                        {
-                            FishId = fish.Id,
-                            BoxId = newBox.Id,
-                            IsChecked = true
-                        };
-                        await _unitOfWork.BoxOptionRepository.AddAsync(newBoxOption);
-
-                        // Thêm hộp mới vào CSDL
-                        await _unitOfWork.BoxRepository.AddAsync(newBox);
                     }
                 }
 
-                // Lưu tất cả thay đổi vào cơ sở dữ liệu
-                var isSuccess = await _unitOfWork.SaveChangeAsync() > 0;
+                // In ra kết quả thay vì lưu vào CSDL
+                foreach (var usedBox in usedBoxes)
+                {
+                    Console.WriteLine($"Box {usedBox.Box.Id} (MaxVolume: {usedBox.Box.MaxVolume}, Price: {usedBox.Box.Price}):");
+                    foreach (var fish in usedBox.Fishes)
+                    {
+                        Console.WriteLine($"\tFish {fish.Id} (Volume: {fish.Volume}, Size: {fish.Size})");
+                    }
+                }
 
-                if (isSuccess)
-                {
-                    response.Data = usedBoxes;
-                    response.Success = true;
-                    response.Message = "Packing optimization completed successfully.";
-                }
-                else
-                {
-                    response.Success = false;
-                    response.Message = "Error saving box and fish details.";
-                }
-            }
-            catch (DbException ex)
-            {
-                response.Success = false;
-                response.Message = "Database error occurred.";
-                response.ErrorMessages = new List<string> { ex.Message };
+                response.Data = usedBoxes;
+                response.Success = true;
+                response.Message = "Packing optimization completed successfully (results printed to console).";
             }
             catch (Exception ex)
             {
@@ -151,7 +125,6 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
-
 
     }
 }

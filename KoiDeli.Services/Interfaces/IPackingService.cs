@@ -1,4 +1,6 @@
-﻿using KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs;
+﻿using KoiDeli.Domain.DTOs.BoxDTOs;
+using KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs;
+using KoiDeli.Domain.DTOs.KoiFishDTOs;
 using KoiDeli.Domain.Entities;
 using KoiDeli.Repositories.Common;
 using System;
