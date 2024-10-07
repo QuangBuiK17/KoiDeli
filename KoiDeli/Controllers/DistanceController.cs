@@ -34,19 +34,19 @@ namespace KoiDeli.Controllers
             var result = await _distanceService.GetDistancesAsync();
             return Ok(result);
         }
-        [HttpGet("enable")]
+        [HttpGet]
         public async Task<IActionResult> ViewAllDistancesEnabled()
         {
             var result = await _distanceService.GetDistancesEnabledAsync();
             return Ok(result);
         }
-        [HttpGet("{id:int}")]
+        [HttpGet]
         public async Task<IActionResult> ViewDistanceById(int id)
         {
             var result = await _distanceService.GetDistanceByIdAsync(id);
             return Ok(result);
         }
-        [HttpPut("{id:int}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateDistance(int id, [FromBody] DistanceUpdateDTO updateDto)
         {
             var d = await _distanceService.UpdateDistanceAsync(id, updateDto);
@@ -56,7 +56,7 @@ namespace KoiDeli.Controllers
             }
             return Ok(d);
         }
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteDistance(int id)
         {
             var d = await _distanceService.DeleteDistanceAsync(id);

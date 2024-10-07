@@ -33,13 +33,13 @@ namespace KoiDeli.Controllers
             var result = await _transactionService.GetAsync();
             return Ok(result);
         }
-        [HttpGet("enable")]
+        [HttpGet]
         public async Task<IActionResult> ViewAllTrấnctionsEnabled()
         {
             var result = await _transactionService.GetEnabledAsync();
             return Ok(result);
         }
-        [HttpGet("{id:int}")]
+        [HttpGet]
         public async Task<IActionResult> ViewTrấnctionById(int id)
         {
             var result = await _transactionService.GetByIdAsync(id);
@@ -56,7 +56,7 @@ namespace KoiDeli.Controllers
             }
             return Ok(t);
         }*/
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteWallet(int id)
         {
             var t = await _transactionService.DeleteAsync(id);

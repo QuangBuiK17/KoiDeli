@@ -23,7 +23,7 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{name}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchKoiFishesByName(string name)
@@ -33,7 +33,7 @@ namespace KoiDeli.Controllers
         }
 
         //[Authorize (Roles = "Manager")]
-        [HttpPost("{new}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -52,7 +52,7 @@ namespace KoiDeli.Controllers
         }
 
         // [Authorize(Roles = "Manager")]
-        [HttpPut("{id:int}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateKoiFish(int id, [FromBody] KoiFishUpdateDTO updateDto)
@@ -66,7 +66,7 @@ namespace KoiDeli.Controllers
         }
 
         //  [Authorize(Roles = "Manager, Customer")]
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteKoiFish(int id)

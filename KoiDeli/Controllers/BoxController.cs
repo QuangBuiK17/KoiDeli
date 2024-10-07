@@ -22,7 +22,7 @@ namespace KoiDeli.Controllers
         }
 
 
-        [HttpGet("{name}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchBoxesByName(string name)
@@ -32,7 +32,7 @@ namespace KoiDeli.Controllers
         }
 
         //[Authorize (Roles = "Manager")]
-        [HttpPost("{new}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,7 +51,7 @@ namespace KoiDeli.Controllers
         }
 
         // [Authorize(Roles = "Manager")]
-        [HttpPut("{id:int}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateBox(int id, [FromBody] BoxUpdateDTO updateDto)
@@ -65,7 +65,7 @@ namespace KoiDeli.Controllers
         }
 
         //  [Authorize(Roles = "Manager, Customer")]
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteBox(int id)

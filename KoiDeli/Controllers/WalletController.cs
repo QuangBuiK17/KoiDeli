@@ -34,19 +34,19 @@ namespace KoiDeli.Controllers
             var result = await _walletService.GetWalletAsync();
             return Ok(result);
         }
-        [HttpGet("enable")]
+        [HttpGet]
         public async Task<IActionResult> ViewAllWalletsEnabled()
         {
             var result = await _walletService.GetWalletEnabledAsync();
             return Ok(result);
         }
-        [HttpGet("{id:int}")]
+        [HttpGet]
         public async Task<IActionResult> ViewWalletById(int id)
         {
             var result = await _walletService.GetWalletByIdAsync(id);
             return Ok(result);
         }
-        [HttpPut("{id:int}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateWallet(int id, [FromBody] WalletUpdateDTO updateDto)
         {
             var w = await _walletService.UpdateWalletAsync(id, updateDto);
@@ -56,7 +56,7 @@ namespace KoiDeli.Controllers
             }
             return Ok(w);
         }
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteWallet(int id)
         {
             var w  = await _walletService.DeleteWalletAsync(id);

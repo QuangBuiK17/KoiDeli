@@ -35,13 +35,13 @@ namespace KoiDeli.Controllers
             var result = await _roleService.GetRolesAsync();
             return Ok(result);
         } 
-        [HttpGet("enable")]
+        [HttpGet]
         public async Task<IActionResult> ViewAllRolesEnabled()
         {
             var result = await _roleService.GetRolesEnabledAsync();
             return Ok(result);
         }
-        [HttpPut("{id:int}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateRole(int id, [FromBody] RoleUpdateDTO updateDto)
         {
             var c = await _roleService.UpdateRoleAsync(id, updateDto);
@@ -51,7 +51,7 @@ namespace KoiDeli.Controllers
             }
             return Ok(c);
         }
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteRole(int id)
         {
             var c = await _roleService.DeleteRoleAsync(id);

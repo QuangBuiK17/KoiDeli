@@ -27,7 +27,7 @@ namespace KoiDeli.Controllers
             }
             return Ok(w);
         }
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var w = await _userService.DeleteAsync(id);
@@ -43,13 +43,13 @@ namespace KoiDeli.Controllers
             var result = await _userService.GetAsync();
             return Ok(result);
         }
-        [HttpGet("{id:int}")]
+        [HttpGet]
         public async Task<IActionResult> ViewUserById(int id)
         {
             var result = await _userService.GetByIdAsync(id);
             return Ok(result);
         }
-        [HttpPut("{id:int}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDTO updateDto)
         {
             var w = await _userService.UpdatetAsync(id, updateDto);

@@ -23,7 +23,7 @@ namespace KoiDeli.Controllers
         }
 
 
-        [HttpGet("{name}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchOrderTimelineByName(string name)
@@ -33,7 +33,7 @@ namespace KoiDeli.Controllers
         }
 
         //[Authorize (Roles = "Manager")]
-        [HttpPost("{new}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
