@@ -8,6 +8,7 @@ namespace KoiDeli.Domain.Entities
 {
     public class PartnerShipment: BaseEntity
     {
+        public string? Name { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
         public bool IsCompleted { get; set; } = false;

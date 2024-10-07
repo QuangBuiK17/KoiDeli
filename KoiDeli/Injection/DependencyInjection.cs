@@ -48,6 +48,10 @@ namespace KoiDeli.Injection
             services.AddScoped<IKoiFishRepository, KoiFishRepository>();
             services.AddScoped<IBoxRepository, BoxRepository>();
             services.AddScoped<IBoxOptionRepository, BoxOptionRepository >();
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IBranchRepository, BranchRepository>();
+            services.AddScoped<IPartnerShipmentRepository, PartnerShipmentRepository>();
+
 
 
 
@@ -57,6 +61,9 @@ namespace KoiDeli.Injection
             services.AddScoped<IGenericRepository<Box>, GenericRepository<Box>>();
             services.AddScoped<IGenericRepository<BoxOption>, GenericRepository<BoxOption>>();
             services.AddScoped<IGenericRepository<KoiFish>, GenericRepository<KoiFish>>();
+            services.AddScoped<IGenericRepository<Vehicle>, GenericRepository<Vehicle>>();
+            services.AddScoped<IGenericRepository<Branch>, GenericRepository<Branch>>();
+            services.AddScoped<IGenericRepository<PartnerShipment>, GenericRepository<PartnerShipment>>();
 
             // add signInManager
 
@@ -65,6 +72,9 @@ namespace KoiDeli.Injection
             services.AddScoped<IPackingService, PackingService>();
             services.AddScoped<IBoxService, BoxService>();
             services.AddScoped<IKoiFishService, KoiFishService>();
+            services.AddScoped<IPartnerShipmentService, PartnerShipmentService>();
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IBranchService, BranchService>();
 
 
             // add unitOfWork

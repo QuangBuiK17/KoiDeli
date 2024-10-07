@@ -13,6 +13,12 @@ namespace KoiDeli.Repositories.Interfaces
         IKoiFishRepository KoiFishRepository { get; }
         IBoxRepository BoxRepository { get; }
         IBoxOptionRepository BoxOptionRepository { get; }
+
+        IVehicleRepository VehicleRepository { get; }
+        IBranchRepository BranchRepository { get; }
+        IPartnerShipmentRepository PartnerShipmentRepository { get; }
+
+        
        
 
 

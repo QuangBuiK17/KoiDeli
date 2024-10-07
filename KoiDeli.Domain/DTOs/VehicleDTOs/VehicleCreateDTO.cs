@@ -8,5 +8,9 @@ namespace KoiDeli.Domain.DTOs.VehicleDTOs
 {
     public class VehicleCreateDTO
     {
+        public string? Name { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public Int64 VehicleVolume { get; set; }
     }
 }
