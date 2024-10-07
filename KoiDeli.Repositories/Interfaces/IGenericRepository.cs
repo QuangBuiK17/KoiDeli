@@ -14,6 +14,8 @@ namespace KoiDeli.Repositories.Interfaces
 
         Task<TEntity?> GetByIdAsync(int id, params Expression<Func<TEntity, object>>[] includes);
 
+        Task<List<TEntity>> SearchAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
+
         Task<TEntity> AddAsync(TEntity entity);
 
         Task<bool> UpdateRange(List<TEntity> entities);

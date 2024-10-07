@@ -10,6 +10,10 @@ namespace KoiDeli.Repositories.Interfaces
     {
         // add Interface vao day
         IAccountRepository AccountRepository { get; }
+        IKoiFishRepository KoiFishRepository { get; }
+        IBoxRepository BoxRepository { get; }
+        IBoxOptionRepository BoxOptionRepository { get; }
+       
 
 
         Task<int> SaveChangeAsync();

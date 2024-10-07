@@ -142,5 +142,23 @@ namespace KoiDeli.Repositories.Repositories
         {
             return _dbSet;
         }
+
+        public async Task<List<TEntity>> SearchAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            // Start by getting the IQueryable of the entity.
+            IQueryable<TEntity> query = GetQueryable();
+
+            // Include the related entities if any are specified.
+            if (includes != null && includes.Any())
+            {
+                query = includes.Aggregate(query, (current, include) => current.Include(include));
+            }
+
+            // Apply the filter predicate (search condition).
+            query = query.Where(predicate);
+
+            // Execute the query and return the result as a list.
+            return await query.ToListAsync();
+        }
     }
 }

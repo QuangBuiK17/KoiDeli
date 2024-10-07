@@ -4,6 +4,7 @@ using KoiDeli.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KoiDeli.Repositories.Migrations
 {
     [DbContext(typeof(KoiDeliDbContext))]
-    partial class KoiDeliDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241007033106_URLOrder")]
+    partial class URLOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +32,9 @@ namespace KoiDeli.Repositories.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BoxType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -53,9 +59,6 @@ namespace KoiDeli.Repositories.Migrations
 
                     b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Price")
                         .HasColumnType("bigint");

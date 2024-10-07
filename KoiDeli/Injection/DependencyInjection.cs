@@ -45,15 +45,27 @@ namespace KoiDeli.Injection
 
             // add repositories
             services.AddScoped<IAccountRepository,AccountRepository >();
+            services.AddScoped<IKoiFishRepository, KoiFishRepository>();
+            services.AddScoped<IBoxRepository, BoxRepository>();
+            services.AddScoped<IBoxOptionRepository, BoxOptionRepository >();
+
+
 
 
             // add generic repositories
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+            services.AddScoped<IGenericRepository<Box>, GenericRepository<Box>>();
+            services.AddScoped<IGenericRepository<BoxOption>, GenericRepository<BoxOption>>();
+            services.AddScoped<IGenericRepository<KoiFish>, GenericRepository<KoiFish>>();
 
             // add signInManager
 
             // add services
             services.AddScoped<IAuthenticationService, AuthenticationService >();
+            services.AddScoped<IPackingService, PackingService>();
+            services.AddScoped<IBoxService, BoxService>();
+            services.AddScoped<IKoiFishService, KoiFishService>();
+
 
             // add unitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -7,19 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\BoxDTOs\" />
-    <Folder Include="DTOs\KoiFishDTOs\" />
     <Folder Include="DTOs\DistanceDTOs\" />
-    <Folder Include="DTOs\BoxOptionDTOs\" />
-    <Folder Include="DTOs\BranchDTOs\" />
     <Folder Include="DTOs\FeedbackDTOs\" />
-    <Folder Include="DTOs\OrderTimelineDTOs\" />
-    <Folder Include="DTOs\TimelineDeliveryDTOs\" />
-    <Folder Include="DTOs\VehicleDTOs\" />
     <Folder Include="DTOs\PaymentDTOs\" />
-    <Folder Include="DTOs\PartnerShipmentDTOs\" />
-    <Folder Include="DTOs\OrderDetailDTOs\" />
-    <Folder Include="DTOs\OrderDTOs\" />
   </ItemGroup>
 
   <ItemGroup>
