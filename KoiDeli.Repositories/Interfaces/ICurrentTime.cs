@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KoiDeli.Services.MiddleWares
+namespace KoiDeli.Repositories.Interfaces
 {
-    public class ConfirmationTokenMiddleware
+    public interface ICurrentTime
     {
+        public DateTime GetCurrentTime();
     }
 }

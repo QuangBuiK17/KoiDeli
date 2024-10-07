@@ -8,8 +8,8 @@ namespace KoiDeli.Domain.Entities
 {
     public class BoxOption: BaseEntity
     {
-        public int FishID { get; set; }
-        public int BoxID { get; set; }
+        public int FishId { get; set; }
+        public int BoxId { get; set; }
         public string? Description { get; set; }
         public bool IsChecked { get; set; } = false;
 

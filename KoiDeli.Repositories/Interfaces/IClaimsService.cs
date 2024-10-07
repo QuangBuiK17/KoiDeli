@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KoiDeli.Services.MiddleWares
+namespace KoiDeli.Repositories.Interfaces
 {
-    public class PerformanceTimeMiddleware
+    public interface IClaimsService
     {
+        public int GetCurrentUserId { get; }
+
     }
 }

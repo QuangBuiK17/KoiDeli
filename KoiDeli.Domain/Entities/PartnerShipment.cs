@@ -14,5 +14,8 @@ namespace KoiDeli.Domain.Entities
         public DateTime? Completed { get; set; }
         public string? Description { get; set; } = null;
         public Int64 Price { get; set; }
+
+        //relation
+        public virtual OrderDetail? OrderDetail { get; set; }
     }
 }
