@@ -21,7 +21,8 @@ namespace KoiDeli.Repositories.Interfaces
         IOrderRepository OrderRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }
 
-        
+        ITimelineDeliveryRepository TimelineDeliveryRepository { get; }
+        IOrderTimelineRepository OrderTimelineRepository { get; }
        
 
 

@@ -55,6 +55,9 @@ namespace KoiDeli.Injection
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
+            services.AddScoped<IOrderTimelineRepository, OrderTimelineRepository>();
+            services.AddScoped<ITimelineDeliveryRepository, TimelineDeliveryRepository>();
+
 
             // add generic repositories
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
@@ -67,6 +70,9 @@ namespace KoiDeli.Injection
 
             services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
             services.AddScoped<IGenericRepository<OrderDetail>, GenericRepository<OrderDetail>>();
+
+            services.AddScoped<IGenericRepository<TimelineDelivery>, GenericRepository<TimelineDelivery>>();
+            services.AddScoped<IGenericRepository<OrderTimeline>, GenericRepository<OrderTimeline>>();
 
             // add signInManager
 
@@ -82,7 +88,8 @@ namespace KoiDeli.Injection
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
 
-
+            services.AddScoped<IOrderTimelineService, OrderTimelineService>();
+            services.AddScoped<ITimelineDeliveryService, TimelineDeliveryService>();
 
 
             // add unitOfWork
