@@ -52,8 +52,8 @@ namespace KoiDeli.Injection
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<IPartnerShipmentRepository, PartnerShipmentRepository>();
 
-
-
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
 
             // add generic repositories
@@ -65,6 +65,9 @@ namespace KoiDeli.Injection
             services.AddScoped<IGenericRepository<Branch>, GenericRepository<Branch>>();
             services.AddScoped<IGenericRepository<PartnerShipment>, GenericRepository<PartnerShipment>>();
 
+            services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
+            services.AddScoped<IGenericRepository<OrderDetail>, GenericRepository<OrderDetail>>();
+
             // add signInManager
 
             // add services
@@ -75,6 +78,11 @@ namespace KoiDeli.Injection
             services.AddScoped<IPartnerShipmentService, PartnerShipmentService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IBranchService, BranchService>();
+            services.AddScoped<IBoxOptionService, BoxOptionService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
+
+
 
 
             // add unitOfWork

@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using KoiDeli.Domain.DTOs.AccountDTOs;
 using KoiDeli.Domain.DTOs.BoxDTOs;
+using KoiDeli.Domain.DTOs.BoxOptionDTOs;
 using KoiDeli.Domain.DTOs.BranchDTOs;
 using KoiDeli.Domain.DTOs.KoiFishDTOs;
+using KoiDeli.Domain.DTOs.OrderDetailDTOs;
+using KoiDeli.Domain.DTOs.OrderDTOs;
 using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
 using KoiDeli.Domain.DTOs.VehicleDTOs;
 using KoiDeli.Domain.Entities;
@@ -29,6 +32,9 @@ namespace KoiDeli.Services.Mapper
             CreateMap<PartnerShipment, PartnerShipmentDTO>().ReverseMap();
             CreateMap<Vehicle, VehicleDTO>().ReverseMap();
             CreateMap<Branch, BranchDTO>().ReverseMap();
+            CreateMap<BoxOption, BoxOptionDTO>().ReverseMap();
+            CreateMap<Order, OrderDTO>().ReverseMap();
+            CreateMap<OrderDetail, OrderDetailDTO>().ReverseMap();
 
 
 
@@ -38,6 +44,10 @@ namespace KoiDeli.Services.Mapper
             CreateMap<PartnerShipment, PartnerShipmentCreateDTO>().ReverseMap();
             CreateMap<Vehicle, VehicleCreateDTO>().ReverseMap();
             CreateMap<Branch, BranchCreateDTO>().ReverseMap();
+            CreateMap<BoxOption, BoxOptionCreateDTO>().ReverseMap();
+            CreateMap<Order, OrderCreateDTO>().ReverseMap();
+            CreateMap<OrderDetail, OrderDetailCreateDTO>().ReverseMap();
+
             //Update
             CreateMap<User, AccountUpdateDTO>().ReverseMap();
             CreateMap<Box, BoxUpdateDTO>().ReverseMap();
@@ -45,6 +55,9 @@ namespace KoiDeli.Services.Mapper
             CreateMap<Vehicle, VehicleUpdateDTO>().ReverseMap();
             CreateMap<Branch, BranchUpdateDTO>().ReverseMap();
             CreateMap<PartnerShipment, PartnerShipmentUpdateDTO>().ReverseMap();
+            CreateMap<BoxOption, BoxOptionUpdateDTO>().ReverseMap();
+            CreateMap<Order, OrderUpdateDTO>().ReverseMap();
+            CreateMap<OrderDetail, OrderDetailUpdateDTO>().ReverseMap();
             //Delete ko can
 
             //Pagination

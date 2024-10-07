@@ -18,6 +18,9 @@ namespace KoiDeli.Repositories.Interfaces
         IBranchRepository BranchRepository { get; }
         IPartnerShipmentRepository PartnerShipmentRepository { get; }
 
+        IOrderRepository OrderRepository { get; }
+        IOrderDetailRepository OrderDetailRepository { get; }
+
         
        
 

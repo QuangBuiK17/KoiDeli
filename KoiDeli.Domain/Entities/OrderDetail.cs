@@ -13,9 +13,7 @@ namespace KoiDeli.Domain.Entities
         public Int64 TotalShippingFee { get;set;}
         public int ParnerShipmentId { get; set;}
         public int BoxOptionId { get; set;}
-        public int FishId { get; set;}
         public int OrderId { get; set;}
-        public int DistanceId { get; set;}
         public bool IsComplete { get; set;} = false;
 
         //relation

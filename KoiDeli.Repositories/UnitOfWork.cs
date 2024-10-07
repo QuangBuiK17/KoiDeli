@@ -15,6 +15,8 @@ namespace KoiDeli.Repositories
         private readonly IPartnerShipmentRepository _partnerShipmentRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly IVehicleRepository _vehicleRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly IOrderRepository _orderRepository;
 
         // add vao UnitOfWork
         public UnitOfWork(KoiDeliDbContext koiDeliDbContext,
@@ -24,7 +26,9 @@ namespace KoiDeli.Repositories
             IKoiFishRepository koiFishRepository,
             IPartnerShipmentRepository partnerShipmentRepository,
             IVehicleRepository vehicleRepository,
-            IBranchRepository branchRepository)
+            IBranchRepository branchRepository,
+            IOrderRepository orderRepository,
+            IOrderDetailRepository orderDetailRepository)
         {
             _koiDeliDbContext = koiDeliDbContext;
             _accountRepository = accountRepository;
@@ -34,6 +38,8 @@ namespace KoiDeli.Repositories
             _partnerShipmentRepository = partnerShipmentRepository;
             _vehicleRepository = vehicleRepository;
             _branchRepository = branchRepository;
+            _orderRepository = orderRepository;
+            _orderDetailRepository = orderDetailRepository;
         }
 
 
@@ -44,6 +50,9 @@ namespace KoiDeli.Repositories
         public IBranchRepository BranchRepository => _branchRepository;
         public IVehicleRepository VehicleRepository => _vehicleRepository;
         public IPartnerShipmentRepository PartnerShipmentRepository => _partnerShipmentRepository;
+
+        public IOrderDetailRepository OrderDetailRepository => _orderDetailRepository;
+        public IOrderRepository OrderRepository => _orderRepository;
 
 
 
