@@ -34,13 +34,13 @@ namespace KoiDeli.Controllers
             var result = await _walletService.GetWalletAsync();
             return Ok(result);
         }
-        [HttpGet]
+        [HttpGet("enable")]
         public async Task<IActionResult> ViewAllWalletsEnabled()
         {
             var result = await _walletService.GetWalletEnabledAsync();
             return Ok(result);
         }
-        [HttpGet]
+        [HttpGet("id")]
         public async Task<IActionResult> ViewWalletById(int id)
         {
             var result = await _walletService.GetWalletByIdAsync(id);

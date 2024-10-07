@@ -33,13 +33,13 @@ namespace KoiDeli.Controllers
             var result = await _transactionService.GetAsync();
             return Ok(result);
         }
-        [HttpGet]
-        public async Task<IActionResult> ViewAllTrấnctionsEnabled()
+        [HttpGet("enable")]
+        public async Task<IActionResult> ViewAllTranctionsEnabled()
         {
             var result = await _transactionService.GetEnabledAsync();
             return Ok(result);
         }
-        [HttpGet]
+        [HttpGet("id")]
         public async Task<IActionResult> ViewTrấnctionById(int id)
         {
             var result = await _transactionService.GetByIdAsync(id);

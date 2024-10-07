@@ -34,13 +34,13 @@ namespace KoiDeli.Controllers
             var result = await _distanceService.GetDistancesAsync();
             return Ok(result);
         }
-        [HttpGet]
+        [HttpGet("enable")]
         public async Task<IActionResult> ViewAllDistancesEnabled()
         {
             var result = await _distanceService.GetDistancesEnabledAsync();
             return Ok(result);
         }
-        [HttpGet]
+        [HttpGet("id")]
         public async Task<IActionResult> ViewDistanceById(int id)
         {
             var result = await _distanceService.GetDistanceByIdAsync(id);

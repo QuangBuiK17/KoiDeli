@@ -22,7 +22,7 @@ namespace KoiDeli.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchBoxesByName(string name)

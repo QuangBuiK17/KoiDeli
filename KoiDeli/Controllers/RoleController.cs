@@ -35,7 +35,7 @@ namespace KoiDeli.Controllers
             var result = await _roleService.GetRolesAsync();
             return Ok(result);
         } 
-        [HttpGet]
+        [HttpGet("enable")]
         public async Task<IActionResult> ViewAllRolesEnabled()
         {
             var result = await _roleService.GetRolesEnabledAsync();

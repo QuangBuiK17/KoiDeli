@@ -43,7 +43,7 @@ namespace KoiDeli.Controllers
             var result = await _userService.GetAsync();
             return Ok(result);
         }
-        [HttpGet]
+        [HttpGet("id")]
         public async Task<IActionResult> ViewUserById(int id)
         {
             var result = await _userService.GetByIdAsync(id);
