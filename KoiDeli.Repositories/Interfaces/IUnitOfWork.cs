@@ -10,6 +10,7 @@ namespace KoiDeli.Repositories.Interfaces
     {
         // add Interface vao day
         IAccountRepository AccountRepository { get; }
+<<<<<<< Updated upstream
         IKoiFishRepository KoiFishRepository { get; }
         IBoxRepository BoxRepository { get; }
         IBoxOptionRepository BoxOptionRepository { get; }
@@ -24,6 +25,15 @@ namespace KoiDeli.Repositories.Interfaces
         ITimelineDeliveryRepository TimelineDeliveryRepository { get; }
         IOrderTimelineRepository OrderTimelineRepository { get; }
        
+=======
+        IRoleRepository RoleRepository { get; }
+        IDistanceRepository DistanceRepository { get; }
+        IPartnerShipmentRepository PartnerShipmentRepository { get; }
+        IWalletRepository WalletRepository { get; }
+        ITransactionRepository TransactionRepository { get; }
+        IUserRepository UserRepository { get; }
+
+>>>>>>> Stashed changes
 
 
         Task<int> SaveChangeAsync();

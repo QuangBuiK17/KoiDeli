@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Repositories.Interfaces
 {
-    public interface IPartnerShipmentRepository : IGenericRepository<PartnerShipment>
+    public interface IDistanceRepository : IGenericRepository<Distance>
     {
-<<<<<<< Updated upstream
-=======
-        Task<List<PartnerShipment>> GetPartnerEnabledAsync();
->>>>>>> Stashed changes
+        Task<List<Distance>> GetDistanceEnabledAsync();
     }
 }

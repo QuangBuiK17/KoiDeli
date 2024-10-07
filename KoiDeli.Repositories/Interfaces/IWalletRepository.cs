@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Repositories.Interfaces
 {
-    public interface IPartnerShipmentRepository : IGenericRepository<PartnerShipment>
+    public interface IWalletRepository : IGenericRepository<Wallet>
     {
-<<<<<<< Updated upstream
-=======
-        Task<List<PartnerShipment>> GetPartnerEnabledAsync();
->>>>>>> Stashed changes
+        Task<bool> CheckUserIdExisted(int id);
+        Task<List<Wallet>> GetWalletssEnabledAsync();
     }
 }

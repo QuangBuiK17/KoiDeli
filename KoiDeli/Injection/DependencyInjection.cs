@@ -41,7 +41,9 @@ namespace KoiDeli.Injection
             services.AddMemoryCache();
 
             // add repositories
+<<<<<<< HEAD
             services.AddScoped<IAccountRepository,AccountRepository >();
+<<<<<<< Updated upstream
             services.AddScoped<IKoiFishRepository, KoiFishRepository>();
             services.AddScoped<IBoxRepository, BoxRepository>();
             services.AddScoped<IBoxOptionRepository, BoxOptionRepository >();
@@ -54,10 +56,19 @@ namespace KoiDeli.Injection
 
             services.AddScoped<IOrderTimelineRepository, OrderTimelineRepository>();
             services.AddScoped<ITimelineDeliveryRepository, TimelineDeliveryRepository>();
+=======
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IDistanceRepository, DistanceRepository>();
+            services.AddScoped<IPartnerShipmentRepository, PartnerShipmentRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+>>>>>>> Stashed changes
 
 
             // add generic repositories
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+<<<<<<< Updated upstream
             services.AddScoped<IGenericRepository<Box>, GenericRepository<Box>>();
             services.AddScoped<IGenericRepository<BoxOption>, GenericRepository<BoxOption>>();
             services.AddScoped<IGenericRepository<KoiFish>, GenericRepository<KoiFish>>();
@@ -70,11 +81,27 @@ namespace KoiDeli.Injection
 
             services.AddScoped<IGenericRepository<TimelineDelivery>, GenericRepository<TimelineDelivery>>();
             services.AddScoped<IGenericRepository<OrderTimeline>, GenericRepository<OrderTimeline>>();
+=======
+            services.AddScoped<IGenericRepository<Role>, GenericRepository<Role>>();
+            services.AddScoped<IGenericRepository<Distance>, GenericRepository<Distance>>();
+            services.AddScoped<IGenericRepository<PartnerShipment>, GenericRepository<PartnerShipment>>();
+            services.AddScoped<IGenericRepository<Wallet>, GenericRepository<Wallet>>();
+            services.AddScoped<IGenericRepository<Transaction>, GenericRepository<Transaction>>();
+            services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+=======
+
+
+            // add generic repositories
+
+>>>>>>> fc180e91848f1562ae48d3d8edc3b7f2970e0a79
+>>>>>>> Stashed changes
 
             // add signInManager
 
             // add services
+<<<<<<< HEAD
             services.AddScoped<IAuthenticationService, AuthenticationService >();
+<<<<<<< Updated upstream
             services.AddScoped<IPackingService, PackingService>();
             services.AddScoped<IBoxService, BoxService>();
             services.AddScoped<IKoiFishService, KoiFishService>();
@@ -88,6 +115,17 @@ namespace KoiDeli.Injection
             services.AddScoped<IOrderTimelineService, OrderTimelineService>();
             services.AddScoped<ITimelineDeliveryService, TimelineDeliveryService>();
 
+=======
+            services.AddScoped<IRoleService, RoleService >();
+            services.AddScoped<IDistanceService, DistanceService >();
+            services.AddScoped<IPartnerShipmentService, PartnerShipmentService >();
+            services.AddScoped<IWalletService, WalletService >();
+            services.AddScoped<ITransactionService, TransactionService >();
+            services.AddScoped<IUserService, UserService >();
+=======
+
+>>>>>>> fc180e91848f1562ae48d3d8edc3b7f2970e0a79
+>>>>>>> Stashed changes
 
             // add unitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();

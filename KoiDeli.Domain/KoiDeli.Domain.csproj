@@ -7,9 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< Updated upstream
     <Folder Include="DTOs\DistanceDTOs\" />
+=======
+    <Folder Include="DTOs\AccountDTOs\" />
+    <Folder Include="DTOs\BoxDTOs\" />
+    <Folder Include="DTOs\KoiFishDTOs\" />
+    <Folder Include="DTOs\BoxOptionDTOs\" />
+    <Folder Include="DTOs\BranchDTOs\" />
+>>>>>>> Stashed changes
     <Folder Include="DTOs\FeedbackDTOs\" />
     <Folder Include="DTOs\PaymentDTOs\" />
+<<<<<<< Updated upstream
+=======
+    <Folder Include="DTOs\OrderDetailDTOs\" />
+    <Folder Include="DTOs\OrderDTOs\" />
+>>>>>>> Stashed changes
   </ItemGroup>
 
   <ItemGroup>

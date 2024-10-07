@@ -9,7 +9,11 @@ namespace KoiDeli.Domain.DTOs.VehicleDTOs
     public class VehicleDTO
     {
         public int Id { get; set; }
+<<<<<<< Updated upstream
         public string? Name { get; set; }
+=======
+        public string Name { get; set; }
+>>>>>>> Stashed changes
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public Int64 VehicleVolume { get; set; }

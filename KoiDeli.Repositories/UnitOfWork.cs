@@ -8,6 +8,7 @@ namespace KoiDeli.Repositories
     {
         private readonly KoiDeliDbContext _koiDeliDbContext;
         private readonly IAccountRepository _accountRepository;
+<<<<<<< Updated upstream
         private readonly IBoxRepository _boxRepository;
         private readonly IBoxOptionRepository _boxOptionRepository;
         private readonly IKoiFishRepository _koiFishRepository;
@@ -45,10 +46,41 @@ namespace KoiDeli.Repositories
             _orderDetailRepository = orderDetailRepository;
             _timelineDeliveryRepository = timelineDeliveryRepository;
             _orderTimelineRepository = orderTimelineRepository;
+=======
+        private readonly IRoleRepository _roleRepository;
+        private readonly IDistanceRepository _distanceRepository;
+        private readonly IPartnerShipmentRepository _partnerShipmentRepository;
+        private readonly IWalletRepository _walletRepository;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly IUserRepository _userRepository;
+        
+
+
+        // add vao UnitOfWork
+        public UnitOfWork(KoiDeliDbContext koiDeliDbContext,
+                          IAccountRepository accountRepository,
+                          IRoleRepository roleRepository,
+                          IDistanceRepository distanceRepository,
+                          IPartnerShipmentRepository partnerShipmentRepository,
+                          IWalletRepository walletRepository,
+                          ITransactionRepository transactionRepository,
+                          IUserRepository userRepository)
+        {
+            _koiDeliDbContext = koiDeliDbContext;
+            _accountRepository = accountRepository;
+            _roleRepository = roleRepository;
+            _distanceRepository = distanceRepository;
+            _partnerShipmentRepository = partnerShipmentRepository;
+            _walletRepository = walletRepository;
+            _transactionRepository = transactionRepository;
+            _userRepository = userRepository;
+            
+>>>>>>> Stashed changes
         }
 
 
         public IAccountRepository AccountRepository => _accountRepository;
+<<<<<<< Updated upstream
         public IBoxRepository BoxRepository => _boxRepository;
         public IBoxOptionRepository BoxOptionRepository => _boxOptionRepository;    
         public IKoiFishRepository KoiFishRepository => _koiFishRepository;
@@ -62,6 +94,24 @@ namespace KoiDeli.Repositories
         public IOrderTimelineRepository OrderTimelineRepository => _orderTimelineRepository;
         public ITimelineDeliveryRepository TimelineDeliveryRepository => _timelineDeliveryRepository;
 
+=======
+        public IRoleRepository RoleRepository => _roleRepository;
+        public IDistanceRepository DistanceRepository => _distanceRepository;
+        public IPartnerShipmentRepository PartnerShipmentRepository => _partnerShipmentRepository;
+        public IWalletRepository WalletRepository => _walletRepository;
+        public ITransactionRepository TransactionRepository => _transactionRepository;
+        public IUserRepository UserRepository => _userRepository;
+=======
+
+        public UnitOfWork(KoiDeliDbContext koiDeliDbContext)
+        {
+            _koiDeliDbContext = koiDeliDbContext;
+        }
+
+
+
+>>>>>>> fc180e91848f1562ae48d3d8edc3b7f2970e0a79
+>>>>>>> Stashed changes
 
 
         //save changes
