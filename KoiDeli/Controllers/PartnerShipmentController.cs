@@ -65,6 +65,20 @@ namespace KoiDeli.Controllers
             return Ok(c);
         }
 
+        // [Authorize(Roles = "Delivery")]
+        [HttpPut("complete")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdatePartnerShipmentComplete(int id, [FromBody] PartnerUpdateCompleteDTO updateDto)
+        {
+            var c = await _partnerShipmentService.UpdatePartnerCompleteAsync(id, updateDto);
+            if (!c.Success)
+            {
+                return BadRequest(c);
+            }
+            return Ok(c);
+        }
+
         //  [Authorize(Roles = "Manager, Customer")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
