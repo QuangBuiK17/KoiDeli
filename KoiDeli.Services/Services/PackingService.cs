@@ -73,7 +73,8 @@ namespace KoiDeli.Services.Services
                                 {
                                     boxWithDetails = new BoxWithFishDetailDTO
                                     {
-                                        Box = box
+                                        Box = box,
+                                        BoxPrice = box.Price  // Thiết lập giá của hộp
                                     };
                                     usedBoxes.Add(boxWithDetails);
                                 }
@@ -83,6 +84,7 @@ namespace KoiDeli.Services.Services
                                 break;
                             }
                         }
+
 
                         if (!placed)
                         {

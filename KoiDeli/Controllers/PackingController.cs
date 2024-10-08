@@ -19,31 +19,37 @@ namespace KoiDeli.Controllers
         {
             var result = await _packingService.OptimizePackingAsync(request.FishList, request.BoxList);
 
-            // Kiểm tra xem kết quả có thành công hay không
             if (!result.Success)
             {
-                // Trả về lỗi nếu không thành công
                 return BadRequest(new { message = result.Message, errors = result.ErrorMessages });
             }
 
-            // Trả về dữ liệu từ result.Data
-            return Ok(result.Data.Select(b => new
+            // Calculate the total price of all used boxes
+            var totalPrice = result.Data.Sum(box => box.TotalPrice);
+
+            // Return box details along with total price
+            return Ok(new
             {
-                BoxName = b.Box.Name,
-                BoxId = b.Box.Id,
-                MaxVolume = b.Box.MaxVolume,
-                RemainingVolume = b.Box.RemainingVolume,
-                TotalFish = b.TotalFish,
-  //              Price = b.price,
-                Fishes = b.Fishes.Select(f => new
+                Boxes = result.Data.Select(b => new
                 {
-                    FishId = f.Id,
-                    FishSize = f.Size,
-                    FishVolume = f.Volume,
-                    FishDescription = f.Description
-                })
-            }));
+                    BoxName = b.Box.Name,
+                    BoxId = b.Box.Id,
+                    MaxVolume = b.Box.MaxVolume,
+                    RemainingVolume = b.Box.RemainingVolume,
+                    TotalFish = b.Fishes.Count,
+                    Price = b.BoxPrice,
+                    Fishes = b.Fishes.Select(f => new
+                    {
+                        FishId = f.Id,
+                        FishSize = f.Size,
+                        FishVolume = f.Volume,
+                        FishDescription = f.Description
+                    })
+                }),
+                TotalPrice = totalPrice  // Include total price in the response
+            });
         }
+
 
     }
 }
