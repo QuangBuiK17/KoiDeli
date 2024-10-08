@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KoiDeli.Domain.DTOs.KoiFishDTOs
+namespace KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs
 {
-    public class KoiFishDTO
+    public class KoiFishModelOptimize
     {
-        public string? Id { get; set; }
         public string? Size { get; set; }
         public Int64 Volume { get; set; }
         public string? Description { get; set; }
