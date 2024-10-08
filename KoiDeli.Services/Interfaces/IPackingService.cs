@@ -13,6 +13,6 @@ namespace KoiDeli.Services.Interfaces
 {
     public interface IPackingService
     {
-       public Task<ApiResult<List<BoxWithFishDetailDTO>>> OptimizePackingAsync(List<KoiFish> fishList, List<Box> boxList);       
+       public Task<ApiResult<List<BoxWithFishDetailDTO>>> OptimizePackingAsync(List<KoiFishModelOptimize> fishList, List<BoxModelOptimize> boxList);       
     }
 }

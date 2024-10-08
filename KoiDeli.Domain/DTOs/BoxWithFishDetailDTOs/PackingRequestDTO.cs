@@ -9,7 +9,7 @@ namespace KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs
 {
     public class PackingRequestDTO
     {
-        public List<KoiFish> FishList { get; set; }
-        public List<Box> BoxList { get; set; }
+        public List<KoiFishModelOptimize> FishList { get; set; }
+        public List<BoxModelOptimize> BoxList { get; set; }
     }
 }

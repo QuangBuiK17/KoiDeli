@@ -9,8 +9,8 @@ namespace KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs
 {
     public class BoxWithFishDetailDTO
     {
-        public Box? Box { get; set; }
-        public List<KoiFish> Fishes { get; set; } = new List<KoiFish>();
+        public BoxModelOptimize? Box { get; set; }
+        public List<KoiFishModelOptimize> Fishes { get; set; } = new List<KoiFishModelOptimize>();
         public int TotalFish => Fishes.Count;
     }
 }

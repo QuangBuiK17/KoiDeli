@@ -44,71 +44,63 @@ namespace KoiDeli.Services.Services
              
         }
 
-        public async Task<ApiResult<List<BoxWithFishDetailDTO>>> OptimizePackingAsync(List<KoiFish> fishList, List<Box> boxList)
+        public async Task<ApiResult<List<BoxWithFishDetailDTO>>> OptimizePackingAsync(List<KoiFishModelOptimize> fishList, List<BoxModelOptimize> boxList)
         {
             var response = new ApiResult<List<BoxWithFishDetailDTO>>();
-
             try
             {
-                // Sắp xếp danh sách cá theo volume giảm dần
                 var sortedFishList = fishList.OrderByDescending(f => f.Volume).ToList();
-
-                // Sắp xếp hộp theo chi phí thấp nhất trước
                 var sortedBoxList = boxList.OrderBy(b => b.Price).ToList();
 
                 List<BoxWithFishDetailDTO> usedBoxes = new List<BoxWithFishDetailDTO>();
 
                 foreach (var fish in sortedFishList)
                 {
-                    bool placed = false;
-                    foreach (var box in sortedBoxList)
-                    {
-                        if (box.CanFitFish(fish))
-                        {
-                            box.AddFish(fish);
+                    int remainingQuantity = (int)fish.Quantity;
 
-                            var boxWithDetails = usedBoxes.FirstOrDefault(b => b.Box.Id == box.Id);
-                            if (boxWithDetails == null)
+                    while (remainingQuantity > 0)
+                    {
+                        bool placed = false;
+
+                        foreach (var box in sortedBoxList)
+                        {
+                            if (box.CanFitFish(fish))
                             {
-                                boxWithDetails = new BoxWithFishDetailDTO
+                                remainingQuantity = box.AddFish(fish);
+
+                                var boxWithDetails = usedBoxes.FirstOrDefault(b => b.Box.Id == box.Id);
+                                if (boxWithDetails == null)
                                 {
-                                    Box = box
-                                };
-                                usedBoxes.Add(boxWithDetails);
+                                    boxWithDetails = new BoxWithFishDetailDTO
+                                    {
+                                        Box = box
+                                    };
+                                    usedBoxes.Add(boxWithDetails);
+                                }
+                                boxWithDetails.Fishes.Add(fish);
+
+                                placed = true;
+                                break;
                             }
-                            boxWithDetails.Fishes.Add(fish);
-
-                            placed = true;
-                            break;
                         }
-                    }
 
-                    if (!placed)
-                    {
-                        // Nếu không có hộp nào phù hợp, tạo hộp mới (chỉ trên bộ nhớ)
-                        var newBox = new Box
+                        if (!placed)
                         {
-                            MaxVolume = sortedBoxList.First().MaxVolume,
-                            Price = sortedBoxList.First().Price
-                        };
-                        newBox.AddFish(fish);
+                            // Tạo hộp mới để chứa cá còn lại
+                            var newBox = new BoxModelOptimize
+                            {
+                                MaxVolume = sortedBoxList.First().MaxVolume,
+                                Price = sortedBoxList.First().Price
+                            };
+                            remainingQuantity = newBox.AddFish(fish);
 
-                        var boxWithDetails = new BoxWithFishDetailDTO
-                        {
-                            Box = newBox
-                        };
-                        boxWithDetails.Fishes.Add(fish);
-                        usedBoxes.Add(boxWithDetails);
-                    }
-                }
-
-                // In ra kết quả thay vì lưu vào CSDL
-                foreach (var usedBox in usedBoxes)
-                {
-                    Console.WriteLine($"Box {usedBox.Box.Id} (MaxVolume: {usedBox.Box.MaxVolume}, Price: {usedBox.Box.Price}):");
-                    foreach (var fish in usedBox.Fishes)
-                    {
-                        Console.WriteLine($"\tFish {fish.Id} (Volume: {fish.Volume}, Size: {fish.Size})");
+                            var boxWithDetails = new BoxWithFishDetailDTO
+                            {
+                                Box = newBox
+                            };
+                            boxWithDetails.Fishes.Add(fish);
+                            usedBoxes.Add(boxWithDetails);
+                        }
                     }
                 }
 
@@ -125,6 +117,7 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
+
 
     }
 }
