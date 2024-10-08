@@ -36,17 +36,24 @@ namespace KoiDeli.Controllers
                     BoxId = b.Box.Id,
                     MaxVolume = b.Box.MaxVolume,
                     RemainingVolume = b.Box.RemainingVolume,
-                    TotalFish = b.Fishes.Count,
+
+                    // TotalFish bằng tổng quantity của từng loại cá
+                    TotalFish = b.Fishes.Sum(f => f.Quantity),
+
                     Price = b.BoxPrice,
+
                     Fishes = b.Fishes.Select(f => new
                     {
                         FishId = f.Id,
                         FishSize = f.Size,
                         FishVolume = f.Volume,
-                        FishDescription = f.Description
+                        FishDescription = f.Description,
+
+                        // Hiển thị Quantity của từng loại cá
+                        Quantity = f.Quantity
                     })
                 }),
-                TotalPrice = totalPrice  // Include total price in the response
+                TotalPrice = totalPrice
             });
         }
 
