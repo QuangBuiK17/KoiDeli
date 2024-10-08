@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace KoiDeli.Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class DatabaseKoi : Migration
+    public partial class databaseKoide : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace KoiDeli.Repositories.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BoxType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MaxVolume = table.Column<long>(type: "bigint", nullable: false),
                     Price = table.Column<long>(type: "bigint", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -82,7 +82,7 @@ namespace KoiDeli.Repositories.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Size = table.Column<long>(type: "bigint", nullable: false),
+                    Size = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Volume = table.Column<long>(type: "bigint", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -104,6 +104,7 @@ namespace KoiDeli.Repositories.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
@@ -293,6 +294,10 @@ namespace KoiDeli.Repositories.Migrations
                     ShippingTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ShippingStart = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ShippingEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    URLCer1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    URLCer2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    URLCer3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    URLCer4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
@@ -385,9 +390,7 @@ namespace KoiDeli.Repositories.Migrations
                     TotalShippingFee = table.Column<long>(type: "bigint", nullable: false),
                     ParnerShipmentId = table.Column<int>(type: "int", nullable: false),
                     BoxOptionId = table.Column<int>(type: "int", nullable: false),
-                    FishId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    DistanceId = table.Column<int>(type: "int", nullable: false),
                     IsComplete = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KoiDeli.Repositories.Migrations
 {
     [DbContext(typeof(KoiDeliDbContext))]
-    [Migration("20241003104344_DatabaseKoi")]
-    partial class DatabaseKoi
+    [Migration("20241008054410_databaseKoide")]
+    partial class databaseKoide
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,9 +32,6 @@ namespace KoiDeli.Repositories.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("BoxType")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
@@ -59,6 +56,9 @@ namespace KoiDeli.Repositories.Migrations
 
                     b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Price")
                         .HasColumnType("bigint");
@@ -275,8 +275,8 @@ namespace KoiDeli.Repositories.Migrations
                     b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Volume")
                         .HasColumnType("bigint");
@@ -357,6 +357,18 @@ namespace KoiDeli.Repositories.Migrations
                     b.Property<long>("TotalShippingFee")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("URLCer1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("URLCer2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("URLCer3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("URLCer4")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
@@ -392,12 +404,6 @@ namespace KoiDeli.Repositories.Migrations
 
                     b.Property<DateTime?>("DeletionDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("DistanceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FishId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
@@ -537,6 +543,9 @@ namespace KoiDeli.Repositories.Migrations
 
                     b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("Price")
                         .HasColumnType("bigint");
