@@ -8,7 +8,8 @@ namespace KoiDeli.Domain.DTOs.PartnerShipmentDTOs
 {
     public class PartnerDTO
     {
-        public int id {  get; set; }
+        public int Id {  get; set; }
+        public string? Name { get; set; }
         public bool isDeleted { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
