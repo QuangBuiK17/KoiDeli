@@ -8,7 +8,7 @@ namespace KoiDeli.Domain.DTOs.KoiFishDTOs
 {
     public class KoiFishDTO
     {
-        public string? Id { get; set; }
+        public int Id { get; set; }
         public string? Size { get; set; }
         public Int64 Volume { get; set; }
         public string? Description { get; set; }
