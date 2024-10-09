@@ -27,6 +27,7 @@ namespace KoiDeli.Repositories.Interfaces
         IWalletRepository WalletRepository { get; }
         ITransactionRepository TransactionRepository { get; }
         IUserRepository UserRepository { get; }
+        IFeedbackRepository FeedbackRepository { get; }
 
 
 

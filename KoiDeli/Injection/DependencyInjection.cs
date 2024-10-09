@@ -63,6 +63,7 @@ namespace KoiDeli.Injection
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
 
             // add generic repositories
@@ -85,6 +86,7 @@ namespace KoiDeli.Injection
             services.AddScoped<IGenericRepository<Wallet>, GenericRepository<Wallet>>();
             services.AddScoped<IGenericRepository<Transaction>, GenericRepository<Transaction>>();
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
+            services.AddScoped<IGenericRepository<Feedback>, GenericRepository<Feedback>>();
 
             // add signInManager
 
@@ -108,6 +110,7 @@ namespace KoiDeli.Injection
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFeedbackService, FeedbackService>();
 
 
             // add unitOfWork

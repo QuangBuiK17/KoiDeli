@@ -4,6 +4,7 @@ using KoiDeli.Domain.DTOs.BoxDTOs;
 using KoiDeli.Domain.DTOs.BoxOptionDTOs;
 using KoiDeli.Domain.DTOs.BranchDTOs;
 using KoiDeli.Domain.DTOs.DistanceDTOs;
+using KoiDeli.Domain.DTOs.FeedbackDTOs;
 using KoiDeli.Domain.DTOs.KoiFishDTOs;
 using KoiDeli.Domain.DTOs.OrderDetailDTOs;
 using KoiDeli.Domain.DTOs.OrderDTOs;
@@ -49,6 +50,7 @@ namespace KoiDeli.Services.Mapper
             CreateMap<Wallet, WalletDTO>().ReverseMap();
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<Feedback, FeedbackDTO>().ReverseMap();
 
 
             //Create
@@ -67,6 +69,7 @@ namespace KoiDeli.Services.Mapper
             CreateMap<Wallet, WalletCreateDTO>().ReverseMap();
             CreateMap<Transaction, TransactionCreateDTO>().ReverseMap();
             CreateMap<User, UserCreateDTO>().ReverseMap();
+            CreateMap<Feedback, FeedbackCreateDTO>().ReverseMap();
 
             //Update
             CreateMap<User, AccountUpdateDTO>().ReverseMap();
@@ -86,6 +89,7 @@ namespace KoiDeli.Services.Mapper
             CreateMap<Wallet, WalletUpdateDTO>().ReverseMap();
             CreateMap<Transaction, TransactionUpdateDTO>().ReverseMap();
             CreateMap<User, UserUpdateDTO>().ReverseMap();
+            CreateMap<Feedback, FeedbackUpdateDTO>().ReverseMap();
             //Delete ko can
 
             //Pagination
