@@ -24,6 +24,7 @@ namespace KoiDeli.Repositories
         private readonly IWalletRepository _walletRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IFeedbackRepository _feedbackRepository;
 
         // add vao UnitOfWork
         public UnitOfWork(KoiDeliDbContext koiDeliDbContext,
@@ -42,7 +43,8 @@ namespace KoiDeli.Repositories
             IPartnerShipmentRepository partnerShipmentRepository,
             IWalletRepository walletRepository,
             ITransactionRepository transactionRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IFeedbackRepository feedbackRepository)
         {
             _koiDeliDbContext = koiDeliDbContext;
             _accountRepository = accountRepository;
@@ -62,6 +64,7 @@ namespace KoiDeli.Repositories
             _walletRepository = walletRepository;
             _transactionRepository = transactionRepository;
             _userRepository = userRepository;
+            _feedbackRepository = feedbackRepository;
         }
 
 
@@ -82,6 +85,7 @@ namespace KoiDeli.Repositories
         public IWalletRepository WalletRepository => _walletRepository;
         public ITransactionRepository TransactionRepository => _transactionRepository;
         public IUserRepository UserRepository => _userRepository;
+        public IFeedbackRepository FeedbackRepository => _feedbackRepository;
 
 
 
