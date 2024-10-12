@@ -108,6 +108,7 @@ namespace KoiDeli.Services.Services
                             BoxModelOptimize newBox;
 
                             // Nếu cá có thể tích nhỏ hơn 225, chỉ lấy hộp medium
+                            if (fish.Volume < 223)
                             {
                                 newBox = sortedBoxList.FirstOrDefault(b => b.MaxVolume >= fish.Volume && b.Name.Contains("Medium"));
                             }
