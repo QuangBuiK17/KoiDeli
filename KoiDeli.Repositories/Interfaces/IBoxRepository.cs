@@ -10,6 +10,7 @@ namespace KoiDeli.Repositories.Interfaces
 {
     public interface IBoxRepository : IGenericRepository<Box>
     {
-        
+        Task<List<Box>> GetBoxsEnabledAsync();
+        Task<List<Box>> GetRBoxsByNameAsync(string name);
     }
 }

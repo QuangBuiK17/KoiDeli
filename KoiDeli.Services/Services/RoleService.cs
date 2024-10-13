@@ -267,7 +267,7 @@ namespace KoiDeli.Services.Services
                 {
                     response.Data = RoleDTOs;
                     response.Success = true;
-                    response.Message = $"Have {RoleDTOs.Count} partner enabled.";
+                    response.Message = $"Have {RoleDTOs.Count} role enabled.";
                     response.Error = "No error";
 
                 }

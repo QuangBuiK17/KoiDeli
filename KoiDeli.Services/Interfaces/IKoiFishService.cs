@@ -11,6 +11,7 @@ namespace KoiDeli.Services.Interfaces
     public interface IKoiFishService
     {
         Task<ApiResult<List<KoiFishDTO>>> GetKoiFishAsync();
+        Task<ApiResult<List<KoiFishDTO>>> GetKoiFishEnableAsync();
         Task<ApiResult<KoiFishDTO>> GetKoiFishByIdAsync(int id);
         Task<ApiResult<List<KoiFishDTO>>> SearchKoiFishByNameAsync(string name);
         Task<ApiResult<KoiFishDTO>> DeleteKoiFishAsync(int id);

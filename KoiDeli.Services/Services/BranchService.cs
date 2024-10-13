@@ -158,6 +158,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<BranchDTO>>> GetBranchesEnableAsync()
+        {
+            var response = new ApiResult<List<BranchDTO>>();
+            List<BranchDTO> branchDTOs = new List<BranchDTO>();
+
+            try
+            {
+                var branches = await _unitOfWork.BranchRepository.SearchAsync(b => b.IsDeleted == false);
+
+                foreach (var branch in branches)
+                {
+                    var branchDto = _mapper.Map<BranchDTO>(branch);
+                    branchDTOs.Add(branchDto);
+                }
+
+                if (branchDTOs.Count > 0)
+                {
+                    response.Data = branchDTOs;
+                    response.Success = true;
+                    response.Message = $"{branchDTOs.Count} Branches are being enable.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No Branches are being enable.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
         public async Task<ApiResult<List<BranchDTO>>> SearchBranchByNameAsync(string name)
         {
             var response = new ApiResult<List<BranchDTO>>();
