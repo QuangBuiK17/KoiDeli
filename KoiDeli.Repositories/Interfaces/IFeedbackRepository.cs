@@ -17,5 +17,6 @@ namespace KoiDeli.Repositories.Interfaces
         Task<int> GetOrderIdByFeedbackIdAsync(int feedbackID);
         Task<List<FeedbackDTO>> GetFeedbackInfoAsync();
         Task<Feedback> GetFeedbackByIdAsync(int id);
+        Task<List<FeedbackDTO>> GetFeedbacksEnabledAsync();
     }
 }

@@ -10,5 +10,6 @@ namespace KoiDeli.Repositories.Interfaces
     public interface IRoleRepository : IGenericRepository<Role>
     {
         Task<List<Role>> GetRolesEnabledAsync();
+        Task<List<Role>> GetRoleByNameAsync(string name);
     }
 }

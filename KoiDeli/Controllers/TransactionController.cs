@@ -13,7 +13,38 @@ namespace KoiDeli.Controllers
         {
             _transactionService = transactionService;
         }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllTransactions()
+        {
+            var result = await _transactionService.GetAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllTranctionsEnabled()
+        {
+            var result = await _transactionService.GetEnabledAsync();
+            return Ok(result);
+        }
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewTrấnctionById(int id)
+        {
+            var result = await _transactionService.GetByIdAsync(id);
+            return Ok(result);
+        }
+
+
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateTransaction([FromBody] TransactionCreateDTO createDto)
         {
             if (createDto == null)
@@ -27,26 +58,11 @@ namespace KoiDeli.Controllers
             }
             return Ok(t);
         }
-        [HttpGet]
-        public async Task<IActionResult> ViewAllTransactions()
-        {
-            var result = await _transactionService.GetAsync();
-            return Ok(result);
-        }
-        [HttpGet("enable")]
-        public async Task<IActionResult> ViewAllTranctionsEnabled()
-        {
-            var result = await _transactionService.GetEnabledAsync();
-            return Ok(result);
-        }
-        [HttpGet("id")]
-        public async Task<IActionResult> ViewTrấnctionById(int id)
-        {
-            var result = await _transactionService.GetByIdAsync(id);
-            return Ok(result);
-        }
+
         /*
-        [HttpPut("{id:int}")]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateWallet(int id, [FromBody] TransactionUpdateDTO updateDto)
         {
             var t = await _transactionService.UpdatetAsync(id, updateDto);
@@ -55,8 +71,11 @@ namespace KoiDeli.Controllers
                 return BadRequest(t);
             }
             return Ok(t);
-        }*/
+        }
+        */
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteWallet(int id)
         {
             var t = await _transactionService.DeleteAsync(id);

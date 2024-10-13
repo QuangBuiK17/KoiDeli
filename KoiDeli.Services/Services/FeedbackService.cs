@@ -158,6 +158,36 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<FeedbackDTO>>> GetFeedbacksEnabledAsync()
+        {
+            var response = new ApiResult<List<FeedbackDTO>>();
+            List<FeedbackDTO> FeedbackDTOs = new List<FeedbackDTO>();
+            try
+            {
+                var feedbacks = await _unitOfWork.FeedbackRepository.GetFeedbacksEnabledAsync();
+                if (feedbacks.Count > 0)
+                {
+                    response.Data = feedbacks;
+                    response.Success = true;
+                    response.Message = $"Found {feedbacks.Count} feedbacks enable.";
+                    response.Error = "No error";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "No feedbacks enable found.";
+                    response.Error = "No error";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Error = "Exception";
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return response;
+        }
+
         public async Task<ApiResult<FeedbackDTO>> UpdateFeedbackAsync(int id, FeedbackUpdateDTO updateDto)
         {
             var response = new ApiResult<FeedbackDTO>();
@@ -175,7 +205,11 @@ namespace KoiDeli.Services.Services
                     if (await _unitOfWork.SaveChangeAsync() > 0)
                     {
                         response.Success = true;
-                        response.Data = _mapper.Map<FeedbackDTO>(bAfter);
+                        //response.Data = _mapper.Map<FeedbackDTO>(bAfter);
+                        var feedback = await _unitOfWork.FeedbackRepository.GetFeedbackByIdAsync(id);
+                        var feedbackDto = _mapper.Map<FeedbackDTO>(feedback);
+                        feedbackDto.OrderId = feedback.Order.Id;
+                        response.Data = feedbackDto;
                         response.Message = $"Successfull for update feedback.";
                         return response;
                     }

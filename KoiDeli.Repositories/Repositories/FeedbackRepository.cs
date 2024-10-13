@@ -78,5 +78,21 @@ namespace KoiDeli.Repositories.Repositories
 
             return feedbackInfoList;
         }
+
+        public async Task<List<FeedbackDTO>> GetFeedbacksEnabledAsync()
+        {
+            var feedbackInfoList = await _context.Feedbacks
+                .Where(feedback => feedback.IsDeleted == false) // Thêm điều kiện isDeleted = false
+                .Select(feedback => new FeedbackDTO
+                {
+                    Id = feedback.Id,
+                    IsDeleted = feedback.IsDeleted,
+                    Desciption = feedback.Desciption,
+                    OrderId = feedback.Order.Id,
+                })
+                .ToListAsync();
+
+            return feedbackInfoList;
+        }
     }
 }

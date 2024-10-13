@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Azure;
 using KoiDeli.Domain.DTOs.AccountDTOs;
+using KoiDeli.Domain.DTOs.DistanceDTOs;
+using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
 using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.Entities;
 using KoiDeli.Repositories.Common;
@@ -96,10 +98,7 @@ namespace KoiDeli.Services.Services
             return _response;
         }
 
-        public Task<ApiResult<RoleDTO>> GetRoleByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<ApiResult<List<RoleDTO>>> GetRolesAsync()
         {
@@ -175,16 +174,6 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
-        public Task<ApiResult<RoleDTO>> GetSRoleByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResult<List<RoleDTO>>> SearchRoleByNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ApiResult<RoleDTO>> UpdateRoleAsync(int id, RoleUpdateDTO updateDto)
         {
             var reponse = new ApiResult<RoleDTO>();
@@ -230,6 +219,72 @@ namespace KoiDeli.Services.Services
             }
 
             return reponse;
+        }
+
+        public async Task<ApiResult<RoleDTO>> GetRoleByIdAsync(int id)
+        {
+            var response = new ApiResult<RoleDTO>();
+            try
+            {
+                var role = await _unitOfWork.RoleRepository.GetByIdAsync(id);
+                if (role == null)
+                {
+                    response.Success = false;
+                    response.Message = "Role ID doesn't exit!";
+                    return response;
+                }
+                else
+                {
+                    response.Data = _mapper.Map<RoleDTO>(role);
+                    response.Success = true;
+                    response.Message = "Role ID is valid";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+                return response;
+            }
+        }
+
+
+
+        public async Task<ApiResult<List<RoleDTO>>> SearchRoleByNameAsync(string name)
+        {
+            var response = new ApiResult<List<RoleDTO>>();
+            List<RoleDTO> RoleDTOs = new List<RoleDTO>();
+            try
+            {
+                var roles = await _unitOfWork.RoleRepository.GetRoleByNameAsync(name);
+                foreach (var role in roles)
+                {
+                    var roleDto = _mapper.Map<RoleDTO>(role);
+                    RoleDTOs.Add(roleDto);
+                }
+                if (RoleDTOs.Count > 0)
+                {
+                    response.Data = RoleDTOs;
+                    response.Success = true;
+                    response.Message = $"Have {RoleDTOs.Count} partner enabled.";
+                    response.Error = "No error";
+
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "Name not found or have been deleted";
+                    response.Error = "No error";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Error = "Exception";
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return response;
         }
     }
 }

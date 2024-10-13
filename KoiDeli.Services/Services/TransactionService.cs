@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using KoiDeli.Domain.DTOs.FeedbackDTOs;
 using KoiDeli.Domain.DTOs.TransactionDTOs;
 using KoiDeli.Domain.DTOs.WalletDTOs;
 using KoiDeli.Domain.Entities;
@@ -215,8 +216,8 @@ public async Task<ApiResult<TransactionDTO>> CreateAsync(TransactionCreateDTO cr
             {
                 var transaction = await _unitOfWork.TransactionRepository.GetTransactionByIdAsync(id);
 
-                // Kiểm tra nếu transaction null hoặc đã bị xóa (IsDeleted = true)
-                if (transaction == null || transaction.IsDeleted)
+                //if (transaction == null || transaction.IsDeleted)
+                if (transaction == null)
                 {
                     response.Success = false;
                     response.Message = "Transaction ID doesn't exist or has been deleted!";
@@ -340,10 +341,11 @@ public async Task<ApiResult<TransactionDTO>> CreateAsync(TransactionCreateDTO cr
 
             try
             {
-                var enityById = await _unitOfWork.TransactionRepository.GetTransactionByIdAsync(id);
+                var enityById = await _unitOfWork.TransactionRepository.GetByIdAsync(id);
 
 
-                if (enityById != null && !enityById.IsDeleted)
+                //if (enityById != null && !enityById.IsDeleted)
+                if (enityById != null )
                 {
                     // Kiểm tra WalletId
                     if (!await _unitOfWork.TransactionRepository.CheckWalletIdExisted(updateDto.WalletId))
@@ -361,16 +363,22 @@ public async Task<ApiResult<TransactionDTO>> CreateAsync(TransactionCreateDTO cr
                         return response;
                     }
 
-                    // Mapping thông tin từ DTO sang entity hiện tại
-                    var updatedTransaction = _mapper.Map(updateDto, enityById);
-                    var entity = _mapper.Map<Transaction>(updatedTransaction);
-                    // Cập nhật transaction
-                    _unitOfWork.TransactionRepository.Update(entity);
+                    var newb = _mapper.Map(updateDto, enityById);
+                    var bAfter = _mapper.Map<Transaction>(newb);
+                    _unitOfWork.TransactionRepository.Update(bAfter);
 
                     if (await _unitOfWork.SaveChangeAsync() > 0)
                     {
                         response.Success = true;
-                        response.Data = _mapper.Map<TransactionDTO>(entity);
+
+                        var transaction = await _unitOfWork.TransactionRepository.GetTransactionByIdAsync(id);
+
+
+                        var transactionDto = _mapper.Map<TransactionDTO>(transaction);
+                        transactionDto.WalletId = transaction.Wallet.Id; // Lấy WalletId từ đối tượng Wallet
+
+                        response.Data = transactionDto;
+
                         response.Message = "Successfully updated the transaction.";
                         return response;
                     }

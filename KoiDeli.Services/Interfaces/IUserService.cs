@@ -1,4 +1,5 @@
 ﻿using KoiDeli.Domain.DTOs.AccountDTOs;
+using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.DTOs.TransactionDTOs;
 using KoiDeli.Domain.DTOs.UserDTOs;
 using KoiDeli.Repositories.Common;
@@ -19,5 +20,10 @@ namespace KoiDeli.Services.Interfaces
         Task<ApiResult<UserDTO>> CreateAsync(UserCreateDTO creaeDTO);
         Task<ApiResult<UserDetailsModel>> GetCurrentUserAsync();
         Task<ApiResult<UserDetailsModel>> GetAccountByIdAsync(int id);
+
+
+        Task<ApiResult<List<UserDTO>>> GetUsersEnabledAsync();
+        Task<ApiResult<List<UserDTO>>> GetUsersByNameAsync(string name);
+
     }
 }

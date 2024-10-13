@@ -44,7 +44,49 @@ namespace KoiDeli.Controllers
         }
 
 
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllUsers()
+        {
+            var result = await _userService.GetAsync();
+            return Ok(result);
+        }
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewUserById(int id)
+        {
+            var result = await _userService.GetByIdAsync(id);
+            return Ok(result);
+        }
+
+        [HttpGet("name")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewUserByName(string name)
+        {
+            var result = await _userService.GetUsersByNameAsync(name);
+            return Ok(result);
+        }
+
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllRolesEnabled()
+        {
+            var result = await _userService.GetUsersEnabledAsync();
+            return Ok(result);
+        }
+
+
+
+
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDTO createDto)
         {
             if (createDto == null)
@@ -58,32 +100,27 @@ namespace KoiDeli.Controllers
             }
             return Ok(w);
         }
-        [HttpDelete]
-        public async Task<IActionResult> DeleteUser(int id)
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDTO updateDto)
         {
-            var w = await _userService.DeleteAsync(id);
+            var w = await _userService.UpdatetAsync(id, updateDto);
             if (!w.Success)
             {
                 return BadRequest(w);
             }
             return Ok(w);
         }
-        [HttpGet]
-        public async Task<IActionResult> ViewAllUsers()
+
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var result = await _userService.GetAsync();
-            return Ok(result);
-        }
-        [HttpGet("id")]
-        public async Task<IActionResult> ViewUserById(int id)
-        {
-            var result = await _userService.GetByIdAsync(id);
-            return Ok(result);
-        }
-        [HttpPut]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDTO updateDto)
-        {
-            var w = await _userService.UpdatetAsync(id, updateDto);
+            var w = await _userService.DeleteAsync(id);
             if (!w.Success)
             {
                 return BadRequest(w);

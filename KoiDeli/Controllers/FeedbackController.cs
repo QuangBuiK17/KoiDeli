@@ -23,6 +23,15 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllFeedbackEnable()
+        {
+            var result = await _feedbackService.GetFeedbacksEnabledAsync();
+            return Ok(result);
+        }
+
 
         [HttpGet("id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
