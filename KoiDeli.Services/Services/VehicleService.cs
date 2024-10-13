@@ -158,6 +158,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<VehicleDTO>>> GetVehiclesEnableAsync()
+        {
+            var response = new ApiResult<List<VehicleDTO>>();
+            List<VehicleDTO> vehicleDTOs = new List<VehicleDTO>();
+
+            try
+            {
+                var vehicles = await _unitOfWork.VehicleRepository.SearchAsync(v => v.IsDeleted == false);
+
+                foreach (var vehicle in vehicles)
+                {
+                    var vehicleDto = _mapper.Map<VehicleDTO>(vehicle);
+                    vehicleDTOs.Add(vehicleDto);
+                }
+
+                if (vehicleDTOs.Count > 0)
+                {
+                    response.Data = vehicleDTOs;
+                    response.Success = true;
+                    response.Message = $"{vehicleDTOs.Count} Vehicles are being enable.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No Vehicles are being enable.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
         public async Task<ApiResult<List<VehicleDTO>>> SearchVehicleByNameAsync(string name)
         {
             var response = new ApiResult<List<VehicleDTO>>();

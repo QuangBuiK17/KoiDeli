@@ -22,6 +22,24 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllBranchesEnable()
+        {
+            var result = await _branchService.GetBranchesEnableAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewBrancheById(int id)
+        {
+            var result = await _branchService.GetBranchByIdAsync(id);
+            return Ok(result);
+        }
+
 
         [HttpGet("name")]
         [ProducesResponseType(StatusCodes.Status200OK)]

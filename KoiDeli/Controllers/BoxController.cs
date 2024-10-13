@@ -21,6 +21,15 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllBoxesEnable()
+        {
+            var result = await _boxService.GetBoxesEnableAsync();
+            return Ok(result);
+        }
+
 
         [HttpGet("name")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -28,6 +37,15 @@ namespace KoiDeli.Controllers
         public async Task<IActionResult> SearchBoxesByName(string name)
         {
             var result = await _boxService.SearchBoxByNameAsync(name);
+            return Ok(result);
+        }
+
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SearchBoxByID(int id)
+        {
+            var result = await _boxService.GetBoxByIdAsync(id);
             return Ok(result);
         }
 

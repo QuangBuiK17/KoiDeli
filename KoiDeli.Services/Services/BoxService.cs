@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KoiDeli.Domain.DTOs.BoxDTOs;
+using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.Entities;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
@@ -161,10 +162,7 @@ namespace KoiDeli.Services.Services
 
         }
 
-        public Task<ApiResult<List<BoxDTO>>> SearchBoxByNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task<ApiResult<BoxDTO>> UpdateBoxAsync(int id, BoxUpdateDTO updatedto)
         {
@@ -211,6 +209,80 @@ namespace KoiDeli.Services.Services
             }
 
             return reponse;
+        }
+
+
+        public async Task<ApiResult<List<BoxDTO>>> GetBoxesEnableAsync()
+        {
+            var response = new ApiResult<List<BoxDTO>>();
+            List<BoxDTO> BoxDTOs = new List<BoxDTO>();
+            try
+            {
+                var boxs = await _unitOfWork.BoxRepository.SearchAsync(b => b.IsDeleted == false);
+
+                foreach (var box in boxs)
+                {
+                    var boxDto = _mapper.Map<BoxDTO>(box);
+                    //boxDto.Name = box.Name;
+                    BoxDTOs.Add(boxDto);
+                }
+                if (BoxDTOs.Count > 0)
+                {
+                    response.Data = BoxDTOs;
+                    response.Success = true;
+                    response.Message = $"Have {BoxDTOs.Count} boxs enabled.";
+                    response.Error = "No error";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "No boxs found.";
+                    response.Error = "No boxs available";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Error = "Exception";
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return response;
+        }
+
+        public async Task<ApiResult<List<BoxDTO>>> SearchBoxByNameAsync(string name)
+        {
+            var response = new ApiResult<List<BoxDTO>>();
+            List<BoxDTO> BoxDTOs = new List<BoxDTO>();
+            try
+            {
+                var boxs = await _unitOfWork.BoxRepository.SearchAsync(b => b.Name.Contains(name));
+                foreach (var box in boxs)
+                {
+                    var boxDto = _mapper.Map<BoxDTO>(box);
+                    BoxDTOs.Add(boxDto);
+                }
+                if (BoxDTOs.Count > 0)
+                {
+                    response.Data = BoxDTOs;
+                    response.Success = true;
+                    response.Message = $"Have {BoxDTOs.Count} box with the name {name}.";
+                    response.Error = "No error";
+
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No box with the name {name}";
+                    response.Error = "No error";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Error = "Exception";
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return response;
         }
     }
 }

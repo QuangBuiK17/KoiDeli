@@ -158,6 +158,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<KoiFishDTO>>> GetKoiFishEnableAsync()
+        {
+            var response = new ApiResult<List<KoiFishDTO>>();
+            List<KoiFishDTO> koiFishDTOs = new List<KoiFishDTO>();
+
+            try
+            {
+                var koiFishList = await _unitOfWork.KoiFishRepository.SearchAsync(k => k.IsDeleted == false);
+
+                foreach (var koiFish in koiFishList)
+                {
+                    var koiFishDto = _mapper.Map<KoiFishDTO>(koiFish);
+                    koiFishDTOs.Add(koiFishDto);
+                }
+
+                if (koiFishDTOs.Count > 0)
+                {
+                    response.Data = koiFishDTOs;
+                    response.Success = true;
+                    response.Message = $"{koiFishDTOs.Count} KoiFish are being enable.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No KoiFish are being enable.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
         public async Task<ApiResult<List<KoiFishDTO>>> SearchKoiFishByNameAsync(string name)
         {
             var response = new ApiResult<List<KoiFishDTO>>();

@@ -11,6 +11,7 @@ namespace KoiDeli.Services.Interfaces
     public interface IVehicleService
     {
         Task<ApiResult<List<VehicleDTO>>> GetVehiclesAsync();
+        Task<ApiResult<List<VehicleDTO>>> GetVehiclesEnableAsync();
         Task<ApiResult<VehicleDTO>> GetVehicleByIdAsync(int id);
         Task<ApiResult<List<VehicleDTO>>> SearchVehicleByNameAsync(string name);
         Task<ApiResult<VehicleDTO>> DeleteVehicleAsync(int id);

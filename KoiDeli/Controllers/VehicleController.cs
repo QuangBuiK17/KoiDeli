@@ -22,6 +22,24 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllVehiclesEnable()
+        {
+            var result = await _vehicleService.GetVehiclesEnableAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewVehicleByID(int id)
+        {
+            var result = await _vehicleService.GetVehicleByIdAsync(id);
+            return Ok(result);
+        }
+
 
         [HttpGet("name")]
         [ProducesResponseType(StatusCodes.Status200OK)]

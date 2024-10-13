@@ -11,6 +11,7 @@ namespace KoiDeli.Services.Interfaces
     public interface IBoxService
     {
         Task<ApiResult<List<BoxDTO>>> GetBoxesAsync();
+        Task<ApiResult<List<BoxDTO>>> GetBoxesEnableAsync();
         Task<ApiResult<BoxDTO>> GetBoxByIdAsync(int id);
         Task<ApiResult<List<BoxDTO>>> SearchBoxByNameAsync(string name);
         Task<ApiResult<BoxDTO>> DeleteBoxAsync(int id);

@@ -11,6 +11,7 @@ namespace KoiDeli.Services.Interfaces
     public interface IBranchService
     {
         Task<ApiResult<List<BranchDTO>>> GetBranchesAsync();
+        Task<ApiResult<List<BranchDTO>>> GetBranchesEnableAsync();
         Task<ApiResult<BranchDTO>> GetBranchByIdAsync(int id);
         Task<ApiResult<List<BranchDTO>>> SearchBranchByNameAsync(string name);
         Task<ApiResult<BranchDTO>> DeleteBranchAsync(int id);
