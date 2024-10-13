@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using KoiDeli.Domain.DTOs.BoxOptionDTOs;
+using KoiDeli.Domain.DTOs.OrderTimelineDTOs;
 using KoiDeli.Domain.Entities;
+using KoiDeli.Domain.Enums;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
@@ -39,6 +41,10 @@ namespace KoiDeli.Services.Services
             try
             {
                 var entity = _mapper.Map<BoxOption>(boxOptionDto);
+
+                entity.IsChecked = boxOptionDto.IsChecked.HasValue
+                    ? boxOptionDto.IsChecked.Value.ToString()
+                    : StatusEnum.Pending.ToString();
 
                 await _unitOfWork.BoxOptionRepository.AddAsync(entity);
 

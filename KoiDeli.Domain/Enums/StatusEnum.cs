@@ -8,12 +8,12 @@ namespace KoiDeli.Domain.Enums
 {
     public enum StatusEnum
     {
-    Pending,   
-    Approved,   
-    Rejected,   
-    Completed,  
-    Cancelle,
-    Packing,
-    Delivering
+    Pending,  //0 
+    Approved, //1  
+    Rejected,  //2 
+    Completed,  //3
+    Cancelle, //4
+    Packing, //5
+    Delivering//6
     }
 }

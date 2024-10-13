@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using KoiDeli.Domain.DTOs.OrderDetailDTOs;
 using KoiDeli.Domain.DTOs.TimelineDeliveryDTOs;
 using KoiDeli.Domain.Entities;
+using KoiDeli.Domain.Enums;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
@@ -39,6 +41,10 @@ namespace KoiDeli.Services.Services
             try
             {
                 var entity = _mapper.Map<TimelineDelivery>(timelineDeliveryDto);
+
+                entity.IsCompleted = timelineDeliveryDto.IsCompleted.HasValue
+                    ? timelineDeliveryDto.IsCompleted.Value.ToString()
+                    : StatusEnum.Pending.ToString();
 
                 await _unitOfWork.TimelineDeliveryRepository.AddAsync(entity);
 

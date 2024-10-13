@@ -2,9 +2,11 @@
 using AutoMapper;
 using Azure;
 using KoiDeli.Domain.DTOs.DistanceDTOs;
+using KoiDeli.Domain.DTOs.OrderTimelineDTOs;
 using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
 using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.Entities;
+using KoiDeli.Domain.Enums;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
@@ -34,6 +36,11 @@ namespace KoiDeli.Services.Services
             try
             {
                 var partner = _mapper.Map<PartnerShipment>(createDTO);
+
+                partner.IsCompleted = createDTO.IsCompleted.HasValue
+                    ? createDTO.IsCompleted.Value.ToString()
+                    : StatusEnum.Pending.ToString();
+
                 await _unitOfWork.PartnerShipmentRepository.AddAsync(partner);
                 if (await _unitOfWork.SaveChangeAsync() > 0)
                 {

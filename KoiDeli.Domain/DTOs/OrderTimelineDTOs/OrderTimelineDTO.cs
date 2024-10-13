@@ -15,7 +15,7 @@ namespace KoiDeli.Domain.DTOs.OrderTimelineDTOs
 
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
-        public StatusEnum IsCompleted { get; set; } 
+        public StatusEnum? IsCompleted { get; set; } 
         public DateTime? TimeCompleted { get; set; }
         public string? Description { get; set; }
     }
