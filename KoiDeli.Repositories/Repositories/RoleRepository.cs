@@ -20,6 +20,15 @@ namespace KoiDeli.Repositories.Repositories
             _dbContext = context;
         }
 
+        public async Task<List<Role>> GetRoleByNameAsync(string name)
+        {
+            var data = await _dbContext.Roles
+                .Where(d => !d.IsDeleted && d.Name.Contains(name))
+                .ToListAsync();
+
+            return data.Any() ? data : new List<Role>();
+        }
+
         public async Task<List<Role>> GetRolesEnabledAsync()
         {
             var data = await _dbContext.Roles.Where(r => r.IsDeleted == false).ToListAsync();

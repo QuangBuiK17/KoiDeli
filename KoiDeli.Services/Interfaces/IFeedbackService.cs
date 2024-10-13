@@ -1,4 +1,5 @@
 ﻿using KoiDeli.Domain.DTOs.FeedbackDTOs;
+using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.DTOs.WalletDTOs;
 using KoiDeli.Repositories.Common;
 using System;
@@ -16,5 +17,6 @@ namespace KoiDeli.Services.Interfaces
         Task<ApiResult<FeedbackDTO>> DeleteFeedbackAsync(int id);
         Task<ApiResult<FeedbackDTO>> UpdateFeedbackAsync(int id, FeedbackUpdateDTO updateDto);
         Task<ApiResult<FeedbackDTO>> CreateFeedbackAsync(FeedbackCreateDTO creaeDTO);
+        Task<ApiResult<List<FeedbackDTO>>> GetFeedbacksEnabledAsync();
     }
 }

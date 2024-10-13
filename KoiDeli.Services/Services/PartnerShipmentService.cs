@@ -161,6 +161,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<PartnerDTO>>> GetPartnersByNameAsync(string name)
+        {
+            var response = new ApiResult<List<PartnerDTO>>();
+            List<PartnerDTO> PartnerDTOs = new List<PartnerDTO>();
+            try
+            {
+                var partners = await _unitOfWork.PartnerShipmentRepository.GetPartnerByNameAsync(name);
+                foreach (var partner in partners)
+                {
+                    var partnerDto = _mapper.Map<PartnerDTO>(partner);
+                    PartnerDTOs.Add(partnerDto);
+                }
+                if (PartnerDTOs.Count > 0)
+                {
+                    response.Data = PartnerDTOs;
+                    response.Success = true;
+                    response.Message = $"Have {PartnerDTOs.Count} partner enabled.";
+                    response.Error = "No error";
+
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "Name not found or have been deleted";
+                    response.Error = "No error";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Error = "Exception";
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return response;
+        }
+
         public async Task<ApiResult<List<PartnerDTO>>> GetPartnersEnabledAsync()
         {
             var response = new ApiResult<List<PartnerDTO>>();

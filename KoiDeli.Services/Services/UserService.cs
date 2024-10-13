@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure;
 using KoiDeli.Domain.DTOs.AccountDTOs;
+using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.DTOs.TransactionDTOs;
 using KoiDeli.Domain.DTOs.UserDTOs;
 using KoiDeli.Domain.DTOs.WalletDTOs;
@@ -236,6 +237,79 @@ namespace KoiDeli.Services.Services
                 return response;
             }
         }
+
+        public async Task<ApiResult<List<UserDTO>>> GetUsersByNameAsync(string name)
+        {
+            var response = new ApiResult<List<UserDTO>>();
+            List<UserDTO> UserDTOs = new List<UserDTO>();
+            try
+            {
+                var users = await _unitOfWork.UserRepository.GetUsersByNameAsync(name);
+                foreach (var user in users)
+                {
+                    var userDto = _mapper.Map<UserDTO>(user);
+                    UserDTOs.Add(userDto);
+                }
+                if (UserDTOs.Count > 0)
+                {
+                    response.Data = UserDTOs;
+                    response.Success = true;
+                    response.Message = $"Have {UserDTOs.Count} user enabled.";
+                    response.Error = "No error";
+
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "Name not found or have been deleted";
+                    response.Error = "No error";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Error = "Exception";
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return response;
+        }
+
+        public async Task<ApiResult<List<UserDTO>>> GetUsersEnabledAsync()
+        {
+            var response = new ApiResult<List<UserDTO>>();
+            List<UserDTO> UserDTOs = new List<UserDTO>();
+            try
+            {
+                var users = await _unitOfWork.UserRepository.GetUsersEnabledAsync();
+
+                foreach (var user in users)
+                {
+                    var userDto = _mapper.Map<UserDTO>(user);
+                    UserDTOs.Add(userDto);
+                }
+                if (UserDTOs.Count > 0)
+                {
+                    response.Data = UserDTOs;
+                    response.Success = true;
+                    response.Message = $"Have {UserDTOs.Count} user enabled.";
+                    response.Error = "No error";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "No user found.";
+                    response.Error = "No user available";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Error = "Exception";
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return response;
+        }
+
     }
     
 }

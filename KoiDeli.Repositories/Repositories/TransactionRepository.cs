@@ -80,7 +80,7 @@ namespace KoiDeli.Repositories.Repositories
         public async Task<Transaction> GetTransactionByIdAsync(int id)
         {
             var transaction = await _context.Transaction
-        .Where(t => t.Id == id && t.IsDeleted == false) 
+        .Where(t => t.Id == id && t.IsDeleted == false)
         .Select(t => new Transaction
         {
             Id = t.Id,

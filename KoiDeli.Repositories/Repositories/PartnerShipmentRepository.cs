@@ -20,6 +20,16 @@ namespace KoiDeli.Repositories.Repositories
             _dbcontext = context;
         }
 
+        public async Task<List<PartnerShipment>> GetPartnerByNameAsync(string name)
+        {
+            var data = await _dbcontext.PartnerShipment
+                .Where(d => !d.IsDeleted && d.Name.Contains(name))
+                .ToListAsync();
+
+            // Nếu không có dữ liệu, trả về danh sách rỗng thay vì null
+            return data.Any() ? data : new List<PartnerShipment>();
+        }
+
         public async Task<List<PartnerShipment>> GetPartnerEnabledAsync()
         {
             var data = await _dbcontext.PartnerShipment.Where(d => d.IsDeleted == false).ToListAsync();

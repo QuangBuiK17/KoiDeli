@@ -11,5 +11,9 @@ namespace KoiDeli.Repositories.Interfaces
     public interface IUserRepository : IGenericRepository<User>
     {
         Task<RoleInfoModel> GetRole(User user);
+
+
+        Task<List<User>> GetUsersEnabledAsync();
+        Task<List<User>> GetUsersByNameAsync(string name);
     }
 }

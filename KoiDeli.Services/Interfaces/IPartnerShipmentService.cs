@@ -13,6 +13,7 @@ namespace KoiDeli.Services.Interfaces
     {
         Task<ApiResult<List<PartnerDTO>>> GetPartnersAsync();
         Task<ApiResult<List<PartnerDTO>>> GetPartnersEnabledAsync();
+        Task<ApiResult<List<PartnerDTO>>> GetPartnersByNameAsync(string name);
         Task<ApiResult<PartnerDTO>> GetPartnerByIdAsync(int id);
         Task<ApiResult<PartnerDTO>> DeletePartnerAsync(int id);
         Task<ApiResult<PartnerDTO>> UpdatePartnerAsync(int id, PartnerUpdateDTO updateDto);

@@ -45,5 +45,24 @@ namespace KoiDeli.Repositories.Repositories
                 RoleName = role.Name
             };
         }
+
+        public async Task<List<User>> GetUsersByNameAsync(string name)
+        {
+            var data = await _context.Users
+                .Where(d => !d.IsDeleted && d.Name.Contains(name))
+                .ToListAsync();
+
+            return data.Any() ? data : new List<User>();
+        }
+
+        public async Task<List<User>> GetUsersEnabledAsync()
+        {
+            var data = await _context.Users.Where(r => r.IsDeleted == false).ToListAsync();
+            if (data.Count == 0 || data == null)
+            {
+                return null;
+            }
+            return data;
+        }
     }
 }

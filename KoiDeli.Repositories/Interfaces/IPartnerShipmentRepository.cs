@@ -10,5 +10,6 @@ namespace KoiDeli.Repositories.Interfaces
     public interface IPartnerShipmentRepository : IGenericRepository<PartnerShipment>
     {
         Task<List<PartnerShipment>> GetPartnerEnabledAsync();
+        Task<List<PartnerShipment>> GetPartnerByNameAsync(string name);
     }
 }
