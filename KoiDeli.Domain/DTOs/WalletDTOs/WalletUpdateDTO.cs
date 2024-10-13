@@ -10,6 +10,6 @@ namespace KoiDeli.Domain.DTOs.WalletDTOs
     {
         public int UserId { get; set; }
         public string? WalletType { get; set; }
-        public long Balance { get; set; }
+        public Int64 Balance { get; set; }
     }
 }

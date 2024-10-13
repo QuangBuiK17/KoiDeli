@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using KoiDeli.Domain.DTOs.OrderDetailDTOs;
+using KoiDeli.Domain.DTOs.OrderDTOs;
 using KoiDeli.Domain.Entities;
+using KoiDeli.Domain.Enums;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
@@ -39,6 +41,10 @@ namespace KoiDeli.Services.Services
             try
             {
                 var entity = _mapper.Map<OrderDetail>(orderDetailDto);
+
+                entity.IsComplete = orderDetailDto.IsComplete.HasValue
+                    ? orderDetailDto.IsComplete.Value.ToString()
+                    : StatusEnum.Pending.ToString();
 
                 await _unitOfWork.OrderDetailRepository.AddAsync(entity);
 

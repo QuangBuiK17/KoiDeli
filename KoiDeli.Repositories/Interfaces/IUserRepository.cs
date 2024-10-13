@@ -1,4 +1,5 @@
-﻿using KoiDeli.Domain.Entities;
+﻿using KoiDeli.Domain.DTOs.UserDTOs;
+using KoiDeli.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace KoiDeli.Repositories.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        Task<RoleInfoModel> GetRole(User user);
     }
 }

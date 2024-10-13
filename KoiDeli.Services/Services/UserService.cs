@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Azure;
+using KoiDeli.Domain.DTOs.AccountDTOs;
 using KoiDeli.Domain.DTOs.TransactionDTOs;
 using KoiDeli.Domain.DTOs.UserDTOs;
 using KoiDeli.Domain.DTOs.WalletDTOs;
@@ -84,6 +86,41 @@ namespace KoiDeli.Services.Services
             }
         }
 
+        public async Task<ApiResult<UserDetailsModel>> GetAccountByIdAsync(int id)
+        {
+            var _response = new ApiResult<UserDetailsModel>();
+
+
+            try
+            {
+                var account = await _unitOfWork.UserRepository.GetByIdAsync(id);
+                if (account != null)
+                {
+                    var role = await _unitOfWork.UserRepository.GetRole(account);
+                    var data = _mapper.Map<UserDetailsModel>(account);
+                    data.Role = role;
+
+                    _response.Success = true;
+                    _response.Data = data;
+                    _response.Message = "Successfully retrieved current user.";
+                    return _response;
+                }
+                else
+                {
+                    _response.Success = false;
+                    _response.Message = "User not found.";
+                    _response.Error = "User is not found due to error or expiration token.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _response.Success = false;
+                _response.ErrorMessages = new List<string> { ex.Message };
+            }
+            return _response;
+        }
+
         public async Task<ApiResult<List<UserDTO>>> GetAsync()
         {
             var response = new ApiResult<List<UserDTO>>();
@@ -147,6 +184,11 @@ namespace KoiDeli.Services.Services
                 response.ErrorMessages = new List<string> { ex.Message };
                 return response;
             }
+        }
+
+        public Task<ApiResult<UserDetailsModel>> GetCurrentUserAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<ApiResult<UserDTO>> UpdatetAsync(int id, UserUpdateDTO updateDto)

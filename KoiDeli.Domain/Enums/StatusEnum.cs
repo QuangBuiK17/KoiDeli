@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Domain.Enums
 {
-    enum StatusEnum
+    public enum StatusEnum
     {
     Pending,   
     Approved,   
     Rejected,   
     Completed,  
-    Cancelled   
+    Cancelle,
+    Packing,
+    Delivering
     }
 }

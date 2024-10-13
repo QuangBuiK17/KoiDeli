@@ -11,12 +11,12 @@ namespace KoiDeli.Domain.Entities
         public string? Name { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
-        public bool IsCompleted { get; set; } = false;
+        public string? IsCompleted { get; set; } 
         public DateTime? Completed { get; set; }
         public string? Description { get; set; } = null;
         public Int64 Price { get; set; }
 
         //relation
-        public virtual OrderDetail? OrderDetail { get; set; }
+        public virtual ICollection<OrderDetail>?  OrderDetail { get; set; }
     }
 }

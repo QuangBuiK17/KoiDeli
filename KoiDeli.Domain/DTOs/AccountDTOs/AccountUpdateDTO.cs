@@ -15,5 +15,6 @@ namespace KoiDeli.Domain.DTOs.AccountDTOs
         public int? RoleID { get; set; }
         public string? Gender { get; set; }
         public bool IsConfirmed { get; set; }
+        public string? UrlAvatar { get; set; }
     }
 }

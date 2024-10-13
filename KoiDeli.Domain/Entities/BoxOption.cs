@@ -11,7 +11,7 @@ namespace KoiDeli.Domain.Entities
         public int FishId { get; set; }
         public int BoxId { get; set; }
         public string? Description { get; set; }
-        public bool IsChecked { get; set; } = false;
+        public string? IsChecked { get; set; } 
 
         //relation
         public virtual Box? Box { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KoiDeli.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,6 @@ namespace KoiDeli.Domain.DTOs.BoxOptionDTOs
     public class BoxOptionUpdateDTO
     {
         public string? Description { get; set; }
-        public bool IsChecked { get; set; } = false;
+        public StatusEnum? IsChecked { get; set; } 
     }
 }

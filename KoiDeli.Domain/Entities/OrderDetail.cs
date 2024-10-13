@@ -14,7 +14,7 @@ namespace KoiDeli.Domain.Entities
         public int ParnerShipmentId { get; set;}
         public int BoxOptionId { get; set;}
         public int OrderId { get; set;}
-        public bool IsComplete { get; set;} = false;
+        public string? IsComplete { get; set;} 
 
         //relation
         public virtual PartnerShipment? PartnerShipment { get; set;}

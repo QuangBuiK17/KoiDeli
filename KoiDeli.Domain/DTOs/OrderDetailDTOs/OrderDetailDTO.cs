@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KoiDeli.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,6 @@ namespace KoiDeli.Domain.DTOs.OrderDetailDTOs
         public int BoxOptionId { get; set; }
         public int FishId { get; set; }
         public int OrderId { get; set; }
-        public bool IsComplete { get; set; } = false;
+        public StatusEnum IsComplete { get; set; } 
     }
 }

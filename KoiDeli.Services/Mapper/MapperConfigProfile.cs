@@ -51,8 +51,9 @@ namespace KoiDeli.Services.Mapper
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<Feedback, FeedbackDTO>().ReverseMap();
-
-
+            CreateMap<User, UserDetailsModel>().ReverseMap();
+            CreateMap<Role, RoleInfoModel>().ReverseMap();
+            CreateMap<User, RoleInfoModel>().ReverseMap();
             //Create
             CreateMap<Box, BoxCreateDTO>().ReverseMap();
             CreateMap<KoiFish, KoiFishCreateDTO>().ReverseMap();

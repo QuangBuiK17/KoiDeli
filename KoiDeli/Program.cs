@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +18,17 @@ var configuration = builder.Configuration.Get<AppConfiguration>() ?? new AppConf
 // CONNECT TO DATABASE
 builder.Services.AddDbContext<KoiDeliDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureKoiDeliConnStr"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+
 // Add interfaces
 builder.Services.AddSingleton<ICurrentTime, CurrentTime>();
 builder.Services.AddSingleton<IClaimsService, ClaimsService>();

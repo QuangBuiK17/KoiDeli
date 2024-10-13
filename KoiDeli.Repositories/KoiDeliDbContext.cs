@@ -100,14 +100,14 @@ namespace KoiDeli.Repositories
 
             modelBuilder.Entity<Order>() // BoxOption vs OrD
            .HasOne(s => s.Distance)
-           .WithOne(ps => ps.Order)
-           .HasForeignKey<Order>(s => s.DistanceId)
+           .WithMany(ps => ps.Order)
+           .HasForeignKey(s => s.DistanceId)
            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
           .HasOne(s => s.PartnerShipment)
-          .WithOne(ps => ps.OrderDetail)
-          .HasForeignKey<OrderDetail>(s => s.ParnerShipmentId)
+          .WithMany(ps => ps.OrderDetail)
+          .HasForeignKey(s => s.ParnerShipmentId)
           .OnDelete(DeleteBehavior.Restrict);
 
            

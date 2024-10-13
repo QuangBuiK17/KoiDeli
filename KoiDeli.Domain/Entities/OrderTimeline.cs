@@ -13,7 +13,7 @@ namespace KoiDeli.Domain.Entities
 
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
-        public bool IsCompleted { get; set; } = false;
+        public string? IsCompleted { get; set; } 
         public DateTime? TimeCompleted { get; set; }
         public string? Description { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KoiDeli.Domain.DTOs.OrderDTOs;
 using KoiDeli.Domain.Entities;
+using KoiDeli.Domain.Enums;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
@@ -38,13 +39,23 @@ namespace KoiDeli.Services.Services
 
             try
             {
-                var entity = _mapper.Map<Order>(orderDto);
+                // Ánh xạ OrderCreateDTO thành đối tượng Order
+                var newOrder = _mapper.Map<Order>(orderDto);
 
-                await _unitOfWork.OrderRepository.AddAsync(entity);
+                // Thiết lập trạng thái của đơn hàng
+                newOrder.IsShipping = orderDto.IsShipping.HasValue
+                    ? orderDto.IsShipping.Value.ToString()
+                    : StatusEnum.Pending.ToString();
 
-                if (await _unitOfWork.SaveChangeAsync() > 0)
+                // Thêm đơn hàng vào repository
+                await _unitOfWork.OrderRepository.AddAsync(newOrder);
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                var saveResult = await _unitOfWork.SaveChangeAsync();
+                if (saveResult > 0)
                 {
-                    response.Data = _mapper.Map<OrderDTO>(entity);
+                    // Ánh xạ Order thành OrderDTO để trả về
+                    response.Data = _mapper.Map<OrderDTO>(newOrder);
                     response.Success = true;
                     response.Message = "Order created successfully.";
                 }
@@ -62,6 +73,7 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
+
 
         public async Task<ApiResult<OrderDTO>> DeleteOrderAsync(int id)
         {

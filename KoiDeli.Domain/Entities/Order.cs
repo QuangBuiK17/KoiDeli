@@ -20,7 +20,7 @@ namespace KoiDeli.Domain.Entities
         public Int64 TotalPackingFee { get; set; }
         public Int64 TotalShippingFee { get; set; }
         // time shiping
-        public bool IsShipping { get; set; }
+        public string? IsShipping { get; set; }
         public DateTime? ShippingDate { get; set; }
         public DateTime? ShippingTime { get; set; }
         public DateTime? ShippingStart { get;set; }

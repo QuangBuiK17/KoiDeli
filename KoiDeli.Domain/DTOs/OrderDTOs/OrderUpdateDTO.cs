@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KoiDeli.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace KoiDeli.Domain.DTOs.OrderDTOs
         public string? ReceiverName { get; set; }
         public string? ReceiverAddress { get; set; }
         public string? ReceiverPhone { get; set; }
+        public StatusEnum? IsShipping { get; set; }
 
         // File URL
         public string? URLCer1 { get; set; }

@@ -1,4 +1,5 @@
-﻿using KoiDeli.Domain.DTOs.TransactionDTOs;
+﻿using KoiDeli.Domain.DTOs.AccountDTOs;
+using KoiDeli.Domain.DTOs.TransactionDTOs;
 using KoiDeli.Domain.DTOs.UserDTOs;
 using KoiDeli.Repositories.Common;
 using System;
@@ -16,5 +17,7 @@ namespace KoiDeli.Services.Interfaces
         Task<ApiResult<UserDTO>> DeleteAsync(int id);
         Task<ApiResult<UserDTO>> UpdatetAsync(int id, UserUpdateDTO updateDto);
         Task<ApiResult<UserDTO>> CreateAsync(UserCreateDTO creaeDTO);
+        Task<ApiResult<UserDetailsModel>> GetCurrentUserAsync();
+        Task<ApiResult<UserDetailsModel>> GetAccountByIdAsync(int id);
     }
 }

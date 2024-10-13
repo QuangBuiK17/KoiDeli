@@ -3,6 +3,7 @@ using KoiDeli.Domain.DTOs.WalletDTOs;
 using KoiDeli.Services.Interfaces;
 using KoiDeli.Services.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace KoiDeli.Controllers
 {
@@ -13,6 +14,36 @@ namespace KoiDeli.Controllers
         {
             _userService = userService;
         }
+
+        [HttpGet("me")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetCurrentUserAsync()
+        {
+            var result = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (result == null || !int.TryParse(result, out int userId))
+            {
+                return BadRequest("Cannot find user ID.");
+            }
+
+            var user = await _userService.GetAccountByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }            
+            return Ok(user);
+           /* var user = await _userService.GetCurrentUserAsync();
+            if (user.Success || user.Data != null)
+            {
+                return Ok(result);
+            }
+            return Unauthorized(result);*/
+
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserCreateDTO createDto)
         {

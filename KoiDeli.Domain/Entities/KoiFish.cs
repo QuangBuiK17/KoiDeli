@@ -10,7 +10,6 @@ namespace KoiDeli.Domain.Entities
 {
     public class KoiFish: BaseEntity
     {
-        [Column(TypeName = "nvarchar(MAX)")]
         public string? Size { get; set; }
         public Int64 Volume { get; set; }
         public string? Description { get; set; }

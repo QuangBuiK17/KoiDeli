@@ -4,6 +4,7 @@ using KoiDeli.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KoiDeli.Repositories.Migrations
 {
     [DbContext(typeof(KoiDeliDbContext))]
-    partial class KoiDeliDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241013134450_updateEnumType")]
+    partial class updateEnumType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -371,7 +374,8 @@ namespace KoiDeli.Repositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DistanceId");
+                    b.HasIndex("DistanceId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -434,7 +438,8 @@ namespace KoiDeli.Repositories.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ParnerShipmentId");
+                    b.HasIndex("ParnerShipmentId")
+                        .IsUnique();
 
                     b.ToTable("OrderDetails");
                 });
@@ -750,9 +755,6 @@ namespace KoiDeli.Repositories.Migrations
                     b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UrlAvatar")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
@@ -883,8 +885,8 @@ namespace KoiDeli.Repositories.Migrations
             modelBuilder.Entity("KoiDeli.Domain.Entities.Order", b =>
                 {
                     b.HasOne("KoiDeli.Domain.Entities.Distance", "Distance")
-                        .WithMany("Order")
-                        .HasForeignKey("DistanceId")
+                        .WithOne("Order")
+                        .HasForeignKey("KoiDeli.Domain.Entities.Order", "DistanceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -913,8 +915,8 @@ namespace KoiDeli.Repositories.Migrations
                         .IsRequired();
 
                     b.HasOne("KoiDeli.Domain.Entities.PartnerShipment", "PartnerShipment")
-                        .WithMany("OrderDetail")
-                        .HasForeignKey("ParnerShipmentId")
+                        .WithOne("OrderDetail")
+                        .HasForeignKey("KoiDeli.Domain.Entities.OrderDetail", "ParnerShipmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
