@@ -69,7 +69,7 @@ namespace KoiDeli.Controllers
         }
 
         // [Authorize(Roles = "Manager")]
-        [HttpPut("{id:int}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateOrderTimeline(int id, [FromBody] OrderTimelineUpdateDTO updateDto)
@@ -83,7 +83,7 @@ namespace KoiDeli.Controllers
         }
 
         //  [Authorize(Roles = "Manager, Customer")]
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteOrderTimeline(int id)

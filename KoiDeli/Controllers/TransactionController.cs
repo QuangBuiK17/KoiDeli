@@ -40,7 +40,6 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
-
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

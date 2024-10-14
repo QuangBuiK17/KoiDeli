@@ -14,6 +14,28 @@ namespace KoiDeli.Controllers
         {
             _walletService = walletService;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewAllWallets()
+        {
+            var result = await _walletService.GetWalletAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("enable")]
+        public async Task<IActionResult> ViewAllWalletsEnabled()
+        {
+            var result = await _walletService.GetWalletEnabledAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("id")]
+        public async Task<IActionResult> ViewWalletById(int id)
+        {
+            var result = await _walletService.GetWalletByIdAsync(id);
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateWallet([FromBody] WalletCreateDTO createDto)
         {
@@ -28,24 +50,7 @@ namespace KoiDeli.Controllers
             }
             return Ok(w);
         }
-        [HttpGet]
-        public async Task<IActionResult> ViewAllWallets()
-        {
-            var result = await _walletService.GetWalletAsync();
-            return Ok(result);
-        }
-        [HttpGet("enable")]
-        public async Task<IActionResult> ViewAllWalletsEnabled()
-        {
-            var result = await _walletService.GetWalletEnabledAsync();
-            return Ok(result);
-        }
-        [HttpGet("id")]
-        public async Task<IActionResult> ViewWalletById(int id)
-        {
-            var result = await _walletService.GetWalletByIdAsync(id);
-            return Ok(result);
-        }
+        
         [HttpPut]
         public async Task<IActionResult> UpdateWallet(int id, [FromBody] WalletUpdateDTO updateDto)
         {
@@ -56,6 +61,7 @@ namespace KoiDeli.Controllers
             }
             return Ok(w);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteWallet(int id)
         {
