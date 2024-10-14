@@ -12,7 +12,8 @@ namespace KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs
         public BoxModelOptimize? Box { get; set; }
         public List<KoiFishModelOptimize> Fishes { get; set; } = new List<KoiFishModelOptimize>();
 
-        // Tính tổng số lượng cá dựa trên Quantity
+        public int UsageCount { get; set; } // Thêm thuộc tính này để đếm số lần tái sử dụng của hộp
+
         public Int64 TotalFish
         {
             get
@@ -21,17 +22,17 @@ namespace KoiDeli.Domain.DTOs.BoxWithFishDetailDTOs
             }
         }
 
-        public Int64 BoxPrice { get; set; }  // Price of the individual box
+        public Int64 BoxPrice { get; set; }
 
-        public Int64 TotalPrice // Calculate the total price for the box, including any other relevant calculations
+        public Int64 TotalPrice
         {
             get
             {
-                // Here, you can adjust this to factor in other costs or discounts if needed
                 return BoxPrice;
             }
         }
 
         public Int64? TotalVolume { get; set; }
     }
+
 }

@@ -18,7 +18,7 @@ var configuration = builder.Configuration.Get<AppConfiguration>() ?? new AppConf
 // CONNECT TO DATABASE
 builder.Services.AddDbContext<KoiDeliDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("KoiDeliAzConnStr"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddControllers()

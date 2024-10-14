@@ -43,6 +43,7 @@ namespace KoiDeli.Services.Services
             _mapper = mapper;
 
         }
+
         public async Task<ApiResult<List<BoxWithFishDetailDTO>>> OptimizePackingAsync(List<KoiFishModelOptimize> fishList, List<BoxModelOptimize> boxList)
         {
             var response = new ApiResult<List<BoxWithFishDetailDTO>>();
@@ -53,12 +54,20 @@ namespace KoiDeli.Services.Services
                 // Sắp xếp hộp theo dung tích giảm dần, sau đó theo giá tăng dần
                 var sortedBoxList = boxList.OrderByDescending(b => b.MaxVolume).ThenBy(b => b.Price).ToList();
 
+                // Tính tổng thể tích của tất cả cá cần đóng gói
+                Int64 totalRemainingVolume = sortedFishList.Sum(f => f.Volume * f.Quantity);
+
                 // Dùng để lưu các hộp đã sử dụng
                 List<BoxWithFishDetailDTO> usedBoxes = new List<BoxWithFishDetailDTO>();
 
                 foreach (var fish in sortedFishList)
                 {
                     Int64 remainingQuantity = fish.Quantity;
+
+                    if (remainingQuantity <= 0)
+                    {
+                        throw new InvalidOperationException($"Fish quantity is invalid: {remainingQuantity} for Fish ID: {fish.Id}");
+                    }
 
                     while (remainingQuantity > 0)
                     {
@@ -69,9 +78,13 @@ namespace KoiDeli.Services.Services
                         {
                             if (usedBox.Box.RemainingVolume >= fish.Volume)
                             {
-                                // Tính số lượng cá có thể thêm vào hộp hiện tại
                                 Int64 quantityThatCanFit = usedBox.Box.RemainingVolume / fish.Volume;
                                 Int64 fishToPlace = Math.Min(quantityThatCanFit, remainingQuantity);
+
+                                if (fishToPlace <= 0)
+                                {
+                                    throw new InvalidOperationException("Calculated fishToPlace is invalid (<= 0). Possible loop error.");
+                                }
 
                                 usedBox.Box.RemainingVolume -= fish.Volume * fishToPlace;
 
@@ -95,6 +108,9 @@ namespace KoiDeli.Services.Services
                                 remainingQuantity -= fishToPlace;
                                 placed = true;
 
+                                // Cập nhật tổng thể tích còn lại của cá sau khi một lượng cá đã được xếp
+                                totalRemainingVolume -= fish.Volume * fishToPlace;
+
                                 if (remainingQuantity <= 0)
                                 {
                                     break;
@@ -102,19 +118,22 @@ namespace KoiDeli.Services.Services
                             }
                         }
 
+                        // Cập nhật số lượng cá còn lại trong danh sách fishList
+                        fish.Quantity = remainingQuantity;
+
                         // Nếu chưa đặt hết cá và không có hộp hiện tại nào đủ chứa, tìm hộp mới
                         if (!placed)
                         {
-                            BoxModelOptimize newBox;
+                            // Tìm hộp mới từ danh sách hộp dựa trên tổng thể tích còn lại của cá và giá
+                            var newBox = sortedBoxList
+                                .Where(b => b.MaxVolume >= totalRemainingVolume) // Chọn hộp có thể tích lớn hơn hoặc bằng tổng thể tích còn lại
+                                .OrderBy(b => b.Price) // Ưu tiên hộp có giá thấp hơn
+                                .FirstOrDefault();
 
-                            // Nếu cá có thể tích nhỏ hơn 225, chỉ lấy hộp medium
-                            if (fish.Volume < 225)
+                            // Nếu không có hộp nào đủ lớn, chọn hộp lớn nhất
+                            if (newBox == null)
                             {
-                                newBox = sortedBoxList.FirstOrDefault(b => b.MaxVolume >= fish.Volume && b.Name.Contains("Medium"));
-                            }
-                            else
-                            {
-                                newBox = sortedBoxList.FirstOrDefault(b => b.MaxVolume >= fish.Volume);
+                                newBox = sortedBoxList.FirstOrDefault(); // Chọn hộp có thể tích lớn nhất
                             }
 
                             if (newBox == null)
@@ -122,9 +141,16 @@ namespace KoiDeli.Services.Services
                                 throw new InvalidOperationException("Không có hộp nào có thể chứa được cá.");
                             }
 
+                            // Thêm kiểm tra để đảm bảo tránh loop quá nhiều lần
+                            if (usedBoxes.Count > 10)
+                            {
+                                throw new InvalidOperationException("Loop exceeded maximum allowable box usage, potential overflow issue.");
+                            }
+
+                            // Tạo một hộp mới từ hộp được chọn (newBox)
                             var newBoxDetails = new BoxModelOptimize
                             {
-                                Id = usedBoxes.Count + 1,
+                                Id = newBox.Id, // Tái sử dụng ID của hộp
                                 MaxVolume = newBox.MaxVolume,
                                 RemainingVolume = newBox.MaxVolume,
                                 Price = newBox.Price,
@@ -137,8 +163,9 @@ namespace KoiDeli.Services.Services
                             var boxWithDetails = new BoxWithFishDetailDTO
                             {
                                 Box = newBoxDetails,
-                                BoxPrice = newBox.Price,
-                                Fishes = new List<KoiFishModelOptimize>()
+                                BoxPrice = newBoxDetails.Price,
+                                Fishes = new List<KoiFishModelOptimize>(),
+                                UsageCount = usedBoxes.Count(b => b.Box.Id == newBoxDetails.Id) + 1 // Đếm số lần sử dụng hộp theo ID
                             };
 
                             boxWithDetails.Fishes.Add(new KoiFishModelOptimize
@@ -152,10 +179,12 @@ namespace KoiDeli.Services.Services
 
                             usedBoxes.Add(boxWithDetails);
                             remainingQuantity -= fishToPlaceInNewBox;
+
+                            // Cập nhật tổng thể tích còn lại sau khi thêm cá vào hộp mới
+                            totalRemainingVolume -= fish.Volume * fishToPlaceInNewBox;
                         }
                     }
                 }
-
 
                 // Trả về kết quả với thông tin đầy đủ về cá, kích thước và số lượng
                 response.Data = usedBoxes;
@@ -171,8 +200,6 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
-
-
 
     }
 }
