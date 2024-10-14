@@ -11,6 +11,7 @@ namespace KoiDeli.Domain.DTOs.BoxOptionDTOs
     {
         public int FishId { get; set; }
         public int BoxId { get; set; }
+        public Int64 Quantity { get; set; }
         public string? Description { get; set; }
         public StatusEnum? IsChecked { get; set; } 
     }
