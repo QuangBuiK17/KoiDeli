@@ -135,6 +135,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<TimelineDeliveryDTO>>> GetTimelineDeliveriesEnableAsync()
+        {
+            var response = new ApiResult<List<TimelineDeliveryDTO>>();
+            List<TimelineDeliveryDTO> timelineDeliveryDTOs = new List<TimelineDeliveryDTO>();
+
+            try
+            {
+                var timelineDeliveries = await _unitOfWork.TimelineDeliveryRepository.SearchAsync(o => o.IsDeleted == false);
+
+                foreach (var timelineDelivery in timelineDeliveries)
+                {
+                    var timelineDeliveryDto = _mapper.Map<TimelineDeliveryDTO>(timelineDelivery);
+                    timelineDeliveryDTOs.Add(timelineDeliveryDto);
+                }
+
+                if (timelineDeliveryDTOs.Count > 0)
+                {
+                    response.Data = timelineDeliveryDTOs;
+                    response.Success = true;
+                    response.Message = $"{timelineDeliveryDTOs.Count} TimelineDeliveries are being anable.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No TimelineDeliveries are being anable.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
         public async Task<ApiResult<TimelineDeliveryDTO>> GetTimelineDeliveryByIdAsync(int id)
         {
             var response = new ApiResult<TimelineDeliveryDTO>();

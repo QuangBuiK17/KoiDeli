@@ -170,6 +170,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<OrderDTO>>> GetOrdersEnableAsync()
+        {
+            var response = new ApiResult<List<OrderDTO>>();
+            List<OrderDTO> orderDTOs = new List<OrderDTO>();
+
+            try
+            {
+                var orders = await _unitOfWork.OrderRepository.SearchAsync(o => o.IsDeleted == false);
+
+                foreach (var order in orders)
+                {
+                    var orderDto = _mapper.Map<OrderDTO>(order);
+                    orderDTOs.Add(orderDto);
+                }
+
+                if (orderDTOs.Count > 0)
+                {
+                    response.Data = orderDTOs;
+                    response.Success = true;
+                    response.Message = $"{orderDTOs.Count} Orders are being enable.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No Orders are being enable.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
         public async Task<ApiResult<List<OrderDTO>>> SearchOrderByNameAsync(string name)
         {
             var response = new ApiResult<List<OrderDTO>>();

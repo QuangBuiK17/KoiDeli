@@ -164,6 +164,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public  async Task<ApiResult<List<BoxOptionDTO>>> GetBoxOptionsEnableAsync()
+        {
+            var response = new ApiResult<List<BoxOptionDTO>>();
+            List<BoxOptionDTO> boxOptionDTOs = new List<BoxOptionDTO>();
+
+            try
+            {
+                var boxOptions = await _unitOfWork.BoxOptionRepository.SearchAsync(b => b.IsDeleted == false);
+
+                foreach (var boxOption in boxOptions)
+                {
+                    var boxOptionDto = _mapper.Map<BoxOptionDTO>(boxOption);
+                    boxOptionDTOs.Add(boxOptionDto);
+                }
+
+                if (boxOptionDTOs.Count > 0)
+                {
+                    response.Data = boxOptionDTOs;
+                    response.Success = true;
+                    response.Message = $"{boxOptionDTOs.Count} BoxOptions are being enable.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No BoxOptions are being enable.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
         public async Task<ApiResult<List<BoxOptionDTO>>> SearchBoxOptionByNameAsync(string name)
         {
             var response = new ApiResult<List<BoxOptionDTO>>();

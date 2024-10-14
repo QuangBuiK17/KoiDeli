@@ -26,7 +26,7 @@ namespace KoiDeli.Controllers
         [HttpGet("enable")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ViewAllTranctionsEnabled()
+        public async Task<IActionResult> ViewAllTransactionsEnabled()
         {
             var result = await _transactionService.GetEnabledAsync();
             return Ok(result);
@@ -34,7 +34,7 @@ namespace KoiDeli.Controllers
         [HttpGet("id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ViewTrấnctionById(int id)
+        public async Task<IActionResult> ViewTransactionById(int id)
         {
             var result = await _transactionService.GetByIdAsync(id);
             return Ok(result);
@@ -59,11 +59,11 @@ namespace KoiDeli.Controllers
             return Ok(t);
         }
 
-        /*
+        
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateWallet(int id, [FromBody] TransactionUpdateDTO updateDto)
+        public async Task<IActionResult> UpdateTransaction(int id, [FromBody] TransactionUpdateDTO updateDto)
         {
             var t = await _transactionService.UpdatetAsync(id, updateDto);
             if (!t.Success)
@@ -72,11 +72,11 @@ namespace KoiDeli.Controllers
             }
             return Ok(t);
         }
-        */
+        
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteWallet(int id)
+        public async Task<IActionResult> DeleteTransaction(int id)
         {
             var t = await _transactionService.DeleteAsync(id);
             if (!t.Success)

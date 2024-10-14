@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KoiDeli.Domain.DTOs.FeedbackDTOs;
+using KoiDeli.Domain.DTOs.OrderDetailDTOs;
 using KoiDeli.Domain.DTOs.TransactionDTOs;
 using KoiDeli.Domain.DTOs.WalletDTOs;
 using KoiDeli.Domain.Entities;
@@ -270,71 +271,63 @@ public async Task<ApiResult<TransactionDTO>> CreateAsync(TransactionCreateDTO cr
             }
             return response;
         }
-        /*
+        
         public async Task<ApiResult<TransactionDTO>> UpdatetAsync(int id, TransactionUpdateDTO updateDto)
         {
             var response = new ApiResult<TransactionDTO>();
 
             try
             {
-                // Lấy transaction hiện tại theo ID
-                //var entityById = await _unitOfWork.TransactionRepository.GetTransactionByIdAsync(id);
-                var entityById = await _unitOfWork.TransactionRepository.GetByIdAsync(id);
+                var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(id);
 
-                if (entityById != null && !entityById.IsDeleted) 
+                if (transaction != null)
                 {
-                    // Kiểm tra WalletId
-                    if (!await _unitOfWork.TransactionRepository.CheckWalletIdExisted(updateDto.WalletId))
+                    var wallet = await _unitOfWork.TransactionRepository.CheckWalletExisted(updateDto.WalletId);
+                    if (wallet == null)
                     {
                         response.Success = false;
-                        response.Message = "WalletId is invalid";
+                        response.Message = "WalletID is invalid";
                         return response;
                     }
-
-                    // Kiểm tra TotalAmount
-                    if (updateDto.TotalAmount < 0)
+                        transaction = new Transaction
                     {
-                        response.Success = false;
-                        response.Message = "Total amount must be positive";
-                        return response;
-                    }
-
-                    // Mapping thông tin từ DTO sang entity hiện tại
-                    var updatedTransaction = _mapper.Map(updateDto, entityById);
-                    var entity = _mapper.Map<Transaction>(updatedTransaction);
-                    // Cập nhật transaction
-                    _unitOfWork.TransactionRepository.Update(entity);
-
+                        TotalAmount = updateDto.TotalAmount,
+                        PaymentType = updateDto.PaymentType,
+                        Wallet = wallet
+                    };
+                    await _unitOfWork.TransactionRepository.Update(transaction);
                     if (await _unitOfWork.SaveChangeAsync() > 0)
                     {
+                        response.Data = _mapper.Map<TransactionDTO>(transaction);
                         response.Success = true;
-                        response.Data = _mapper.Map<TransactionDTO>(entity); 
-                        response.Message = "Successfully updated the transaction.";
+                        response.Message = "Update new transaction successfully";
                         return response;
                     }
                     else
                     {
                         response.Success = false;
-                        response.Error = "Save update failed";
+                        response.Message = "Update new transaction fail";
                         return response;
                     }
+
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = "Transaction not found or has been deleted.";
-                    response.Error = "Transaction not found";
-                    return response;
+                    response.Message = "Transaction not found.";
                 }
             }
             catch (Exception ex)
             {
                 response.Success = false;
                 response.ErrorMessages = new List<string> { ex.Message };
-                return response;
             }
-        }*/
 
+            return response;
+        }
+
+
+        /*
         public async Task<ApiResult<TransactionDTO>> UpdatetAsync(int id, TransactionUpdateDTO updateDto)
         {
             var response = new ApiResult<TransactionDTO>();
@@ -404,7 +397,7 @@ public async Task<ApiResult<TransactionDTO>> CreateAsync(TransactionCreateDTO cr
                 response.ErrorMessages = new List<string> { ex.Message };
                 return response;
             }
-        }
+        }*/
     }
     
 }
