@@ -31,21 +31,21 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
-        [HttpGet("name")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> SearchPartnerShipmentsByName(string name)
-        {
-            var result = await _partnerShipmentService.GetPartnersByNameAsync(name);
-            return Ok(result);
-        }
-
         [HttpGet("id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchPartnerShipmentsByid(int id)
         {
             var result = await _partnerShipmentService.GetPartnerByIdAsync(id);
+            return Ok(result);
+        }
+
+        [HttpGet("name")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SearchPartnerShipmentsByName(string name)
+        {
+            var result = await _partnerShipmentService.GetPartnersByNameAsync(name);
             return Ok(result);
         }
 

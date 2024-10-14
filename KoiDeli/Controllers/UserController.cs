@@ -43,8 +43,6 @@ namespace KoiDeli.Controllers
 
         }
 
-
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -53,6 +51,16 @@ namespace KoiDeli.Controllers
             var result = await _userService.GetAsync();
             return Ok(result);
         }
+
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllRolesEnabled()
+        {
+            var result = await _userService.GetUsersEnabledAsync();
+            return Ok(result);
+        }
+
         [HttpGet("id")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -70,18 +78,6 @@ namespace KoiDeli.Controllers
             var result = await _userService.GetUsersByNameAsync(name);
             return Ok(result);
         }
-
-        [HttpGet("enable")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ViewAllRolesEnabled()
-        {
-            var result = await _userService.GetUsersEnabledAsync();
-            return Ok(result);
-        }
-
-
-
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]

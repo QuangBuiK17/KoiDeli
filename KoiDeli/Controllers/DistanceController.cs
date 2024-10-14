@@ -14,7 +14,37 @@ namespace KoiDeli.Controllers
             _distanceService = distanceService;
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllDistances()
+        {
+            var result = await _distanceService.GetDistancesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllDistancesEnabled()
+        {
+            var result = await _distanceService.GetDistancesEnabledAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewDistanceById(int id)
+        {
+            var result = await _distanceService.GetDistanceByIdAsync(id);
+            return Ok(result);
+        }
+
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateDistance([FromBody] DistanceCreateDTO createDto)
         {
             if (createDto == null)
@@ -28,25 +58,10 @@ namespace KoiDeli.Controllers
             }
             return Ok(d);
         }
-        [HttpGet]
-        public async Task<IActionResult> ViewAllDistances()
-        {
-            var result = await _distanceService.GetDistancesAsync();
-            return Ok(result);
-        }
-        [HttpGet("enable")]
-        public async Task<IActionResult> ViewAllDistancesEnabled()
-        {
-            var result = await _distanceService.GetDistancesEnabledAsync();
-            return Ok(result);
-        }
-        [HttpGet("id")]
-        public async Task<IActionResult> ViewDistanceById(int id)
-        {
-            var result = await _distanceService.GetDistanceByIdAsync(id);
-            return Ok(result);
-        }
+        
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateDistance(int id, [FromBody] DistanceUpdateDTO updateDto)
         {
             var d = await _distanceService.UpdateDistanceAsync(id, updateDto);
@@ -56,7 +71,10 @@ namespace KoiDeli.Controllers
             }
             return Ok(d);
         }
+
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteDistance(int id)
         {
             var d = await _distanceService.DeleteDistanceAsync(id);
