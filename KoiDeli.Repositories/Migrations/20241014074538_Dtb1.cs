@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace KoiDeli.Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class databaseKoide : Migration
+    public partial class Dtb1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -107,7 +107,7 @@ namespace KoiDeli.Repositories.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDay = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsCompleted = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Completed = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<long>(type: "bigint", nullable: false),
@@ -176,7 +176,7 @@ namespace KoiDeli.Repositories.Migrations
                     FishId = table.Column<int>(type: "int", nullable: false),
                     BoxId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsChecked = table.Column<bool>(type: "bit", nullable: false),
+                    IsChecked = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -217,6 +217,7 @@ namespace KoiDeli.Repositories.Migrations
                     ConfirmationToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
+                    UrlAvatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -246,7 +247,7 @@ namespace KoiDeli.Repositories.Migrations
                     BranchId = table.Column<int>(type: "int", nullable: false),
                     StartDay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDay = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsCompleted = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TimeCompleted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -289,7 +290,7 @@ namespace KoiDeli.Repositories.Migrations
                     TotalBox = table.Column<long>(type: "bigint", nullable: false),
                     TotalPackingFee = table.Column<long>(type: "bigint", nullable: false),
                     TotalShippingFee = table.Column<long>(type: "bigint", nullable: false),
-                    IsShipping = table.Column<bool>(type: "bit", nullable: false),
+                    IsShipping = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShippingDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ShippingTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ShippingStart = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -391,7 +392,7 @@ namespace KoiDeli.Repositories.Migrations
                     ParnerShipmentId = table.Column<int>(type: "int", nullable: false),
                     BoxOptionId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    IsComplete = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -461,7 +462,7 @@ namespace KoiDeli.Repositories.Migrations
                     TimelineDeliveryId = table.Column<int>(type: "int", nullable: false),
                     StartDay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDay = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsCompleted = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TimeCompleted = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -517,14 +518,12 @@ namespace KoiDeli.Repositories.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_ParnerShipmentId",
                 table: "OrderDetails",
-                column: "ParnerShipmentId",
-                unique: true);
+                column: "ParnerShipmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_DistanceId",
                 table: "Orders",
-                column: "DistanceId",
-                unique: true);
+                column: "DistanceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
