@@ -4,12 +4,12 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/KoiDeliapi/apis/KoiDeli",
       "type": "apis.azure"
     },
-    "mssql1": {
-      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/KoiDeli/providers/Microsoft.ServiceLinker/linkers/AzureKoiDeliConnStr_E9F66ACC90",
+    "mssql2": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/KoiDeli/providers/Microsoft.ServiceLinker/linkers/KoideliAzConnStr_A805D430A1",
       "secretStore": "AzureAppSettings",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/koidelidbserver/databases/KoiDeli_db",
       "type": "mssql.azure",
-      "connectionId": "AzureKoiDeliConnStr"
+      "connectionId": "KoideliAzConnStr"
     }
   }
 }

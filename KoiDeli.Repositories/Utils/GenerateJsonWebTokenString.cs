@@ -20,7 +20,7 @@ namespace KoiDeli.Repositories.Utils
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("Email" ,user.Email),
+                new Claim(ClaimTypes.Email ,user.Email),
                 new Claim(ClaimTypes.Role ,rolename),
             };
             var token = new JwtSecurityToken(

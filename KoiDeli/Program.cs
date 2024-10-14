@@ -18,7 +18,7 @@ var configuration = builder.Configuration.Get<AppConfiguration>() ?? new AppConf
 // CONNECT TO DATABASE
 builder.Services.AddDbContext<KoiDeliDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("KoiDeliAzConnStr"));
 });
 
 builder.Services.AddControllers()
@@ -51,8 +51,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = configuration.JWTSection.Issuer,
