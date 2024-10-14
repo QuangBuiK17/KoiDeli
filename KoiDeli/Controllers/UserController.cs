@@ -15,6 +15,9 @@ namespace KoiDeli.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        // Deletes a specific TodoItem.
+        /// </summary>
         [HttpGet("me")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
