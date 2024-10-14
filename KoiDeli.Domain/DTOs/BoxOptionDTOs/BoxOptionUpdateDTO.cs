@@ -9,6 +9,7 @@ namespace KoiDeli.Domain.DTOs.BoxOptionDTOs
 {
     public class BoxOptionUpdateDTO
     {
+        public Int64 Quantity { get; set; }
         public string? Description { get; set; }
         public StatusEnum? IsChecked { get; set; } 
     }
