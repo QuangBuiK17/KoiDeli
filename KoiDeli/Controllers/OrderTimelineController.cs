@@ -22,6 +22,23 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
+        [HttpGet("enable")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllOrderTimelineEnable()
+        {
+            var result = await _orderTimelineService.GetOrderTimelinesEnableAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetOrderTimelineById(int id)
+        {
+            var result = await _orderTimelineService.GetOrderTimelineByIdAsync(id);
+            return Ok(result);
+        }
 
         [HttpGet("name")]
         [ProducesResponseType(StatusCodes.Status200OK)]

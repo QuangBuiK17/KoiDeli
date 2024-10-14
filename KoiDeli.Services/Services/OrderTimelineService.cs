@@ -165,6 +165,42 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<OrderTimelineDTO>>> GetOrderTimelinesEnableAsync()
+        {
+            var response = new ApiResult<List<OrderTimelineDTO>>();
+            List<OrderTimelineDTO> orderTimelineDTOs = new List<OrderTimelineDTO>();
+
+            try
+            {
+                var orderTimelines = await _unitOfWork.OrderTimelineRepository.SearchAsync(o => o.IsDeleted);
+
+                foreach (var orderTimeline in orderTimelines)
+                {
+                    var orderTimelineDto = _mapper.Map<OrderTimelineDTO>(orderTimeline);
+                    orderTimelineDTOs.Add(orderTimelineDto);
+                }
+
+                if (orderTimelineDTOs.Count > 0)
+                {
+                    response.Data = orderTimelineDTOs;
+                    response.Success = true;
+                    response.Message = $"{orderTimelineDTOs.Count} OrderTimelines are being enable.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = $"No OrderTimelines are being enable.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
         public async Task<ApiResult<List<OrderTimelineDTO>>> SearchOrderTimelineByNameAsync(string name)
         {
             var response = new ApiResult<List<OrderTimelineDTO>>();

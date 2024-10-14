@@ -11,6 +11,7 @@ namespace KoiDeli.Services.Interfaces
     public interface IOrderTimelineService
     {
         Task<ApiResult<List<OrderTimelineDTO>>> GetOrderTimelinesAsync();
+        Task<ApiResult<List<OrderTimelineDTO>>> GetOrderTimelinesEnableAsync();
         Task<ApiResult<OrderTimelineDTO>> GetOrderTimelineByIdAsync(int id);
         Task<ApiResult<List<OrderTimelineDTO>>> SearchOrderTimelineByNameAsync(string name);
         Task<ApiResult<OrderTimelineDTO>> DeleteOrderTimelineAsync(int id);
