@@ -14,9 +14,6 @@ namespace KoiDeli.Domain.Enums
     Completed,  //3
     Cancelle, //4
     Packing, //5
-    Delivering,//6
-    Incomplete,//7
-    Delivered,//8
-    Received//9
+    Delivering//6
     }
 }
