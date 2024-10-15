@@ -2,7 +2,6 @@
 using Azure;
 using KoiDeli.Domain.DTOs.AccountDTOs;
 using KoiDeli.Domain.DTOs.DistanceDTOs;
-using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
 using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.Entities;
 using KoiDeli.Repositories.Common;

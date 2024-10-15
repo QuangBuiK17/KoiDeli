@@ -59,7 +59,6 @@ namespace KoiDeli.Injection
 
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IDistanceRepository, DistanceRepository>();
-            services.AddScoped<IPartnerShipmentRepository, PartnerShipmentRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -82,7 +81,6 @@ namespace KoiDeli.Injection
 
             services.AddScoped<IGenericRepository<Role>, GenericRepository<Role>>();
             services.AddScoped<IGenericRepository<Distance>, GenericRepository<Distance>>();
-            services.AddScoped<IGenericRepository<PartnerShipment>, GenericRepository<PartnerShipment>>();
             services.AddScoped<IGenericRepository<Wallet>, GenericRepository<Wallet>>();
             services.AddScoped<IGenericRepository<Transaction>, GenericRepository<Transaction>>();
             services.AddScoped<IGenericRepository<User>, GenericRepository<User>>();
@@ -106,7 +104,6 @@ namespace KoiDeli.Injection
 
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IDistanceService, DistanceService>();
-            services.AddScoped<IPartnerShipmentService, PartnerShipmentService>();
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IUserService, UserService>();

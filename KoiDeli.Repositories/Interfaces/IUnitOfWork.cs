@@ -23,7 +23,7 @@ namespace KoiDeli.Repositories.Interfaces
         IOrderTimelineRepository OrderTimelineRepository { get; }
         IRoleRepository RoleRepository { get; }
         IDistanceRepository DistanceRepository { get; }
-        IPartnerShipmentRepository PartnerShipmentRepository { get; }
+       
         IWalletRepository WalletRepository { get; }
         ITransactionRepository TransactionRepository { get; }
         IUserRepository UserRepository { get; }

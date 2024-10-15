@@ -1,5 +1,4 @@
 ﻿using KoiDeli.Domain.DTOs.FeedbackDTOs;
-using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
 using KoiDeli.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

@@ -24,7 +24,6 @@ namespace KoiDeli.Repositories
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderTimeline> OrderTimeline { get; set; }
-        public DbSet<PartnerShipment> PartnerShipment { get; set; }
         public DbSet<TimelineDelivery> TimelineDelivery { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
@@ -94,23 +93,16 @@ namespace KoiDeli.Repositories
 
             modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
            .HasOne(s => s.BoxOption)
-           .WithMany(ps => ps.OrderDetails)
-           .HasForeignKey(s => s.BoxOptionId)
+           .WithOne(ps => ps.OrderDetail)
+           .HasForeignKey<OrderDetail>(s => s.BoxOptionId)
            .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Order>() // BoxOption vs OrD
-           .HasOne(s => s.Distance)
-           .WithMany(ps => ps.Order)
-           .HasForeignKey(s => s.DistanceId)
-           .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
-          .HasOne(s => s.PartnerShipment)
-          .WithMany(ps => ps.OrderDetail)
-          .HasForeignKey(s => s.ParnerShipmentId)
+          .HasOne(s => s.Distance)
+          .WithMany(ps => ps.OrderDetails)
+          .HasForeignKey(s => s.DistanceId)
           .OnDelete(DeleteBehavior.Restrict);
-
-           
 
         }
 

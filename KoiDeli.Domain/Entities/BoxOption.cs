@@ -17,7 +17,7 @@ namespace KoiDeli.Domain.Entities
         //relation
         public virtual Box? Box { get; set; }
         public virtual KoiFish? Fish { get; set; }
-        public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
+        public virtual OrderDetail? OrderDetail { get; set; }
         
     }
 }

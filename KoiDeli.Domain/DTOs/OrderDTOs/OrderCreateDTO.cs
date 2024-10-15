@@ -9,7 +9,6 @@ namespace KoiDeli.Domain.DTOs.OrderDTOs
 {
     public class OrderCreateDTO
     {
-        public int DistanceId { get; set; }
         //receive 
         public string? ReceiverName { get; set; }
         public string? ReceiverAddress { get; set; }

@@ -12,7 +12,7 @@ namespace KoiDeli.Domain.Entities
         public Int64 Price {get; set; }
 
         //relation
-        public virtual ICollection<Order>? Order { get; set; }
+        public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
 
     }
 }

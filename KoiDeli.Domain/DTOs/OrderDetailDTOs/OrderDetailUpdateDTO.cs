@@ -9,12 +9,10 @@ namespace KoiDeli.Domain.DTOs.OrderDetailDTOs
 {
     public class OrderDetailUpdateDTO
     {
-        public Int64 LocalShipingFee { get; set; }
-        public Int64 PartnerShippingFee { get; set; }
         public Int64 TotalShippingFee { get; set; }
-        public int ParnerShipmentId { get; set; }
         public int BoxOptionId { get; set; }
         public int OrderId { get; set; }
+        public int DistanceId { get; set; }
         public StatusEnum IsComplete { get; set; } 
     }
 }

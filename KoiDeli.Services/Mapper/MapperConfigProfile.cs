@@ -9,7 +9,6 @@ using KoiDeli.Domain.DTOs.KoiFishDTOs;
 using KoiDeli.Domain.DTOs.OrderDetailDTOs;
 using KoiDeli.Domain.DTOs.OrderDTOs;
 using KoiDeli.Domain.DTOs.OrderTimelineDTOs;
-using KoiDeli.Domain.DTOs.PartnerShipmentDTOs;
 using KoiDeli.Domain.DTOs.RoleDTOs;
 using KoiDeli.Domain.DTOs.TimelineDeliveryDTOs;
 using KoiDeli.Domain.DTOs.TransactionDTOs;
@@ -46,7 +45,7 @@ namespace KoiDeli.Services.Mapper
             CreateMap<TimelineDelivery, TimelineDeliveryDTO>().ReverseMap();
             CreateMap<Role, RoleDTO>().ReverseMap();
             CreateMap<Distance, DistanceDTO>().ReverseMap();
-            CreateMap<PartnerShipment, PartnerDTO>().ReverseMap();
+         
             CreateMap<Wallet, WalletDTO>().ReverseMap();
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
@@ -66,7 +65,7 @@ namespace KoiDeli.Services.Mapper
             CreateMap<TimelineDelivery, TimelineDeliveryCreateDTO>().ReverseMap();
             CreateMap<Role, RoleCreateDTO>().ReverseMap();
             CreateMap<Distance, DistanceCreateDTO>().ReverseMap();
-            CreateMap<PartnerShipment, PartnerCreateDTO>().ReverseMap();
+          
             CreateMap<Wallet, WalletCreateDTO>().ReverseMap();
             CreateMap<Transaction, TransactionCreateDTO>().ReverseMap();
             CreateMap<User, UserCreateDTO>().ReverseMap();
@@ -85,8 +84,7 @@ namespace KoiDeli.Services.Mapper
             CreateMap<TimelineDelivery, TimelineDeliveryUpdateDTO>().ReverseMap();
             CreateMap<Role, RoleUpdateDTO>().ReverseMap();
             CreateMap<Distance, DistanceUpdateDTO>().ReverseMap();
-            CreateMap<PartnerShipment, PartnerUpdateDTO>().ReverseMap();
-            CreateMap<PartnerShipment, PartnerUpdateCompleteDTO>().ReverseMap();
+        
             CreateMap<Wallet, WalletUpdateDTO>().ReverseMap();
             CreateMap<Transaction, TransactionUpdateDTO>().ReverseMap();
             CreateMap<User, UserUpdateDTO>().ReverseMap();

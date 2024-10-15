@@ -20,7 +20,7 @@ namespace KoiDeli.Repositories
         private readonly ITimelineDeliveryRepository _timelineDeliveryRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IDistanceRepository _distanceRepository;
-        private readonly IPartnerShipmentRepository _partnerShipmentRepository;
+      
         private readonly IWalletRepository _walletRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IUserRepository _userRepository;
@@ -40,7 +40,7 @@ namespace KoiDeli.Repositories
             ITimelineDeliveryRepository timelineDeliveryRepository,
             IRoleRepository roleRepository,
             IDistanceRepository distanceRepository,
-            IPartnerShipmentRepository partnerShipmentRepository,
+            
             IWalletRepository walletRepository,
             ITransactionRepository transactionRepository,
             IUserRepository userRepository,
@@ -51,7 +51,7 @@ namespace KoiDeli.Repositories
             _boxRepository = boxRepository;
             _boxOptionRepository = boxOptionRepository;
             _koiFishRepository = koiFishRepository;
-            _partnerShipmentRepository = partnerShipmentRepository;
+            
             _vehicleRepository = vehicleRepository;
             _branchRepository = branchRepository;
             _orderRepository = orderRepository;
@@ -60,7 +60,7 @@ namespace KoiDeli.Repositories
             _orderTimelineRepository = orderTimelineRepository;
             _roleRepository = roleRepository;
             _distanceRepository = distanceRepository;
-            _partnerShipmentRepository = partnerShipmentRepository;
+            
             _walletRepository = walletRepository;
             _transactionRepository = transactionRepository;
             _userRepository = userRepository;
@@ -81,7 +81,7 @@ namespace KoiDeli.Repositories
         public ITimelineDeliveryRepository TimelineDeliveryRepository => _timelineDeliveryRepository;
         public IRoleRepository RoleRepository => _roleRepository;
         public IDistanceRepository DistanceRepository => _distanceRepository;
-        public IPartnerShipmentRepository PartnerShipmentRepository => _partnerShipmentRepository;
+       
         public IWalletRepository WalletRepository => _walletRepository;
         public ITransactionRepository TransactionRepository => _transactionRepository;
         public IUserRepository UserRepository => _userRepository;
