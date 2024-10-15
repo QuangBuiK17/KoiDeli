@@ -26,6 +26,9 @@ namespace KoiDeli.Domain.DTOs.BoxOptionDTOs
         public Int64 FishVolume { get; set; }
         public string? FishDescription { get; set; }
         public Int64 Quantity { get; set; }
+
+        // Thêm Id của BoxOption
+        public int BoxOptionId { get; set; }
     }
 
 }

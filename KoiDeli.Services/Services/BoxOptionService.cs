@@ -203,7 +203,8 @@ namespace KoiDeli.Services.Services
                             FishSize = boxOption.Fish.Size,
                             FishVolume = boxOption.Fish.Volume,
                             FishDescription = boxOption.Fish.Description,
-                            Quantity = boxOption.Quantity
+                            Quantity = boxOption.Quantity,
+                            BoxOptionId = boxOption.Id  // Thêm Id của BoxOption vào đây
                         };
 
                         boxDto.Fishes.Add(fishDto);
@@ -233,6 +234,7 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
+
 
 
 
