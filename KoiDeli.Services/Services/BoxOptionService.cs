@@ -6,6 +6,7 @@ using KoiDeli.Domain.Enums;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,23 +35,53 @@ namespace KoiDeli.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<ApiResult<BoxOptionDTO>> CreateBoxOptionAsync(BoxOptionCreateDTO boxOptionDto)
+        public async Task<ApiResult<BoxOptionDTO>> CreateBoxOptionAsync(BoxOptionCreateRequest boxOptionRequest)
         {
             var response = new ApiResult<BoxOptionDTO>();
 
             try
             {
-                var entity = _mapper.Map<BoxOption>(boxOptionDto);
+                foreach (var boxData in boxOptionRequest.Boxes)
+                {
+                    var box = await _unitOfWork.BoxRepository.GetByIdAsync(boxData.BoxId);
+                    if (box == null)
+                    {
+                        response.Success = false;
+                        response.Message = $"Box with ID {boxData.BoxId} not found.";
+                        return response;
+                    }
 
-                entity.IsChecked = boxOptionDto.IsChecked.HasValue
-                    ? boxOptionDto.IsChecked.Value.ToString()
-                    : StatusEnum.Pending.ToString();
+                    foreach (var fishData in boxData.Fishes)
+                    {
+                        var koiFish = await _unitOfWork.KoiFishRepository.GetByIdAsync(fishData.FishId);
+                        if (koiFish == null)
+                        {
+                            response.Success = false;
+                            response.Message = $"Fish with ID {fishData.FishId} not found.";
+                            return response;
+                        }
 
-                await _unitOfWork.BoxOptionRepository.AddAsync(entity);
+                        var boxOptionDto = new BoxOptionCreateDTO
+                        {
+                            BoxId = boxData.BoxId,
+                            FishId = fishData.FishId,
+                            Quantity = fishData.Quantity,
+                            Description = $"Added {fishData.Quantity} fish(es) to Box {boxData.BoxId}.",
+                            IsChecked = StatusEnum.Pending
+                        };
+
+                        var entity = _mapper.Map<BoxOption>(boxOptionDto);
+
+                        entity.IsChecked = boxOptionDto.IsChecked.HasValue
+                            ? boxOptionDto.IsChecked.Value.ToString()
+                            : StatusEnum.Pending.ToString();
+
+                        await _unitOfWork.BoxOptionRepository.AddAsync(entity);
+                    }
+                }
 
                 if (await _unitOfWork.SaveChangeAsync() > 0)
                 {
-                    response.Data = _mapper.Map<BoxOptionDTO>(entity);
                     response.Success = true;
                     response.Message = "BoxOption created successfully.";
                 }
@@ -68,6 +99,7 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
+
 
         public async Task<ApiResult<BoxOptionDTO>> DeleteBoxOptionAsync(int id)
         {
@@ -128,31 +160,69 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
-        public async Task<ApiResult<List<BoxOptionDTO>>> GetBoxOptionsAsync()
+        public async Task<ApiResult<List<BoxOpDTO>>> GetBoxOptionsAsync()
         {
-            var response = new ApiResult<List<BoxOptionDTO>>();
-            List<BoxOptionDTO> boxOptionDTOs = new List<BoxOptionDTO>();
+            var response = new ApiResult<List<BoxOpDTO>>();
+            List<BoxOpDTO> boxDTOs = new List<BoxOpDTO>();
 
             try
             {
-                var boxOptions = await _unitOfWork.BoxOptionRepository.GetAllAsync();
+                // Sử dụng Include để nạp đầy đủ thông tin về Box và KoiFish
+                var boxOptions = await _unitOfWork.BoxOptionRepository
+                    .GetAll()  // Trả về IQueryable
+                    .Include(bo => bo.Box)
+                    .Include(bo => bo.Fish)
+                    .ToListAsync();  // Thực thi truy vấn và lấy danh sách
 
-                foreach (var boxOption in boxOptions)
+                // Nhóm các BoxOptions theo BoxId (mỗi Box có thể chứa nhiều BoxOption)
+                var groupedBoxOptions = boxOptions
+                    .GroupBy(bo => bo.BoxId)
+                    .ToList();
+
+                foreach (var group in groupedBoxOptions)
                 {
-                    var boxOptionDto = _mapper.Map<BoxOptionDTO>(boxOption);
-                    boxOptionDTOs.Add(boxOptionDto);
+                    var firstBoxOption = group.First();  // Lấy thông tin Box từ item đầu tiên của nhóm
+                    var boxDto = new BoxOpDTO
+                    {
+                        BoxId = firstBoxOption.BoxId,
+                        BoxName = firstBoxOption.Box.Name,
+                        MaxVolume = firstBoxOption.Box.MaxVolume,
+                        RemainingVolume = firstBoxOption.Box.RemainingVolume,
+                        Price = firstBoxOption.Box.Price,
+                        UsageCount = group.Count(),
+                        TotalFish = (int)group.Sum(g => g.Quantity),
+                        TotalVolume = group.Sum(g => g.Fish.Volume * g.Quantity)
+                    };
+
+                    // Duyệt qua từng BoxOption để lấy thông tin cá trong hộp
+                    foreach (var boxOption in group)
+                    {
+                        var fishDto = new FishDTO
+                        {
+                            FishId = boxOption.FishId,
+                            FishSize = boxOption.Fish.Size,
+                            FishVolume = boxOption.Fish.Volume,
+                            FishDescription = boxOption.Fish.Description,
+                            Quantity = boxOption.Quantity
+                        };
+
+                        boxDto.Fishes.Add(fishDto);
+                    }
+
+                    // Thêm BoxDTO vào danh sách trả về
+                    boxDTOs.Add(boxDto);
                 }
 
-                if (boxOptionDTOs.Count > 0)
+                if (boxDTOs.Count > 0)
                 {
-                    response.Data = boxOptionDTOs;
+                    response.Data = boxDTOs;
                     response.Success = true;
-                    response.Message = $"Found {boxOptionDTOs.Count} BoxOptions.";
+                    response.Message = $"Found {boxDTOs.Count} boxes with fish details.";
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = "No BoxOptions found.";
+                    response.Message = "No boxes found.";
                 }
             }
             catch (Exception ex)
@@ -164,7 +234,10 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
-        public  async Task<ApiResult<List<BoxOptionDTO>>> GetBoxOptionsEnableAsync()
+
+
+
+        public async Task<ApiResult<List<BoxOptionDTO>>> GetBoxOptionsEnableAsync()
         {
             var response = new ApiResult<List<BoxOptionDTO>>();
             List<BoxOptionDTO> boxOptionDTOs = new List<BoxOptionDTO>();

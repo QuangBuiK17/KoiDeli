@@ -54,19 +54,23 @@ namespace KoiDeli.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CreateBoxOption([FromBody] BoxOptionCreateDTO createDto)
+        public async Task<IActionResult> CreateBoxOption([FromBody] BoxOptionCreateRequest createRequest)
         {
-            if (createDto == null)
+            if (createRequest == null || createRequest.Boxes == null || !createRequest.Boxes.Any())
             {
-                return BadRequest();
+                return BadRequest("Invalid request.");
             }
-            var c = await _boxOptionService.CreateBoxOptionAsync(createDto);
-            if (!c.Success)
+
+            var result = await _boxOptionService.CreateBoxOptionAsync(createRequest);
+
+            if (!result.Success)
             {
-                return BadRequest(c);
+                return BadRequest(result);
             }
-            return Ok(c);
+
+            return Ok(result);
         }
+
 
         // [Authorize(Roles = "Manager")]
         [HttpPut]

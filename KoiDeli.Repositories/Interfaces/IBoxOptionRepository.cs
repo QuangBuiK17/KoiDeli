@@ -9,5 +9,6 @@ namespace KoiDeli.Repositories.Interfaces
 {
     public interface IBoxOptionRepository: IGenericRepository<BoxOption>
     {
+        IQueryable<BoxOption> GetAll();
     }
 }
