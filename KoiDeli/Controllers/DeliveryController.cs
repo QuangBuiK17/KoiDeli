@@ -13,7 +13,9 @@ namespace KoiDeli.Controllers
             _deliveryService = deliveryService;
         }
 
-        [HttpGet("order-detail/{orderDetailID}")]
+        [HttpGet("order-detail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetOrderDetailInfo(int orderDetailID)
         {
             var result = await _deliveryService.GetOrderDetailInfoAsync(orderDetailID);
@@ -21,20 +23,25 @@ namespace KoiDeli.Controllers
         }
 
         [HttpGet("timeline-deliveries")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTimelineDeliveries(int branchID, DateTime date)
         {
             var result = await _deliveryService.GetTimelineDeliveriesAsync(branchID, date);
             return Ok(result);
         }
-
+        /*
         [HttpPost("assign-order")]
         public async Task<IActionResult> AssignOrderToTimeline(int timelineDeliveryID, int orderDetailID)
         {
             var result = await _deliveryService.AssignOrderToTimelineAsync(timelineDeliveryID, orderDetailID);
             return Ok(result);
         }
-
+        */
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateOrdertimeline(OrderTimelineCreateDTO orderTimelineDto)
         {
             var result = await _deliveryService.CreateOrderTimelineAsync(orderTimelineDto);
