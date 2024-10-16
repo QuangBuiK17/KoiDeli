@@ -50,7 +50,7 @@ namespace KoiDeli.Services.Services
             try
             {
                 var orderDetail = await _context.OrderDetails
-                    .Where(o => o.Id == orderDetailID)
+                    .Where(o => o.Id == orderDetailID && o.IsDeleted == false)
                     .Join(_context.BoxOptions, o => o.BoxOptionId, b => b.Id, (o, b) => new { o, b })
                     .Join(_context.Boxes, ob => ob.b.BoxId, bx => bx.Id, (ob, bx) => new de_OrderDetailInfoDTO
                     {
@@ -65,12 +65,13 @@ namespace KoiDeli.Services.Services
                 if (orderDetail == null)
                 {
                     result.Success = false;
-                    result.Message = "Order detail not found.";
+                    result.Message = "Order detail not found or has been deleted.";
                 }
                 else
                 {
-                    result.Data = orderDetail;
                     result.Success = true;
+                    result.Data = orderDetail;
+                    result.Message = $"Get orderDetail with ID( {orderDetailID} ) sucessfully";
                 }
             }
             catch (Exception ex)
@@ -108,13 +109,21 @@ namespace KoiDeli.Services.Services
                         VehicleName = v.Name,
                         MaxVolume = v.VehicleVolume,
                         RemainingVolume = v.VehicleVolume - _context.OrderTimeline
-                        .Where(ot => ot.TimelineDeliveryId == tb.t.Id)
+                        .Where(ot => ot.TimelineDeliveryId == tb.t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false)
                         .Sum(ot => ot.OrderDetail.BoxOption.Quantity * ot.OrderDetail.BoxOption.Box.MaxVolume)
                     })
                     .ToListAsync();
-
-                result.Data = deliveries;
-                result.Success = true;
+                if (deliveries != null)
+                {
+                    result.Success = true;
+                    result.Data = deliveries;
+                    result.Message = $"There are {deliveries.Count} trip in date: {date.ToString("yyyy-MM-dd")}.";
+                }else
+                {
+                    result.Success = false;
+                    result.Message = "There are no matching trip.";
+                }
+                
             }
             catch (Exception ex)
             {
@@ -144,7 +153,7 @@ namespace KoiDeli.Services.Services
 
                 var remainingVolume = timeline.Vehicle.VehicleVolume -
                     _context.OrderTimeline
-                        .Where(ot => ot.TimelineDeliveryId == timelineDeliveryID)
+                        .Where(ot => ot.TimelineDeliveryId == timelineDeliveryID && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false)
                         .Sum(ot => ot.OrderDetail.BoxOption.Quantity * ot.OrderDetail.BoxOption.Box.MaxVolume);
 
                 var orderTotalVolume = orderDetail.BoxOption.Quantity * orderDetail.BoxOption.Box.MaxVolume;
@@ -232,7 +241,8 @@ namespace KoiDeli.Services.Services
 
                 var remainingVolume = timeline.Vehicle.VehicleVolume -
                     _context.OrderTimeline
-                        .Where(ot => ot.TimelineDeliveryId == orderTimelineDto.TimelineDeliveryId)
+                        .Where(ot => ot.TimelineDeliveryId == orderTimelineDto.TimelineDeliveryId 
+                                    && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false)
                         .Sum(ot => ot.OrderDetail.BoxOption.Quantity * ot.OrderDetail.BoxOption.Box.MaxVolume);
 
                 var orderTotalVolume = orderDetail.BoxOption.Quantity * orderDetail.BoxOption.Box.MaxVolume;
@@ -258,7 +268,9 @@ namespace KoiDeli.Services.Services
                     {
                         response.Data = _mapper.Map<OrderTimelineDTO>(entity);
                         response.Success = true;
-                        response.Message = "OrderTimeline created successfully.";
+                        response.Message = $"OrderTimeline created successfully. " +
+                                            $"orderDetail_ID: {orderTimelineDto.OrderDetailId} with total volume = {orderTotalVolume} " +
+                                            $"has been assigned into the timeline delivery: {orderTimelineDto.TimelineDeliveryId} ";
                     }
                     else
                     {
