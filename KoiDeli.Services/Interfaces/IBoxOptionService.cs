@@ -16,7 +16,7 @@ namespace KoiDeli.Services.Interfaces
         Task<ApiResult<List<BoxOptionDTO>>> SearchBoxOptionByNameAsync(string name);
         Task<ApiResult<BoxOptionDTO>> DeleteBoxOptionAsync(int id);
         Task<ApiResult<BoxOptionDTO>> UpdateBoxOptionAsync(int id, BoxOptionUpdateDTO updateDto);
-        Task<ApiResult<BoxOptionDTO>> CreateBoxOptionAsync(BoxOptionCreateRequest boxOptionRequest);
+        Task<ApiResult<List<BoxOptionDTO>>> CreateBoxOptionAsync(BoxOptionCreateRequest boxOptionRequest);
 
     }
 }

@@ -35,9 +35,10 @@ namespace KoiDeli.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<ApiResult<BoxOptionDTO>> CreateBoxOptionAsync(BoxOptionCreateRequest boxOptionRequest)
+        public async Task<ApiResult<List<BoxOptionDTO>>> CreateBoxOptionAsync(BoxOptionCreateRequest boxOptionRequest)
         {
-            var response = new ApiResult<BoxOptionDTO>();
+            var response = new ApiResult<List<BoxOptionDTO>>();
+            var createdBoxOptions = new List<BoxOption>();
 
             try
             {
@@ -77,6 +78,9 @@ namespace KoiDeli.Services.Services
                             : StatusEnum.Pending.ToString();
 
                         await _unitOfWork.BoxOptionRepository.AddAsync(entity);
+
+                        // Add the created BoxOption entity to the list
+                        createdBoxOptions.Add(entity);
                     }
                 }
 
@@ -84,6 +88,9 @@ namespace KoiDeli.Services.Services
                 {
                     response.Success = true;
                     response.Message = "BoxOption created successfully.";
+
+                    // Map the created BoxOption entities to BoxOptionDTO and add them to the response data
+                    response.Data = _mapper.Map<List<BoxOptionDTO>>(createdBoxOptions);
                 }
                 else
                 {
@@ -99,6 +106,8 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
+
+
 
 
         public async Task<ApiResult<BoxOptionDTO>> DeleteBoxOptionAsync(int id)
