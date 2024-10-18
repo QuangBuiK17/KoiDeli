@@ -14,8 +14,10 @@ namespace KoiDeli.Services.Interfaces
     {
         Task<ApiResult<de_OrderDetailInfoDTO>> GetOrderDetailInfoAsync(int orderDetailID);
         Task<ApiResult<List<de_TimelineDeliveryInfoDTO>>> GetTimelineDeliveriesAsync(int branchID, DateTime date);
-        Task<ApiResult<bool>> AssignOrderToTimelineAsync(int timelineDeliveryID, int orderDetailID);
+        //Task<ApiResult<bool>> AssignOrderToTimelineAsync(int timelineDeliveryID, int orderDetailID);
         Task<ApiResult<OrderTimelineDTO>> CreateOrderTimelineAsync(OrderTimelineCreateDTO orderTimeline);
+
+        Task<ApiResult<bool>> CreateTotalTimelineAsync (de_CreateTotalTimelineDTO dto);
 
     }
 }
