@@ -10,9 +10,9 @@ namespace KoiDeli.Domain.Enums
     {
     Pending,  //0 
     Approved, //1  
-    Rejected,  //2 
+    Packed,  //2 
     Completed,  //3
-    Cancelle, //4
+    Cancelled, //4
     Packing, //5
     Delivering//6
     }
