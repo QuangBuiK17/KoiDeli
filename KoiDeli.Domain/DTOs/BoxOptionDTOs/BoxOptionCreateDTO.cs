@@ -1,4 +1,5 @@
-﻿using KoiDeli.Domain.Enums;
+﻿using KoiDeli.Domain.DTOs.FishInBoxDTOs;
+using KoiDeli.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,8 @@ namespace KoiDeli.Domain.DTOs.BoxOptionDTOs
 {
     public class BoxOptionCreateDTO
     {
-        public int FishId { get; set; }
         public int BoxId { get; set; }
-        public Int64 Quantity { get; set; }
-        public string? Description { get; set; }
-        public StatusEnum? IsChecked { get; set; } 
+        public List<FishInBoxDTO>? FishInBoxes { get; set; }  // Chứa danh sách FishInBox
+        public StatusEnum? IsChecked { get; set; }
     }
 }

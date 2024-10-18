@@ -5,6 +5,7 @@ using KoiDeli.Domain.DTOs.BoxOptionDTOs;
 using KoiDeli.Domain.DTOs.BranchDTOs;
 using KoiDeli.Domain.DTOs.DistanceDTOs;
 using KoiDeli.Domain.DTOs.FeedbackDTOs;
+using KoiDeli.Domain.DTOs.FishInBoxDTOs;
 using KoiDeli.Domain.DTOs.KoiFishDTOs;
 using KoiDeli.Domain.DTOs.OrderDetailDTOs;
 using KoiDeli.Domain.DTOs.OrderDTOs;
@@ -53,6 +54,9 @@ namespace KoiDeli.Services.Mapper
             CreateMap<User, UserDetailsModel>().ReverseMap();
             CreateMap<Role, RoleInfoModel>().ReverseMap();
             CreateMap<User, RoleInfoModel>().ReverseMap();
+
+            CreateMap<FishInBox, FishInBoxDTO>().ReverseMap();
+
             //Create
             CreateMap<Box, BoxCreateDTO>().ReverseMap();
             CreateMap<KoiFish, KoiFishCreateDTO>().ReverseMap();

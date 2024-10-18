@@ -8,6 +8,7 @@ namespace KoiDeli.Domain.DTOs.BoxOptionDTOs
 {
     public class BoxOpDTO
     {
+        public int BoxOptionId { get; set; }
         public string? BoxName { get; set; }
         public int BoxId { get; set; }
         public Int64 MaxVolume { get; set; }
@@ -21,6 +22,7 @@ namespace KoiDeli.Domain.DTOs.BoxOptionDTOs
 
     public class FishDTO
     {
+        public int FishInBoxId { get; set; }
         public int FishId { get; set; }
         public string? FishSize { get; set; }
         public Int64 FishVolume { get; set; }

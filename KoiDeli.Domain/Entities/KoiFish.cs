@@ -14,9 +14,8 @@ namespace KoiDeli.Domain.Entities
         public Int64 Volume { get; set; }
         public string? Description { get; set; }
 
-        //Relation
-        public virtual ICollection<BoxOption>? BoxOptions { get; set; }
-
+        //Relation       
+        public virtual ICollection<FishInBox>? FishInBoxes { get; set; }
 
     }
 }

@@ -28,84 +28,93 @@ namespace KoiDeli.Repositories
         public DbSet<Transaction> Transaction { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
 
+        public DbSet<FishInBox> FishInBoxes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            {
-                relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            }
-            //Config N-N realationship
+            // Loại bỏ vòng lặp này vì nó ảnh hưởng đến tất cả các quan hệ trước khi ta có thể cấu hình chi tiết
+            // foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            // {
+            //     relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            // }
 
-            //config Boxoption
-            modelBuilder.Entity<BoxOption>()
-           .HasKey(ps => ps.Id);
+            // Config N-N relationship
 
+            // Config BoxOption
             modelBuilder.Entity<BoxOption>()
-            .HasOne(s => s.Box)
-            .WithMany(ps => ps.BoxOptions)
-            .HasForeignKey(s => s.BoxId)
-            .OnDelete(DeleteBehavior.Restrict);
+               .HasKey(ps => ps.Id);
 
             modelBuilder.Entity<BoxOption>()
-            .HasOne(p => p.Fish)
-            .WithMany(ps => ps.BoxOptions)
-            .HasForeignKey(s => s.FishId)
-            .OnDelete(DeleteBehavior.Restrict);
+               .HasOne(s => s.Box)
+               .WithMany(ps => ps.BoxOptions)
+               .HasForeignKey(s => s.BoxId)
+               .OnDelete(DeleteBehavior.Restrict); // Không xóa Box khi xóa BoxOption
 
-            //config TimelineDelivery
-            modelBuilder.Entity<TimelineDelivery>()
-           .HasKey(ps => ps.Id);
+            // Config FishInBox
+            modelBuilder.Entity<FishInBox>()
+               .HasOne(fib => fib.BoxOption)        // Mỗi FishInBox thuộc về một BoxOption
+               .WithMany(bo => bo.FishInBoxes)      // Một BoxOption chứa nhiều FishInBox
+               .HasForeignKey(fib => fib.BoxOptionId) // Khóa ngoại là BoxOptionId
+               .OnDelete(DeleteBehavior.Cascade);   // Khi xóa BoxOption, xóa luôn FishInBox
 
-            modelBuilder.Entity<TimelineDelivery>()
-            .HasOne(s => s.Branch)
-            .WithMany(ps => ps.TimelineDeliveries)
-            .HasForeignKey(s => s.BranchId)
-            .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<FishInBox>()
+               .HasOne(fib => fib.KoiFish)          // Mỗi FishInBox chứa một loại KoiFish
+               .WithMany(kf => kf.FishInBoxes)      // Một KoiFish có thể có nhiều FishInBox
+               .HasForeignKey(fib => fib.FishId)    // Khóa ngoại là FishId
+               .OnDelete(DeleteBehavior.Restrict);  // Không xóa KoiFish khi xóa FishInBox
 
-            modelBuilder.Entity<TimelineDelivery>()
-            .HasOne(p => p.Vehicle)
-            .WithMany(ps => ps.TimelineDeliveries)
-            .HasForeignKey(s => s.VehicleId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            //config OrderTimeline
-            modelBuilder.Entity<OrderTimeline>()
-           .HasKey(ps => ps.Id);
-
-            modelBuilder.Entity<OrderTimeline>()
-            .HasOne(s => s.OrderDetail)
-            .WithMany(ps => ps.OrderTimelines)
-            .HasForeignKey(s => s.OrderDetailId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<OrderTimeline>()
-            .HasOne(p => p.TimelineDelivery)
-            .WithMany(ps => ps.OrderTimelines)
-            .HasForeignKey(s => s.TimelineDeliveryId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            //config OrderDetail
+            // Config OrderDetail
+            modelBuilder.Entity<OrderDetail>()
+               .HasKey(ps => ps.Id);
 
             modelBuilder.Entity<OrderDetail>()
-           .HasKey(ps => ps.Id);
+               .HasOne(s => s.BoxOption)            // Mỗi OrderDetail chứa một BoxOption
+               .WithOne(ps => ps.OrderDetail)       // Một BoxOption thuộc về một OrderDetail
+               .HasForeignKey<OrderDetail>(s => s.BoxOptionId)
+               .OnDelete(DeleteBehavior.Cascade);   // Khi xóa OrderDetail, xóa luôn BoxOption
 
-            modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
-           .HasOne(s => s.BoxOption)
-           .WithOne(ps => ps.OrderDetail)
-           .HasForeignKey<OrderDetail>(s => s.BoxOptionId)
-           .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrderDetail>()
+               .HasOne(s => s.Distance)
+               .WithMany(ps => ps.OrderDetails)
+               .HasForeignKey(s => s.DistanceId)
+               .OnDelete(DeleteBehavior.Restrict);  // Không xóa Distance khi xóa OrderDetail
 
+            // Config TimelineDelivery
+            modelBuilder.Entity<TimelineDelivery>()
+               .HasKey(ps => ps.Id);
 
-            modelBuilder.Entity<OrderDetail>() // BoxOption vs OrD
-          .HasOne(s => s.Distance)
-          .WithMany(ps => ps.OrderDetails)
-          .HasForeignKey(s => s.DistanceId)
-          .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TimelineDelivery>()
+               .HasOne(s => s.Branch)
+               .WithMany(ps => ps.TimelineDeliveries)
+               .HasForeignKey(s => s.BranchId)
+               .OnDelete(DeleteBehavior.Restrict);  // Không xóa Branch khi xóa TimelineDelivery
 
+            modelBuilder.Entity<TimelineDelivery>()
+               .HasOne(p => p.Vehicle)
+               .WithMany(ps => ps.TimelineDeliveries)
+               .HasForeignKey(s => s.VehicleId)
+               .OnDelete(DeleteBehavior.Restrict);  // Không xóa Vehicle khi xóa TimelineDelivery
+
+            // Config OrderTimeline
+            modelBuilder.Entity<OrderTimeline>()
+               .HasKey(ps => ps.Id);
+
+            modelBuilder.Entity<OrderTimeline>()
+               .HasOne(s => s.OrderDetail)
+               .WithMany(ps => ps.OrderTimelines)
+               .HasForeignKey(s => s.OrderDetailId)
+               .OnDelete(DeleteBehavior.Restrict);  // Không xóa OrderDetail khi xóa OrderTimeline
+
+            modelBuilder.Entity<OrderTimeline>()
+               .HasOne(p => p.TimelineDelivery)
+               .WithMany(ps => ps.OrderTimelines)
+               .HasForeignKey(s => s.TimelineDeliveryId)
+               .OnDelete(DeleteBehavior.Restrict);  // Không xóa TimelineDelivery khi xóa OrderTimeline
         }
 
 
-        }
+
+    }
 }

@@ -52,6 +52,14 @@ namespace KoiDeli.Services.Services
                         return response;
                     }
 
+                    // Tạo một BoxOption duy nhất cho mỗi Box
+                    var boxOption = new BoxOption
+                    {
+                        BoxId = boxData.BoxId,
+                        IsChecked = StatusEnum.Pending.ToString(),  // Đặt trạng thái hộp là Pending
+                        FishInBoxes = new List<FishInBox>()  // Khởi tạo danh sách cá trong hộp
+                    };
+
                     foreach (var fishData in boxData.Fishes)
                     {
                         var koiFish = await _unitOfWork.KoiFishRepository.GetByIdAsync(fishData.FishId);
@@ -62,26 +70,20 @@ namespace KoiDeli.Services.Services
                             return response;
                         }
 
-                        var boxOptionDto = new BoxOptionCreateDTO
+                        // Thêm các FishInBox vào danh sách
+                        var fishInBox = new FishInBox
                         {
-                            BoxId = boxData.BoxId,
                             FishId = fishData.FishId,
                             Quantity = fishData.Quantity,
-                            Description = $"Added {fishData.Quantity} fish(es) to Box {boxData.BoxId}.",
-                            IsChecked = StatusEnum.Pending
+                            KoiFish = koiFish,  // Gán loại cá
+                            BoxOption = boxOption // Gán liên kết với BoxOption
                         };
 
-                        var entity = _mapper.Map<BoxOption>(boxOptionDto);
-
-                        entity.IsChecked = boxOptionDto.IsChecked.HasValue
-                            ? boxOptionDto.IsChecked.Value.ToString()
-                            : StatusEnum.Pending.ToString();
-
-                        await _unitOfWork.BoxOptionRepository.AddAsync(entity);
-
-                        // Add the created BoxOption entity to the list
-                        createdBoxOptions.Add(entity);
+                        boxOption.FishInBoxes.Add(fishInBox);  // Thêm cá vào hộp
                     }
+
+                    await _unitOfWork.BoxOptionRepository.AddAsync(boxOption);  // Lưu BoxOption
+                    createdBoxOptions.Add(boxOption);  // Thêm BoxOption vào danh sách đã tạo
                 }
 
                 if (await _unitOfWork.SaveChangeAsync() > 0)
@@ -89,7 +91,7 @@ namespace KoiDeli.Services.Services
                     response.Success = true;
                     response.Message = "BoxOption created successfully.";
 
-                    // Map the created BoxOption entities to BoxOptionDTO and add them to the response data
+                    // Map các BoxOption đã tạo sang DTO và trả về
                     response.Data = _mapper.Map<List<BoxOptionDTO>>(createdBoxOptions);
                 }
                 else
@@ -106,6 +108,7 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
+
 
 
 
@@ -176,16 +179,17 @@ namespace KoiDeli.Services.Services
 
             try
             {
-                // Sử dụng Include để nạp đầy đủ thông tin về Box và KoiFish
+                // Sử dụng Include để nạp đầy đủ thông tin về Box và FishInBox, KoiFish
                 var boxOptions = await _unitOfWork.BoxOptionRepository
                     .GetAll()  // Trả về IQueryable
-                    .Include(bo => bo.Box)
-                    .Include(bo => bo.Fish)
+                    .Include(bo => bo.Box)  // Include Box thông tin
+                    .Include(bo => bo.FishInBoxes)  // Include FishInBoxes
+                        .ThenInclude(fib => fib.KoiFish)  // Include KoiFish từ FishInBox
                     .ToListAsync();  // Thực thi truy vấn và lấy danh sách
 
-                // Nhóm các BoxOptions theo BoxId (mỗi Box có thể chứa nhiều BoxOption)
+                // Nhóm các BoxOptions theo BoxOptionId (mỗi BoxOption là một nhóm riêng)
                 var groupedBoxOptions = boxOptions
-                    .GroupBy(bo => bo.BoxId)
+                    .GroupBy(bo => bo.Id)  // Nhóm theo BoxOptionId
                     .ToList();
 
                 foreach (var group in groupedBoxOptions)
@@ -193,30 +197,36 @@ namespace KoiDeli.Services.Services
                     var firstBoxOption = group.First();  // Lấy thông tin Box từ item đầu tiên của nhóm
                     var boxDto = new BoxOpDTO
                     {
+                        BoxOptionId = firstBoxOption.Id,  // Đảm bảo rằng mỗi BoxOptionId là duy nhất
                         BoxId = firstBoxOption.BoxId,
                         BoxName = firstBoxOption.Box.Name,
                         MaxVolume = firstBoxOption.Box.MaxVolume,
                         RemainingVolume = firstBoxOption.Box.RemainingVolume,
                         Price = firstBoxOption.Box.Price,
-                        UsageCount = group.Count(),
-                        TotalFish = (int)group.Sum(g => g.Quantity),
-                        TotalVolume = group.Sum(g => g.Fish.Volume * g.Quantity)
+                        UsageCount = group.Count(),  // Số lần sử dụng hộp này (không thay đổi)
+                        TotalFish = group.Sum(g => g.FishInBoxes.Sum(f => (int)f.Quantity)),  // Tổng số lượng cá trong BoxOption
+                        TotalVolume = group.Sum(g => g.FishInBoxes.Sum(f => f.KoiFish.Volume * f.Quantity))  // Tổng dung tích
                     };
 
                     // Duyệt qua từng BoxOption để lấy thông tin cá trong hộp
                     foreach (var boxOption in group)
                     {
-                        var fishDto = new FishDTO
+                        // Duyệt qua từng FishInBox để thêm cá vào danh sách
+                        foreach (var fishInBox in boxOption.FishInBoxes)
                         {
-                            FishId = boxOption.FishId,
-                            FishSize = boxOption.Fish.Size,
-                            FishVolume = boxOption.Fish.Volume,
-                            FishDescription = boxOption.Fish.Description,
-                            Quantity = boxOption.Quantity,
-                            BoxOptionId = boxOption.Id  // Thêm Id của BoxOption vào đây
-                        };
+                            var fishDto = new FishDTO
+                            {
+                                FishInBoxId = fishInBox.Id,  // Gán FishInBoxId
+                                FishId = fishInBox.FishId,
+                                FishSize = fishInBox.KoiFish.Size,
+                                FishVolume = fishInBox.KoiFish.Volume,
+                                FishDescription = fishInBox.KoiFish.Description,
+                                Quantity = fishInBox.Quantity,
+                                BoxOptionId = boxOption.Id  // Thêm Id của BoxOption vào FishDTO
+                            };
 
-                        boxDto.Fishes.Add(fishDto);
+                            boxDto.Fishes.Add(fishDto);
+                        }
                     }
 
                     // Thêm BoxDTO vào danh sách trả về
@@ -243,8 +253,6 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
-
-
 
 
 

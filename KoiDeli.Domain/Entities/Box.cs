@@ -16,6 +16,6 @@ namespace KoiDeli.Domain.Entities
 
         //Relation
         public virtual ICollection<BoxOption>? BoxOptions { get; set; }
-        
+
     }
 }
