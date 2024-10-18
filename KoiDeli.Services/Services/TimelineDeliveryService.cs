@@ -40,6 +40,25 @@ namespace KoiDeli.Services.Services
 
             try
             {
+                // Truy vấn các TimelineDelivery hiện tại của Vehicle và Branch
+                var existingDeliveries = (await _unitOfWork.TimelineDeliveryRepository
+                       .GetAllTimelineAsync())  // Lấy tất cả các dòng thời gian giao hàng
+                       .Where(t => t.VehicleId == timelineDeliveryDto.VehicleId && t.BranchId == timelineDeliveryDto.BranchId)
+                       .ToList();
+
+
+                // Kiểm tra xung đột thời gian với các TimelineDelivery hiện có
+                foreach (var delivery in existingDeliveries)
+                {
+                    if ((timelineDeliveryDto.StartDay < delivery.EndDay && timelineDeliveryDto.EndDay > delivery.StartDay))
+                    {
+                        response.Success = false;
+                        response.Message = "The delivery schedule conflicts with an existing delivery for this vehicle and branch.";
+                        return response;  // Trả về lỗi nếu có xung đột
+                    }
+                }
+
+                // Nếu không có xung đột, tiến hành tạo mới TimelineDelivery
                 var entity = _mapper.Map<TimelineDelivery>(timelineDeliveryDto);
 
                 entity.IsCompleted = timelineDeliveryDto.IsCompleted.HasValue
@@ -68,6 +87,7 @@ namespace KoiDeli.Services.Services
 
             return response;
         }
+
 
         public async Task<ApiResult<TimelineDeliveryDTO>> DeleteTimelineDeliveryAsync(int id)
         {

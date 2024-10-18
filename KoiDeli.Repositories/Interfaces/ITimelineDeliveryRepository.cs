@@ -9,5 +9,6 @@ namespace KoiDeli.Repositories.Interfaces
 {
     public interface ITimelineDeliveryRepository : IGenericRepository<TimelineDelivery>
     {
+        Task<List<TimelineDelivery>> GetAllTimelineAsync();
     }
 }
