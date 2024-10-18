@@ -18,6 +18,7 @@ namespace KoiDeli.Domain.Entities
         public bool IsConfirmed { get; set; }
         public int OrderId { get; set; }
         public string? UrlAvatar { get; set; }
+        public string? Address { get; set; }
 
         //Relation
         public virtual Role? Role { get; set; }

@@ -12,8 +12,7 @@ namespace KoiDeli.Domain.Enums
     Approved, //1  
     Packed,  //2 
     Completed,  //3
-    Cancelled, //4
-    Packing, //5
-    Delivering//6
+    Cancelled, //4 
+    Delivering//5
     }
 }
