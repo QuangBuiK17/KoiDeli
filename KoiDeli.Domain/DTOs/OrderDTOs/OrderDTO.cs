@@ -10,6 +10,8 @@ namespace KoiDeli.Domain.DTOs.OrderDTOs
     public class OrderDTO
     {
         public int ID { get; set; }
+        public string? SenderName { get; set; }
+        public string? SenderAddress { get; set; }
         public bool isDeleted { get; set; }
         public int FeedbackId { get; set; }
         //receive 
