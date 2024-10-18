@@ -210,14 +210,14 @@ namespace KoiDeli.Services.Services
              {
                  var orderTimeline = await _context.OrderTimeline.FirstOrDefaultAsync(ot => ot.OrderDetailId == orderTimelineDto.OrderDetailId
                                                                                      && ot.TimelineDeliveryId == orderTimelineDto.TimelineDeliveryId);
-                /*
+                
                  if (orderTimeline != null)
                  {
                      response.Success = false;
                      response.Message = "This orderDetail has been assigned into this timeline.";
                      return response;
                  }
-                 */
+                 
                  //var timeline = await _context.TimelineDelivery.FindAsync(orderTimelineDto.TimelineDeliveryId);
                  //var orderDetail = await _context.OrderDetails.FindAsync(orderTimelineDto.OrderDetailId);
 
