@@ -12,7 +12,7 @@ namespace KoiDeli.Domain.DTOs.DeliveryDTOs
         public int BoxOptionID { get; set; }
         public string? BoxName { get; set; }
         public long BoxVolume { get; set; }
-        public Int64 Quantity { get; set; }
-        public long TotalVolume => BoxVolume * Quantity;
+        //public Int64 Quantity { get; set; }
+        //public long TotalVolume => BoxVolume * Quantity;
     }
 }
