@@ -48,11 +48,6 @@ namespace KoiDeli.Services.Services
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<OrderTimelineDTO>> CreateOrderTimelineAsync(OrderTimelineCreateDTO orderTimeline)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ApiResult<de_OrderDetailInfoDTO>> GetOrderDetailInfoAsync(int orderDetailID)
         {
             var result = new ApiResult<de_OrderDetailInfoDTO>();
@@ -68,7 +63,6 @@ namespace KoiDeli.Services.Services
                         BoxOptionID = ob.o.BoxOptionId,
                         BoxName = bx.Name,
                         BoxVolume = bx.MaxVolume,
-                       // Quantity = ob.b.Quantity
                     })
                     .FirstOrDefaultAsync();
 
@@ -94,14 +88,9 @@ namespace KoiDeli.Services.Services
             return result;
         }
 
-        public Task<ApiResult<List<de_TimelineDeliveryInfoDTO>>> GetTimelineDeliveriesAsync(int branchID, DateTime date)
-        {
-            throw new NotImplementedException();
-        }
 
 
-
-        /*  public async Task<ApiResult<List<de_TimelineDeliveryInfoDTO>>> GetTimelineDeliveriesAsync(int branchID, DateTime date)
+          public async Task<ApiResult<List<de_TimelineDeliveryInfoDTO>>> GetTimelineDeliveriesAsync(int branchID, DateTime date)
           {
               var result = new ApiResult<List<de_TimelineDeliveryInfoDTO>>();
 
@@ -125,7 +114,7 @@ namespace KoiDeli.Services.Services
                           MaxVolume = v.VehicleVolume,
                           RemainingVolume = v.VehicleVolume - _context.OrderTimeline
                           .Where(ot => ot.TimelineDeliveryId == tb.t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false)
-                          .Sum(ot => ot.OrderDetail.BoxOption.Quantity * ot.OrderDetail.BoxOption.Box.MaxVolume)
+                          .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume)
                       })
                       .ToListAsync();
                   if (deliveries != null)
@@ -147,7 +136,7 @@ namespace KoiDeli.Services.Services
               }
 
               return result;
-          }*/
+          }
 
 
         /* public async Task<ApiResult<bool>> AssignOrderToTimelineAsync(int timelineDeliveryID, int orderDetailID)
@@ -213,21 +202,22 @@ namespace KoiDeli.Services.Services
          }*/
 
 
-        /* public async Task<ApiResult<OrderTimelineDTO>> CreateOrderTimelineAsync(OrderTimelineCreateDTO orderTimelineDto)
+         public async Task<ApiResult<OrderTimelineDTO>> CreateOrderTimelineAsync(OrderTimelineCreateDTO orderTimelineDto)
          {
              var response = new ApiResult<OrderTimelineDTO>();
 
              try
              {
                  var orderTimeline = await _context.OrderTimeline.FirstOrDefaultAsync(ot => ot.OrderDetailId == orderTimelineDto.OrderDetailId
-                                                                                         && ot.TimelineDeliveryId == orderTimelineDto.TimelineDeliveryId);
+                                                                                     && ot.TimelineDeliveryId == orderTimelineDto.TimelineDeliveryId);
+                /*
                  if (orderTimeline != null)
                  {
                      response.Success = false;
                      response.Message = "This orderDetail has been assigned into this timeline.";
                      return response;
                  }
-
+                 */
                  //var timeline = await _context.TimelineDelivery.FindAsync(orderTimelineDto.TimelineDeliveryId);
                  //var orderDetail = await _context.OrderDetails.FindAsync(orderTimelineDto.OrderDetailId);
 
@@ -266,9 +256,9 @@ namespace KoiDeli.Services.Services
                      _context.OrderTimeline
                          .Where(ot => ot.TimelineDeliveryId == orderTimelineDto.TimelineDeliveryId 
                                      && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false)
-                         .Sum(ot => ot.OrderDetail.BoxOption.Quantity * ot.OrderDetail.BoxOption.Box.MaxVolume);
+                         .Sum(ot =>  ot.OrderDetail.BoxOption.Box.MaxVolume);
 
-                 var orderTotalVolume = orderDetail.BoxOption.Quantity * orderDetail.BoxOption.Box.MaxVolume;
+                 var orderTotalVolume =  orderDetail.BoxOption.Box.MaxVolume;
 
                  if (orderTotalVolume > remainingVolume)
                  {
@@ -309,6 +299,6 @@ namespace KoiDeli.Services.Services
              }
 
              return response;
-         }*/
+         }
     }
 }
