@@ -14,7 +14,7 @@ namespace KoiDeli.Controllers
             _deliveryService = deliveryService;
         }
 
-        [HttpGet("order-detail")]
+        [HttpGet("order-detail-infor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetOrderDetailInfo(int orderDetailID)
@@ -23,7 +23,7 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
 
-        [HttpGet("timeline-deliveries")]
+        [HttpGet("timeline-deliveries-infor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTimelineDeliveries(int branchID, DateTime date)
@@ -31,14 +31,25 @@ namespace KoiDeli.Controllers
             var result = await _deliveryService.GetTimelineDeliveriesAsync(branchID, date);
             return Ok(result);
         }
-        /*
-        [HttpPost("assign-order")]
-        public async Task<IActionResult> AssignOrderToTimeline(int timelineDeliveryID, int orderDetailID)
+        
+        [HttpGet("view-schedule-of-ordetail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewScheduleOfOrdetail(int orDetailID)
         {
-            var result = await _deliveryService.AssignOrderToTimelineAsync(timelineDeliveryID, orderDetailID);
+            var result = await _deliveryService.ViewScheduleOfOrdetail(orDetailID);
             return Ok(result);
         }
-        */
+
+        [HttpGet("view-all-order-detail-in-timeline")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ViewAllOrderDetailInTimeline(int timelineID)
+        {
+            var result = await _deliveryService.ViewAllOrderDetailInTimeline(timelineID);
+            return Ok(result);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -58,5 +69,28 @@ namespace KoiDeli.Controllers
             var result = await _deliveryService.CreateTotalTimelineAsync(dto);
             return Ok(result);
         }
+
+        [HttpPost("assign-ordetail-timeline")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AssignOrderToTimelines(de_AssignOrderToTimelinesDTO dto)
+        {
+            var result = await _deliveryService.AssignOrderToTimelineAsync(dto);
+            return Ok(result);
+        }
+        
+        [HttpPost("update-timeline-status")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateTimelineStatus(int timelineID)
+        {
+            var result = await _deliveryService.UpdateTimelineStatusAsync(timelineID);
+            return Ok(result);
+        }
+
+
+
     }
 }

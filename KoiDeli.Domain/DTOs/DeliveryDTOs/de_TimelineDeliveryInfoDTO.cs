@@ -9,6 +9,7 @@ namespace KoiDeli.Domain.DTOs.DeliveryDTOs
     public class de_TimelineDeliveryInfoDTO
     {
         public int TimelineDeliveryID { get; set; }
+        public string isComplete { get; set; }
         public int BranchID { get; set; }
         public string? StartPoint { get; set; }
         public string? EndPoint { get; set; }
