@@ -2,6 +2,7 @@
 using Azure;
 using KoiDeli.Domain.DTOs.BranchDTOs;
 using KoiDeli.Domain.DTOs.DeliveryDTOs;
+using KoiDeli.Domain.DTOs.OrderDetailDTOs;
 using KoiDeli.Domain.DTOs.OrderTimelineDTOs;
 using KoiDeli.Domain.DTOs.TimelineDeliveryDTOs;
 using KoiDeli.Domain.DTOs.WalletDTOs;
@@ -45,11 +46,6 @@ namespace KoiDeli.Services.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Task<ApiResult<bool>> AssignOrderToTimelineAsync(int timelineDeliveryID, int orderDetailID)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ApiResult<de_OrderDetailInfoDTO>> GetOrderDetailInfoAsync(int orderDetailID)
         {
             var result = new ApiResult<de_OrderDetailInfoDTO>();
@@ -62,6 +58,7 @@ namespace KoiDeli.Services.Services
                     .Join(_context.Boxes, ob => ob.b.BoxId, bx => bx.Id, (ob, bx) => new de_OrderDetailInfoDTO
                     {
                         OrderDetailID = ob.o.Id,
+                        isComplete = ob.o.IsComplete,
                         BoxOptionID = ob.o.BoxOptionId,
                         BoxName = bx.Name,
                         BoxVolume = bx.MaxVolume,
@@ -104,6 +101,7 @@ namespace KoiDeli.Services.Services
                       .Join(_context.Vehicles, tb => tb.t.VehicleId, v => v.Id, (tb, v) => new de_TimelineDeliveryInfoDTO
                       {
                           TimelineDeliveryID = tb.t.Id,
+                          isComplete = tb.t.IsCompleted,
                           BranchID = tb.t.BranchId,
                           StartPoint = tb.b.StartPoint,
                           EndPoint = tb.b.EndPoint,
@@ -115,7 +113,9 @@ namespace KoiDeli.Services.Services
                           VehicleName = v.Name,
                           MaxVolume = v.VehicleVolume,
                           RemainingVolume = v.VehicleVolume - _context.OrderTimeline
-                          .Where(ot => ot.TimelineDeliveryId == tb.t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false)
+                          .Where(ot => ot.TimelineDeliveryId == tb.t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false  
+                                                                        && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                        && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
                           .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume)
                       })
                       .ToListAsync();
@@ -193,7 +193,9 @@ namespace KoiDeli.Services.Services
                  var remainingVolume = timeline.Vehicle.VehicleVolume -
                      _context.OrderTimeline
                          .Where(ot => ot.TimelineDeliveryId == orderTimelineDto.TimelineDeliveryId 
-                                     && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false)
+                                     && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                     && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                     && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
                          .Sum(ot =>  ot.OrderDetail.BoxOption.Box.MaxVolume);
 
                  var orderTotalVolume =  orderDetail.BoxOption.Box.MaxVolume;
@@ -238,6 +240,486 @@ namespace KoiDeli.Services.Services
 
              return response;
          }
+
+
+        public async Task<ApiResult<bool>> CreateTotalTimelineAsync(de_CreateTotalTimelineDTO dto)
+        {
+            var response = new ApiResult<bool>();
+            var timelines = new List<TimelineDelivery>();
+            var totalDescription = "";
+            try
+            {
+
+                //CHECK VehicleID
+                var existVehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(dto.VehicleID);
+                if (existVehicle == null)
+                {
+                    response.Success = false;
+                    response.Message = $"Invalid VehicleID: {dto.VehicleID}";
+                    return response;
+                }
+
+                //CHECK DOULICATE BranchID
+
+                var duplicateBranchIds = dto.de_CreateDetailTimelineDTOs
+                    .GroupBy(t => t.BranchId)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key)
+                    .ToList();
+
+                if (duplicateBranchIds.Any())
+                {
+                    response.Success = false;
+                    response.Message = $"Duplicate BranchID(s) found: {string.Join(", ", duplicateBranchIds)}";
+                    return response;
+                }
+
+
+
+
+                //SET DESCRIPTION.
+                totalDescription = "";
+                if (dto.de_CreateDetailTimelineDTOs.Count > 1)
+                {
+                    totalDescription = $"This timeline belong to bigger one, with total {dto.de_CreateDetailTimelineDTOs.Count} timelines.";
+                }
+
+                //Creta some variable before enter the loop
+                var existingTimelines = await _unitOfWork.TimelineDeliveryRepository.GetAllAsync();
+                DateTime currentStartDay = dto.TotalStartTime;
+                int count = 1;
+
+                foreach (var detailTimeline in dto.de_CreateDetailTimelineDTOs)
+                {
+
+                    //CHECK branchID
+                    var existBranch = await _unitOfWork.BranchRepository.GetByIdAsync(detailTimeline.BranchId);
+                    if (existBranch == null)
+                    {
+                        response.Success = false;
+                        response.Message = $"Invalid branchID: {detailTimeline.BranchId}";
+                        return response;
+                    }
+
+
+                    // SET start day and end day
+                    TimeSpan duration = SetDuarationTimeByBranch(detailTimeline.BranchId);
+                    DateTime endDay = currentStartDay + duration;
+
+                    //CHECK LOGIC DAY
+
+                    var isConflictWithExisting = existingTimelines.Any(t =>
+                            t.VehicleId == dto.VehicleID &&
+                            t.BranchId == detailTimeline.BranchId &&
+                            (currentStartDay <= t.EndDay && endDay >= t.StartDay));
+
+                    if (isConflictWithExisting)
+                    {
+                        response.Success = false;
+                        response.Message = "The vehicle is already scheduled for another delivery within the given time range.";
+                        return response;
+                    }
+
+                    totalDescription += $"\n{count}) Vehicle: {existVehicle.Name}, Branch: {existBranch.Name}, " +
+                        $"Start: {currentStartDay}, End: {endDay}";
+
+
+                    var timeline = new TimelineDelivery
+                    {
+                        VehicleId = dto.VehicleID,
+                        BranchId = detailTimeline.BranchId,
+                        StartDay = currentStartDay,
+                        EndDay = endDay,
+                        IsCompleted = StatusEnum.Pending.ToString(),
+                        TimeCompleted = null,
+
+                    };
+                    timelines.Add(timeline);
+                    count++;
+
+                    currentStartDay = endDay;
+                }
+
+
+                foreach (var timeline in timelines)
+                {
+                    timeline.Description = totalDescription;
+                }
+
+                await _unitOfWork.TimelineDeliveryRepository.AddRangeAsync(timelines);
+
+
+                if (await _unitOfWork.SaveChangeAsync() > 0)
+                {
+                    response.Success = true;
+                    response.Data = true;
+                    response.Message = "Timelines created successfully.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "Failed to create Timelines.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
+        public async Task<ApiResult<bool>> AssignOrderToTimelineAsync(de_AssignOrderToTimelinesDTO dto)
+        {
+            var response = new ApiResult<bool>();
+            var orderTimelines = new List<OrderTimeline>();
+
+            try
+            {
+                // Kiểm tra OrderDetailID có tồn tại không
+                var orderDetail = await _context.OrderDetails
+                    .Include(od => od.BoxOption)
+                    .ThenInclude(bo => bo.Box)
+                    .FirstOrDefaultAsync(od => od.Id == dto.OrderDetailID);
+
+                if (orderDetail == null || orderDetail.BoxOption?.Box == null)
+                {
+                    response.Success = false;
+                    response.Message = "Invalid OrderDetail.";
+                    return response;
+                }
+
+                var orderTotalVolume = orderDetail.BoxOption.Box.MaxVolume;
+
+                // Duyệt qua từng TimelineID trong danh sách
+                foreach (var timelineID in dto.TimelineID)
+                {
+                    // Kiểm tra TimelineDelivery có tồn tại không
+                    var timeline = await _context.TimelineDelivery
+                        .Include(t => t.Vehicle)
+                        .FirstOrDefaultAsync(t => t.Id == timelineID);
+
+                    if (timeline == null || timeline.Vehicle == null)
+                    {
+                        response.Success = false;
+                        response.Message = $"Timeline {timelineID} invalid.";
+                        return response;
+                    }
+
+                    // Kiểm tra xem OrderDetail đã được gán vào Timeline này chưa
+                    var existingOrderTimeline = await _context.OrderTimeline
+                        .FirstOrDefaultAsync(ot => ot.OrderDetailId == dto.OrderDetailID && ot.TimelineDeliveryId == timelineID
+                                                    && ot.IsDeleted == false  && ot.IsCompleted != StatusEnum.Completed.ToString());
+
+                    if (existingOrderTimeline != null)
+                    {
+                        response.Success = false;
+                        response.Message = $"OrderDetail {dto.OrderDetailID} has assigned into Timeline {timelineID}.";
+                        return response;
+                    }
+
+                    // Kiểm tra còn đủ không gian không
+                    var remainingVolume = timeline.Vehicle.VehicleVolume -
+                        _context.OrderTimeline
+                            .Where(ot => ot.TimelineDeliveryId == timelineID 
+                                        && !ot.IsDeleted && !ot.OrderDetail.IsDeleted
+                                        && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                        && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                            .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume);
+
+                    if (orderTotalVolume > remainingVolume)
+                    {
+                        response.Success = false;
+                        //response.Message = $"Không đủ không gian trong Timeline {timelineID}. Dung tích còn lại: {remainingVolume}.";
+                        response.Message = $"This OrderDetail can not assign into timeline {timelineID}, because remaning volume = {remainingVolume}.";
+                        return response;
+                    }
+
+                    // Tạo mới OrderTimeline
+                    var newOrderTimeline = new OrderTimeline
+                    {
+                        OrderDetailId = dto.OrderDetailID,
+                        TimelineDeliveryId = timelineID,
+                        StartDay = timeline.StartDay,
+                        EndDay = timeline.EndDay,
+                        IsCompleted = StatusEnum.Pending.ToString(),
+                        TimeCompleted = null,
+                        Description = null
+                    };
+
+                    orderTimelines.Add(newOrderTimeline);
+                }
+
+                // Thêm danh sách OrderTimeline vào database
+                await _unitOfWork.OrderTimelineRepository.AddRangeAsync(orderTimelines);
+
+                if (await _unitOfWork.SaveChangeAsync() > 0)
+                {
+                    response.Success = true;
+                    response.Data = true;
+                    response.Message = $"Total {orderTimelines.Count} OrderTimelines has been assign successfully.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "Can not create OrderTimelines.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
+
+
+        public async Task<ApiResult<bool>> UpdateTimelineStatusAsync(int timelineID)
+        {
+            var response = new ApiResult<bool>();
+
+            try
+            {
+                var timeline = await _context.TimelineDelivery.FirstOrDefaultAsync(t => t.Id == timelineID);
+
+                if (timeline == null)
+                {
+                    response.Success = false;
+                    response.Message = $"Timeline ID: {timelineID} invalid.";
+                    return response;
+                }
+
+                // Update Timeline: iscomplete = Completed
+                timeline.IsCompleted = StatusEnum.Completed.ToString();
+                _context.TimelineDelivery.Update(timeline);
+
+                // get all ordertimeline in this timeline
+                var relatedOrderTimelines = await _context.OrderTimeline
+                    .Where(ot => ot.TimelineDeliveryId == timelineID && !ot.IsDeleted)
+                    .ToListAsync();
+
+                if (relatedOrderTimelines.Any())
+                {
+                    // Cập nhật tất cả OrderTimeline thành Completed
+                    foreach (var orderTimeline in relatedOrderTimelines)
+                    {
+                        orderTimeline.IsCompleted = StatusEnum.Completed.ToString();
+                        _context.OrderTimeline.Update(orderTimeline);
+                    }
+                }
+
+                // Lưu thay đổi vào database
+                if (await _unitOfWork.SaveChangeAsync() > 0)
+                {
+                    response.Success = true;
+                    response.Data = true;
+                    response.Message = $"Total {relatedOrderTimelines.Count} ordertimeline and timeline ({timelineID}) has been updated.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "Update status fail.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
+
+
+        public async Task<ApiResult<de_ViewScheduleOfOrdetailDTO>> ViewScheduleOfOrdetail(int orderDetailID)
+        {
+            var response = new ApiResult<de_ViewScheduleOfOrdetailDTO>();
+
+            try
+            {
+                // Tìm OrderDetail với các thông tin liên quan đến BoxOption và Box.
+                var orderDetail = await _context.OrderDetails
+                    .Include(od => od.BoxOption)
+                    .ThenInclude(bo => bo.Box)
+                    .FirstOrDefaultAsync(od => od.Id == orderDetailID);
+
+                if (orderDetail == null)
+                {
+                    response.Success = false;
+                    response.Message = $"OrderDetail with ID {orderDetailID} not found.";
+                    return response;
+                }
+
+                // Lấy danh sách các OrderTimeline liên quan đến OrderDetail.
+                var orderTimelines = await _context.OrderTimeline
+                    .Where(ot => ot.OrderDetailId == orderDetailID)
+                    .Include(ot => ot.TimelineDelivery)
+                    .Select(ot => new de_OrderTimelineDTO
+                    {
+                        OrderTimelineID = ot.Id,
+                        IsComplete = ot.IsCompleted,
+                        TimelineID = ot.TimelineDeliveryId,
+                        StartDay = ot.StartDay,
+                        EndDay = ot.EndDay,
+                        Start_From = ot.TimelineDelivery.Branch.Name
+                    })
+                    .ToListAsync();
+
+                // Tạo DTO chứa dữ liệu trả về.
+                var result = new de_ViewScheduleOfOrdetailDTO
+                {
+                    DetailID = orderDetail.Id,
+                    IsComplete = orderDetail.IsComplete,
+                    BoxOptionID = orderDetail.BoxOption.Id,
+                    BoxName = orderDetail.BoxOption.Box.Name,
+                    Volume = orderDetail.BoxOption.Box.MaxVolume,
+                    OrderTimelines = orderTimelines
+                };
+
+                response.Success = true;
+                response.Data = result;
+                response.Message = $"Order detail and {orderTimelines.Count} related timelines retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
+
+        public async Task<ApiResult<de_ViewOrderDetailInTimelineDTO>> ViewAllOrderDetailInTimeline(int timelineID)
+        {
+            var response = new ApiResult<de_ViewOrderDetailInTimelineDTO>();
+
+            try
+            {
+                // Lấy thông tin timeline cùng với Vehicle và Branch.
+                var timeline = await _context.TimelineDelivery
+                    .Include(t => t.Vehicle)
+                    .Include(t => t.Branch)
+                    .FirstOrDefaultAsync(t => t.Id == timelineID);
+
+                if (timeline == null)
+                {
+                    response.Success = false;
+                    response.Message = $"Timeline with ID {timelineID} not found.";
+                    return response;
+                }
+
+                // Lấy danh sách OrderDetail liên quan đến timeline này.
+                var orderDetails = await _context.OrderTimeline
+                    .Where(ot => ot.TimelineDeliveryId == timelineID)
+                    .Include(ot => ot.OrderDetail)
+                        .ThenInclude(od => od.BoxOption)
+                        .ThenInclude(bo => bo.Box)
+                    .Select(ot => new de_OrderDetailDTO
+                    {
+                        DetailID = ot.OrderDetailId,
+                        IsComplete = ot.OrderDetail.IsComplete,
+                        BoxName = ot.OrderDetail.BoxOption.Box.Name,
+                        Volume = ot.OrderDetail.BoxOption.Box.MaxVolume
+                    })
+                    .ToListAsync();
+
+                // Tạo DTO chứa kết quả trả về.
+                var result = new de_ViewOrderDetailInTimelineDTO
+                {
+                    TimelineID = timeline.Id,
+                    IsComplete = timeline.IsCompleted,
+                    VehicleName = timeline.Vehicle.Name,
+                    BranchName = timeline.Branch.Name,
+                    StartDay = timeline.StartDay,
+                    EndDay = timeline.EndDay,
+                    Maxvolume = timeline.Vehicle.VehicleVolume,
+                    RemainingVolume = timeline.Vehicle.VehicleVolume - _context.OrderTimeline
+                          .Where(ot => ot.TimelineDeliveryId == timelineID  && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                                                            && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                            && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                          .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),
+                    OrderDetails = orderDetails
+                };
+
+                response.Success = true;
+                response.Data = result;
+                response.Message = $"Timeline and {orderDetails.Count} related order details retrieved successfully.";
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private TimeSpan SetDuarationTimeByBranch(int branchID)
+        {
+            return branchID switch
+            {
+                // Cần Thơ - Sài Gòn hoặc Sài Gòn - Cần Thơ
+                1 or 8 => TimeSpan.FromHours(4),
+
+                // Sài Gòn - Đà Nẵng hoặc Đà Nẵng - Sài Gòn
+                2 or 7 => TimeSpan.FromHours(17),
+
+                // Đà Nẵng - Hải Phòng hoặc Hải Phòng - Đà Nẵng
+                3 or 6 => TimeSpan.FromHours(16),
+
+                // Hải Phòng - Hà Nội hoặc Hà Nội - Hải Phòng
+                4 or 5 => TimeSpan.FromHours(5),
+
+                // Mặc định nếu branchID không hợp lệ
+                _ => throw new ArgumentException("Invalid branchID")
+            };
+        }
 
 
         //Create multiple timeline but have to include multiple time
@@ -390,168 +872,6 @@ namespace KoiDeli.Services.Services
 
             return response;
         }*/
-
-
-
-
-
-        public async Task<ApiResult<bool>> CreateTotalTimelineAsync(de_CreateTotalTimelineDTO dto)
-        {
-            var response = new ApiResult<bool>();
-            var timelines = new List<TimelineDelivery>();
-            var totalDescription = "";
-            try
-            {
-
-                //CHECK VehicleID
-                var existVehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(dto.VehicleID);
-                if (existVehicle == null)
-                {
-                    response.Success = false;
-                    response.Message = $"Invalid VehicleID: {dto.VehicleID}";
-                    return response;
-                }
-
-                //CHECK DOULICATE BranchID
-
-                var duplicateBranchIds = dto.de_CreateDetailTimelineDTOs
-                    .GroupBy(t => t.BranchId)
-                    .Where(g => g.Count() > 1)
-                    .Select(g => g.Key)
-                    .ToList();
-
-                if (duplicateBranchIds.Any())
-                {
-                    response.Success = false;
-                    response.Message = $"Duplicate BranchID(s) found: {string.Join(", ", duplicateBranchIds)}";
-                    return response;
-                }
-
-
-
-
-                //SET DESCRIPTION.
-                totalDescription = "";
-                if (dto.de_CreateDetailTimelineDTOs.Count > 1)
-                {
-                    totalDescription = $"This timeline belong to bigger one, with total {dto.de_CreateDetailTimelineDTOs.Count} timelines.";
-                }
-
-                //Creta some variable before enter the loop
-                var existingTimelines = await _unitOfWork.TimelineDeliveryRepository.GetAllAsync();
-                DateTime currentStartDay = dto.TotalStartTime;
-                int count = 1;
-
-                foreach (var detailTimeline in dto.de_CreateDetailTimelineDTOs)
-                {
-
-                    //CHECK branchID
-                    var existBranch = await _unitOfWork.BranchRepository.GetByIdAsync(detailTimeline.BranchId);
-                    if (existBranch == null)
-                    {
-                        response.Success = false;
-                        response.Message = $"Invalid branchID: {detailTimeline.BranchId}";
-                        return response;
-                    }
-
-
-                    // SET start day and end day
-                    TimeSpan duration = SetDuarationTimeByBranch(detailTimeline.BranchId);
-                    DateTime endDay = currentStartDay + duration;
-
-                    //CHECK LOGIC DAY
-
-                    var isConflictWithExisting = existingTimelines.Any(t =>
-                            t.VehicleId == dto.VehicleID &&
-                            t.BranchId == detailTimeline.BranchId &&
-                            (currentStartDay <= t.EndDay && endDay >= t.StartDay));
-
-                    if (isConflictWithExisting)
-                    {
-                        response.Success = false;
-                        response.Message = "The vehicle is already scheduled for another delivery within the given time range.";
-                        return response;
-                    }
-
-                    totalDescription += $"\n{count}) Vehicle: {existVehicle.Name}, Branch: {existBranch.Name}, " +
-                        $"Start: {currentStartDay}, End: {endDay}";
-
-
-                    var timeline = new TimelineDelivery
-                    {
-                        VehicleId = dto.VehicleID,
-                        BranchId = detailTimeline.BranchId,
-                        StartDay = currentStartDay,
-                        EndDay = endDay,
-                        IsCompleted = StatusEnum.Pending.ToString(),
-                        TimeCompleted = null,
-
-                    };
-                    timelines.Add(timeline);
-                    count++;
-
-                    currentStartDay = endDay;
-                }
-
-
-                foreach (var timeline in timelines)
-                {
-                    timeline.Description = totalDescription;
-                }
-
-                await _unitOfWork.TimelineDeliveryRepository.AddRangeAsync(timelines);
-
-
-                if (await _unitOfWork.SaveChangeAsync() > 0)
-                {
-                    response.Success = true;
-                    response.Data = true;
-                    response.Message = "Timelines created successfully.";
-                }
-                else
-                {
-                    response.Success = false;
-                    response.Message = "Failed to create Timelines.";
-                }
-
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.ErrorMessages = new List<string> { ex.Message };
-            }
-
-            return response;
-        }
-
-
-
-
-
-
-        private TimeSpan SetDuarationTimeByBranch(int branchID)
-        {
-            return branchID switch
-            {
-                // Cần Thơ - Sài Gòn hoặc Sài Gòn - Cần Thơ
-                1 or 8 => TimeSpan.FromHours(4),
-
-                // Sài Gòn - Đà Nẵng hoặc Đà Nẵng - Sài Gòn
-                2 or 7 => TimeSpan.FromHours(17),
-
-                // Đà Nẵng - Hải Phòng hoặc Hải Phòng - Đà Nẵng
-                3 or 6 => TimeSpan.FromHours(16),
-
-                // Hải Phòng - Hà Nội hoặc Hà Nội - Hải Phòng
-                4 or 5 => TimeSpan.FromHours(5),
-
-                // Mặc định nếu branchID không hợp lệ
-                _ => throw new ArgumentException("Invalid branchID")
-            };
-        }
-
-
-
 
 
     }

@@ -9,6 +9,7 @@ namespace KoiDeli.Domain.DTOs.DeliveryDTOs
     public class de_OrderDetailInfoDTO
     {
         public int OrderDetailID { get; set; }
+        public string isComplete { get; set; }
         public int BoxOptionID { get; set; }
         public string? BoxName { get; set; }
         public long BoxVolume { get; set; }
