@@ -23,16 +23,14 @@ namespace KoiDeli.Repositories.Repositories
 
         public async Task<RoleInfoModel> GetRole(User user)
         {
-            // Giả sử bạn có một bảng `UserRoles` trong cơ sở dữ liệu lưu thông tin người dùng và vai trò của họ
-            // Bạn có thể lấy vai trò của user từ bảng `UserRoles` và sau đó lấy thông tin của vai trò từ `Role` bảng.
-
-            var userRole = await _context.Roles.FirstOrDefaultAsync(ur => ur.Id == user.Id);
-            if (userRole == null)
+            // Kiểm tra nếu user có RoleId được gán
+            if (user.RoleId == null)
             {
                 throw new Exception("User does not have a role assigned.");
             }
 
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == userRole.Id);
+            // Lấy thông tin của vai trò dựa trên RoleId từ bảng Roles
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == user.RoleId);
             if (role == null)
             {
                 throw new Exception("Role not found.");
@@ -45,6 +43,7 @@ namespace KoiDeli.Repositories.Repositories
                 RoleName = role.Name
             };
         }
+
 
         public async Task<List<User>> GetUsersByNameAsync(string name)
         {
