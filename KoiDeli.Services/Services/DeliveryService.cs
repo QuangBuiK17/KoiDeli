@@ -705,16 +705,16 @@ namespace KoiDeli.Services.Services
             return branchID switch
             {
                 // Cần Thơ - Sài Gòn hoặc Sài Gòn - Cần Thơ
-                1 or 8 => TimeSpan.FromHours(4),
+                1 or 2 => TimeSpan.FromHours(4),
 
                 // Sài Gòn - Đà Nẵng hoặc Đà Nẵng - Sài Gòn
-                2 or 7 => TimeSpan.FromHours(17),
+                3 or 4 => TimeSpan.FromHours(17),
 
                 // Đà Nẵng - Hải Phòng hoặc Hải Phòng - Đà Nẵng
-                3 or 6 => TimeSpan.FromHours(16),
+                5 or 6 => TimeSpan.FromHours(16),
 
                 // Hải Phòng - Hà Nội hoặc Hà Nội - Hải Phòng
-                4 or 5 => TimeSpan.FromHours(5),
+                7 or 8 => TimeSpan.FromHours(5),
 
                 // Mặc định nếu branchID không hợp lệ
                 _ => throw new ArgumentException("Invalid branchID")
