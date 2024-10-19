@@ -1,4 +1,5 @@
-﻿using KoiDeli.Domain.DTOs.OrderTimelineDTOs;
+﻿using KoiDeli.Domain.DTOs.DeliveryDTOs;
+using KoiDeli.Domain.DTOs.OrderTimelineDTOs;
 using KoiDeli.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,6 +46,16 @@ namespace KoiDeli.Controllers
         public async Task<IActionResult> CreateOrdertimeline(OrderTimelineCreateDTO orderTimelineDto)
         {
             var result = await _deliveryService.CreateOrderTimelineAsync(orderTimelineDto);
+            return Ok(result);
+        }
+
+        [HttpPost("multiple-timelines")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> CreateTotalTimelines(de_CreateTotalTimelineDTO dto)
+        {
+            var result = await _deliveryService.CreateTotalTimelineAsync(dto);
             return Ok(result);
         }
     }

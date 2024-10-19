@@ -3,6 +3,7 @@ using KoiDeli.Domain.DTOs.AccountDTOs;
 using KoiDeli.Domain.DTOs.BoxDTOs;
 using KoiDeli.Domain.DTOs.BoxOptionDTOs;
 using KoiDeli.Domain.DTOs.BranchDTOs;
+using KoiDeli.Domain.DTOs.DeliveryDTOs;
 using KoiDeli.Domain.DTOs.DistanceDTOs;
 using KoiDeli.Domain.DTOs.FeedbackDTOs;
 using KoiDeli.Domain.DTOs.FishInBoxDTOs;
@@ -76,6 +77,10 @@ namespace KoiDeli.Services.Mapper
             CreateMap<Feedback, FeedbackCreateDTO>().ReverseMap();
 
             CreateMap<BoxOption, BoxOptionCreateRequest>().ReverseMap();
+
+
+            //CreateMap<TimelineDelivery, de_CreateTotalTimelineDTO>().ReverseMap();
+            //CreateMap<TimelineDelivery, de_CreateDetailTimelineDTO>().ReverseMap();
 
             //Update
             CreateMap<User, AccountUpdateDTO>().ReverseMap();
