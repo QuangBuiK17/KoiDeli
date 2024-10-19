@@ -238,7 +238,12 @@ namespace KoiDeli.Services.Services
 
              return response;
          }
-        
+
+
+        //Create multiple timeline but have to include multiple time
+
+
+        /*
         public async Task<ApiResult<bool>> CreateTotalTimelineAsync (de_CreateTotalTimelineDTO dto)
         {
             var response = new ApiResult<bool>();
@@ -384,6 +389,170 @@ namespace KoiDeli.Services.Services
             }
 
             return response;
+        }*/
+
+
+
+
+
+        public async Task<ApiResult<bool>> CreateTotalTimelineAsync(de_CreateTotalTimelineDTO dto)
+        {
+            var response = new ApiResult<bool>();
+            var timelines = new List<TimelineDelivery>();
+            var totalDescription = "";
+            try
+            {
+
+                //CHECK VehicleID
+                var existVehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(dto.VehicleID);
+                if (existVehicle == null)
+                {
+                    response.Success = false;
+                    response.Message = $"Invalid VehicleID: {dto.VehicleID}";
+                    return response;
+                }
+
+                //CHECK DOULICATE BranchID
+
+                var duplicateBranchIds = dto.de_CreateDetailTimelineDTOs
+                    .GroupBy(t => t.BranchId)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key)
+                    .ToList();
+
+                if (duplicateBranchIds.Any())
+                {
+                    response.Success = false;
+                    response.Message = $"Duplicate BranchID(s) found: {string.Join(", ", duplicateBranchIds)}";
+                    return response;
+                }
+
+
+
+
+                //SET DESCRIPTION.
+                totalDescription = "";
+                if (dto.de_CreateDetailTimelineDTOs.Count > 1)
+                {
+                    totalDescription = $"This timeline belong to bigger one, with total {dto.de_CreateDetailTimelineDTOs.Count} timelines.";
+                }
+
+                //Creta some variable before enter the loop
+                var existingTimelines = await _unitOfWork.TimelineDeliveryRepository.GetAllAsync();
+                DateTime currentStartDay = dto.TotalStartTime;
+                int count = 1;
+
+                foreach (var detailTimeline in dto.de_CreateDetailTimelineDTOs)
+                {
+
+                    //CHECK branchID
+                    var existBranch = await _unitOfWork.BranchRepository.GetByIdAsync(detailTimeline.BranchId);
+                    if (existBranch == null)
+                    {
+                        response.Success = false;
+                        response.Message = $"Invalid branchID: {detailTimeline.BranchId}";
+                        return response;
+                    }
+
+
+                    // SET start day and end day
+                    TimeSpan duration = SetDuarationTimeByBranch(detailTimeline.BranchId);
+                    DateTime endDay = currentStartDay + duration;
+
+                    //CHECK LOGIC DAY
+
+                    var isConflictWithExisting = existingTimelines.Any(t =>
+                            t.VehicleId == dto.VehicleID &&
+                            t.BranchId == detailTimeline.BranchId &&
+                            (currentStartDay <= t.EndDay && endDay >= t.StartDay));
+
+                    if (isConflictWithExisting)
+                    {
+                        response.Success = false;
+                        response.Message = "The vehicle is already scheduled for another delivery within the given time range.";
+                        return response;
+                    }
+
+                    totalDescription += $"\n{count}) Vehicle: {existVehicle.Name}, Branch: {existBranch.Name}, " +
+                        $"Start: {currentStartDay}, End: {endDay}";
+
+
+                    var timeline = new TimelineDelivery
+                    {
+                        VehicleId = dto.VehicleID,
+                        BranchId = detailTimeline.BranchId,
+                        StartDay = currentStartDay,
+                        EndDay = endDay,
+                        IsCompleted = StatusEnum.Pending.ToString(),
+                        TimeCompleted = null,
+
+                    };
+                    timelines.Add(timeline);
+                    count++;
+
+                    currentStartDay = endDay;
+                }
+
+
+                foreach (var timeline in timelines)
+                {
+                    timeline.Description = totalDescription;
+                }
+
+                await _unitOfWork.TimelineDeliveryRepository.AddRangeAsync(timelines);
+
+
+                if (await _unitOfWork.SaveChangeAsync() > 0)
+                {
+                    response.Success = true;
+                    response.Data = true;
+                    response.Message = "Timelines created successfully.";
+                }
+                else
+                {
+                    response.Success = false;
+                    response.Message = "Failed to create Timelines.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
         }
+
+
+
+
+
+
+        private TimeSpan SetDuarationTimeByBranch(int branchID)
+        {
+            return branchID switch
+            {
+                // Cần Thơ - Sài Gòn hoặc Sài Gòn - Cần Thơ
+                1 or 8 => TimeSpan.FromHours(4),
+
+                // Sài Gòn - Đà Nẵng hoặc Đà Nẵng - Sài Gòn
+                2 or 7 => TimeSpan.FromHours(17),
+
+                // Đà Nẵng - Hải Phòng hoặc Hải Phòng - Đà Nẵng
+                3 or 6 => TimeSpan.FromHours(16),
+
+                // Hải Phòng - Hà Nội hoặc Hà Nội - Hải Phòng
+                4 or 5 => TimeSpan.FromHours(5),
+
+                // Mặc định nếu branchID không hợp lệ
+                _ => throw new ArgumentException("Invalid branchID")
+            };
+        }
+
+
+
+
+
     }
 }

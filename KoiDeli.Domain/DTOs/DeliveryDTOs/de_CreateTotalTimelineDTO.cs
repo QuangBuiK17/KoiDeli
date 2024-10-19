@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace KoiDeli.Domain.DTOs.DeliveryDTOs
 {
+    /*
     public class de_CreateTotalTimelineDTO
     {
-        public string TotalStartPoint { get; set; }
-        public string TotalEndPoint { get; set; }
         public int VehicleID { get; set; }
         public List<de_CreateDetailTimelineDTO> de_CreateDetailTimelineDTOs { get; set; }
     }
-
-
 
     public class de_CreateDetailTimelineDTO
     {
@@ -23,4 +20,19 @@ namespace KoiDeli.Domain.DTOs.DeliveryDTOs
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
     }
+    */
+
+    
+    public class de_CreateTotalTimelineDTO
+    {
+        public int VehicleID { get; set; }
+        public DateTime TotalStartTime { get; set; }
+        public List<de_CreateDetailTimelineDTO> de_CreateDetailTimelineDTOs { get; set; }
+    }
+
+    public class de_CreateDetailTimelineDTO
+    {
+        public int BranchId { get; set; }
+    }
+
 }
