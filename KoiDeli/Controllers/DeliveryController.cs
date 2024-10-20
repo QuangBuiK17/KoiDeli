@@ -80,10 +80,9 @@ namespace KoiDeli.Controllers
             return Ok(result);
         }
         
-        [HttpPost("update-timeline-status")]
+        [HttpPut("update-timeline-status")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTimelineStatus(int timelineID)
         {
             var result = await _deliveryService.UpdateTimelineStatusAsync(timelineID);
