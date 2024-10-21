@@ -495,6 +495,7 @@ namespace KoiDeli.Services.Services
 
                 // Update Timeline: iscomplete = Completed
                 timeline.IsCompleted = StatusEnum.Completed.ToString();
+                timeline.TimeCompleted = _currentTime.GetCurrentTime();
                 _context.TimelineDelivery.Update(timeline);
 
                 // get all ordertimeline in this timeline
@@ -508,6 +509,7 @@ namespace KoiDeli.Services.Services
                     foreach (var orderTimeline in relatedOrderTimelines)
                     {
                         orderTimeline.IsCompleted = StatusEnum.Completed.ToString();
+                        orderTimeline.TimeCompleted = _currentTime.GetCurrentTime();
                         _context.OrderTimeline.Update(orderTimeline);
                     }
                 }
