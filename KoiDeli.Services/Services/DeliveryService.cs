@@ -285,7 +285,8 @@ namespace KoiDeli.Services.Services
                 }
 
                 //Creta some variable before enter the loop
-                var existingTimelines = await _unitOfWork.TimelineDeliveryRepository.GetAllAsync();
+                //var existingTimelines = await _unitOfWork.TimelineDeliveryRepository.GetAllAsync();
+                var existingTimelines = await _unitOfWork.TimelineDeliveryRepository.SearchAsync(o => o.IsDeleted == false);
                 DateTime currentStartDay = dto.TotalStartTime;
                 int count = 1;
 
