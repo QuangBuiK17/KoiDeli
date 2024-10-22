@@ -112,11 +112,17 @@ namespace KoiDeli.Services.Services
                           VehicleID = tb.t.VehicleId,
                           VehicleName = v.Name,
                           MaxVolume = v.VehicleVolume,
-                          RemainingVolume = v.VehicleVolume - _context.OrderTimeline
+                          CurentVolume = _context.OrderTimeline
+                                            .Where(ot => ot.TimelineDeliveryId == tb.t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                                                                          && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                                          && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                                            .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),
+
+                          /*RemainingVolume = v.VehicleVolume - _context.OrderTimeline
                           .Where(ot => ot.TimelineDeliveryId == tb.t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false  
                                                                         && ot.IsCompleted != StatusEnum.Completed.ToString()
                                                                         && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
-                          .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume)
+                          .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume)*/
                       })
                       .ToListAsync();
                   if (deliveries != null)
@@ -700,11 +706,18 @@ namespace KoiDeli.Services.Services
                     StartDay = timeline.StartDay,
                     EndDay = timeline.EndDay,
                     Maxvolume = timeline.Vehicle.VehicleVolume,
-                    RemainingVolume = timeline.Vehicle.VehicleVolume - _context.OrderTimeline
-                          .Where(ot => ot.TimelineDeliveryId == timelineID  && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                    CurrentVolume = _context.OrderTimeline
+                          .Where(ot => ot.TimelineDeliveryId == timelineID && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
                                                                             && ot.IsCompleted != StatusEnum.Completed.ToString()
                                                                             && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
                           .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),
+
+                    /*RemainingVolume = timeline.Vehicle.VehicleVolume - _context.OrderTimeline
+                          .Where(ot => ot.TimelineDeliveryId == timelineID  && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                                                            && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                            && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                          .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),*/
+
                     OrderDetails = orderDetails
                 };
 

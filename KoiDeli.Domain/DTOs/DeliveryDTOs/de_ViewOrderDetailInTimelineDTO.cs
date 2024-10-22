@@ -15,7 +15,15 @@ namespace KoiDeli.Domain.DTOs.DeliveryDTOs
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
         public long Maxvolume { get; set; }
-        public long RemainingVolume { get; set; }
+        public long CurrentVolume { get; set; }
+        //public long RemainingVolume { get; set; }
+        public long RemainingVolume
+        {
+            get
+            {
+                return (long) (Maxvolume -  CurrentVolume);
+            }
+        }
         public List<de_OrderDetailDTO> OrderDetails { get; set; }
     }
 

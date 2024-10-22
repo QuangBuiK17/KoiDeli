@@ -49,7 +49,7 @@ namespace KoiDeli.Controllers
             var result = await _deliveryService.ViewAllOrderDetailInTimeline(timelineID);
             return Ok(result);
         }
-
+        /*
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,7 +59,7 @@ namespace KoiDeli.Controllers
             var result = await _deliveryService.CreateOrderTimelineAsync(orderTimelineDto);
             return Ok(result);
         }
-
+        */
         [HttpPost("multiple-timelines")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

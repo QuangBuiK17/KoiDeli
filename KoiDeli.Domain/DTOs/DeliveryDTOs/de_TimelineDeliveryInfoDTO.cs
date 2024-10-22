@@ -20,7 +20,16 @@ namespace KoiDeli.Domain.DTOs.DeliveryDTOs
         public int VehicleID { get; set; }
         public string? VehicleName { get; set; }
         public long MaxVolume { get; set; }
-        public long RemainingVolume { get; set; }
+        public long CurentVolume { get; set; }
+        //public long RemainingVolume { get; set; }
+
+        public long RemainingVolume 
+        {
+            get
+            {
+                return (long) (MaxVolume - CurentVolume);
+            }
+        }
     }
 
 }
