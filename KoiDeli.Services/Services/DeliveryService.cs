@@ -494,14 +494,26 @@ namespace KoiDeli.Services.Services
                     return response;
                 }
 
-                // Update Timeline: iscomplete = Completed
-                timeline.IsCompleted = StatusEnum.Completed.ToString();
-                timeline.TimeCompleted = _currentTime.GetCurrentTime();
-                _context.TimelineDelivery.Update(timeline);
+
+                if(timeline.IsCompleted == StatusEnum.Pending.ToString())
+                {
+                    timeline.IsCompleted = StatusEnum.Delivering.ToString();
+                }else if (timeline.IsCompleted == StatusEnum.Delivering.ToString())
+                {
+                    timeline.IsCompleted = StatusEnum.Completed.ToString();
+                    timeline.TimeCompleted = _currentTime.GetCurrentTime();
+                }else if (timeline.IsCompleted == StatusEnum.Completed.ToString())
+                {
+                    response.Success = false;
+                    response.Message = $"Timeline ID: {timelineID} has been completed.";
+                    return response;
+                }          
+                _unitOfWork.TimelineDeliveryRepository.Update(timeline);
 
                 // get all ordertimeline in this timeline
                 var relatedOrderTimelines = await _context.OrderTimeline
-                    .Where(ot => ot.TimelineDeliveryId == timelineID && !ot.IsDeleted)
+                    .Where(ot => ot.TimelineDeliveryId == timelineID && !ot.IsDeleted
+                                    && ot.IsCompleted != StatusEnum.Completed.ToString())
                     .ToListAsync();
 
                 if (relatedOrderTimelines.Any())
@@ -509,18 +521,64 @@ namespace KoiDeli.Services.Services
                     // Cập nhật tất cả OrderTimeline thành Completed
                     foreach (var orderTimeline in relatedOrderTimelines)
                     {
-                        orderTimeline.IsCompleted = StatusEnum.Completed.ToString();
-                        orderTimeline.TimeCompleted = _currentTime.GetCurrentTime();
-                        _context.OrderTimeline.Update(orderTimeline);
+                        if (orderTimeline.IsCompleted == StatusEnum.Pending.ToString())
+                        {
+                            orderTimeline.IsCompleted = StatusEnum.Delivering.ToString();
+                            _unitOfWork.OrderTimelineRepository.Update(orderTimeline);
+                        }
+                        else if (orderTimeline.IsCompleted == StatusEnum.Delivering.ToString())
+                        {
+                            orderTimeline.IsCompleted = StatusEnum.Completed.ToString();
+                            orderTimeline.TimeCompleted = _currentTime.GetCurrentTime();
+                            _unitOfWork.OrderTimelineRepository.Update(orderTimeline);
+                        }
                     }
                 }
+
+
+                var orderDetailsToCheck = await _context.OrderTimeline
+                                        .Where(ot => ot.TimelineDeliveryId == timelineID && !ot.IsDeleted)
+                                        .Select(ot => ot.OrderDetailId)
+                                        .Distinct()
+                                        .ToListAsync();
+                foreach (var orderDetailId in orderDetailsToCheck)
+                {
+                    // Lấy tất cả các OrderTimeline của OrderDetail đó
+                    var allOrderTimelines = await _context.OrderTimeline
+                        .Where(ot => ot.OrderDetailId == orderDetailId && !ot.IsDeleted)
+                        .ToListAsync();
+
+                    var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(od => od.Id == orderDetailId);
+
+                    // Kiểm tra xem tất cả các OrderTimeline có trạng thái Completed hay không
+                    if (allOrderTimelines.All(ot => ot.IsCompleted == StatusEnum.Completed.ToString()))
+                    {
+                        // Nếu tất cả OrderTimeline đều đã Completed, cập nhật trạng thái OrderDetail
+                        //var orderDetail = await _context.OrderDetails.FirstOrDefaultAsync(od => od.Id == orderDetailId);
+                        if (orderDetail != null && orderDetail.IsComplete == StatusEnum.Delivering.ToString())
+                        {
+                            orderDetail.IsComplete = StatusEnum.Completed.ToString();
+                            _unitOfWork.OrderDetailRepository.Update(orderDetail);
+                        }
+                    }
+                    else
+                    {
+                        if (orderDetail != null && orderDetail.IsComplete == StatusEnum.Packed.ToString())
+                        {
+                            orderDetail.IsComplete = StatusEnum.Delivering.ToString();
+                            _unitOfWork.OrderDetailRepository.Update(orderDetail);
+                        }
+                    }
+                }
+
+
 
                 // Lưu thay đổi vào database
                 if (await _unitOfWork.SaveChangeAsync() > 0)
                 {
                     response.Success = true;
                     response.Data = true;
-                    response.Message = $"Total {relatedOrderTimelines.Count} ordertimeline and timeline ({timelineID}) has been updated.";
+                    response.Message = $"Total {relatedOrderTimelines.Count} ordertimeline and timeline ({timelineID}) has been updated to {timeline.IsCompleted}.";
                 }
                 else
                 {
