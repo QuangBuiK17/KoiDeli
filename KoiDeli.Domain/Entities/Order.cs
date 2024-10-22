@@ -17,7 +17,7 @@ namespace KoiDeli.Domain.Entities
         public string? ReceiverPhone { get; set; }
         //cost
         public Int64 TotalBox { get; set; }
-        public Int64 TotalShippingFee { get; set; }
+        public Int64 TotalFee { get; set; }
         // time shiping
         public string? IsShipping { get; set; }
         // File URL
