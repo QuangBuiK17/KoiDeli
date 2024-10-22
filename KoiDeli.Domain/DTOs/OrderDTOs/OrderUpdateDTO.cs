@@ -15,6 +15,7 @@ namespace KoiDeli.Domain.DTOs.OrderDTOs
         public string? ReceiverName { get; set; }
         public string? ReceiverAddress { get; set; }
         public string? ReceiverPhone { get; set; }
+        public Int64 TotalShippingFee { get; set; }
         public StatusEnum? IsShipping { get; set; }
 
         // File URL
