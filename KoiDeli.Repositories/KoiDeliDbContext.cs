@@ -112,6 +112,12 @@ namespace KoiDeli.Repositories
                .WithMany(ps => ps.OrderTimelines)
                .HasForeignKey(s => s.TimelineDeliveryId)
                .OnDelete(DeleteBehavior.Restrict);  // Không xóa TimelineDelivery khi xóa OrderTimeline
+
+            modelBuilder.Entity<Order>()
+                .HasOne(p => p.User)
+                .WithMany(p =>p.Orders)
+                .HasForeignKey( s=> s.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
 

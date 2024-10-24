@@ -8,6 +8,7 @@ namespace KoiDeli.Domain.Entities
 {
     public class Order: BaseEntity
     {
+        public int UserId { get; set; }
         public int FeedbackId { get; set; }
         public string? SenderName { get; set; }
         public string? SenderAddress { get; set; }

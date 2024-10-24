@@ -16,7 +16,7 @@ namespace KoiDeli.Domain.Entities
         public string? Gender { get; set; }
         public string? ConfirmationToken { get; set; }
         public bool IsConfirmed { get; set; }
-        public int OrderId { get; set; }
+        
         public string? UrlAvatar { get; set; }
         public string? Address { get; set; }
 
