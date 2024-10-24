@@ -683,7 +683,7 @@ namespace KoiDeli.Services.Services
 
                 // Lấy danh sách OrderDetail liên quan đến timeline này.
                 var orderDetails = await _context.OrderTimeline
-                    .Where(ot => ot.TimelineDeliveryId == timelineID)
+                    .Where(ot => ot.TimelineDeliveryId == timelineID && ot.IsDeleted == false)
                     .Include(ot => ot.OrderDetail)
                         .ThenInclude(od => od.BoxOption)
                         .ThenInclude(bo => bo.Box)
