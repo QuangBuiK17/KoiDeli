@@ -172,7 +172,7 @@ namespace KoiDeli.Services.Services
 
             try
             {
-                var orderTimelines = await _unitOfWork.OrderTimelineRepository.SearchAsync(o => o.IsDeleted);
+                var orderTimelines = await _unitOfWork.OrderTimelineRepository.SearchAsync(o => o.IsDeleted == false);
 
                 foreach (var orderTimeline in orderTimelines)
                 {
