@@ -20,6 +20,7 @@ using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KoiDeli.Services.Services
 {
@@ -734,7 +735,116 @@ namespace KoiDeli.Services.Services
             return response;
         }
 
+        public async Task<ApiResult<List<de_SuitableTimelineDTO>>> GetSuitableTimelines(int orderDetailID, int startBranch, int endBranch, DateTime? startDay)
+        {
+            var response = new ApiResult<List<de_SuitableTimelineDTO>>();
+            try
+            {
+                var orderDetail = await _context.OrderDetails
+                      .Include(od => od.BoxOption)
+                      .ThenInclude(bo => bo.Box)
+                      .FirstOrDefaultAsync(od => od.Id == orderDetailID && !od.IsDeleted);
+                if (orderDetail == null)
+                {
+                    response.Success = false;
+                    response.Message = $"OrderDetail ID: {orderDetailID} not found.";
+                    return response;
+                }
 
+                var orderDetailVolume = orderDetail.BoxOption?.Box?.MaxVolume ?? 0;
+
+                if (orderDetailVolume == 0)
+                {
+                    response.Success = false;
+                    response.Message = "OrderDetail does not have a valid Box or BoxOption with volume.";
+                    return response;
+                }
+
+
+                // Lấy các timeline phù hợp với các điều kiện: startBranch, endBranch, startDay và remainingVolume
+                var suitableTimelines = await _context.TimelineDelivery
+                    .Include(t => t.Vehicle)
+                    .Where(t => t.BranchId >= startBranch && t.BranchId <= endBranch
+                                && t.StartDay.Date == startDay
+                                && !t.IsDeleted
+                                && t.Vehicle.VehicleVolume -
+                                    _context.OrderTimeline
+                                        .Where(ot => ot.TimelineDeliveryId == t.Id && !ot.IsDeleted
+                                                    && ot.OrderDetail.IsDeleted == false
+                                                    && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                    && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                                        .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume)
+                                        > orderDetailVolume)
+
+                    .Select(t => new ListTimeline
+                    {
+                        TimelineId = t.Id,
+                        isComplete = t.IsCompleted,
+                        BranchName = t.Branch.Name,  // Assuming StartBranch has a 'Name' field
+                        StartDate = t.StartDay,
+                        EndDate = t.EndDay,
+                        CurrentVolume = _context.OrderTimeline
+                                            .Where(ot => ot.TimelineDeliveryId == t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                                                                       && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                                       && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                                            .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),
+                        RemainingVolume = t.Vehicle.VehicleVolume -
+                                                _context.OrderTimeline
+                                            .Where(ot => ot.TimelineDeliveryId == t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                                                                       && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                                       && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                                            .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),
+
+                    })
+                    .ToListAsync();
+
+                if (!suitableTimelines.Any())
+                {
+                    response.Success = false;
+                    response.Message = "No suitable timelines found.";
+                    return response;
+                }
+
+                var groupedTimelines = await _context.TimelineDelivery
+                                         .Where(t => suitableTimelines.Select(st => st.TimelineId).Contains(t.Id)) // Chỉ lấy những timeline phù hợp
+                                         .GroupBy(t => t.VehicleId)
+                                         .Select(g => new de_SuitableTimelineDTO
+                                         {
+                                             VehicleID = g.Key,
+                                             VehicleName = g.FirstOrDefault().Vehicle.Name, // Lấy tên xe từ bản ghi đầu tiên
+                                             VehicleVolume = g.FirstOrDefault().Vehicle.VehicleVolume, // Lấy dung tích xe từ bản ghi đầu tiên
+                                             Timelines = g.Select(t => new ListTimeline
+                                             {
+                                                 TimelineId = t.Id,
+                                                 isComplete = t.IsCompleted,
+                                                 BranchName = t.Branch.Name,  // Lấy tên chi nhánh bắt đầu
+                                                 StartDate = t.StartDay,
+                                                 EndDate = t.EndDay,
+                                                 CurrentVolume = _context.OrderTimeline
+                                                                .Where(ot => ot.TimelineDeliveryId == t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                                                                                           && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                                                           && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                                                                .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),
+                                                 RemainingVolume = t.Vehicle.VehicleVolume -
+                                                                         _context.OrderTimeline
+                                                                     .Where(ot => ot.TimelineDeliveryId == t.Id && ot.IsDeleted == false && ot.OrderDetail.IsDeleted == false
+                                                                                                                && ot.IsCompleted != StatusEnum.Completed.ToString()
+                                                                                                                && ot.OrderDetail.IsComplete != StatusEnum.Completed.ToString())
+                                                                     .Sum(ot => ot.OrderDetail.BoxOption.Box.MaxVolume),
+                                             }).ToList()
+                                          }).ToListAsync();
+
+                response.Data = groupedTimelines;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessages = new List<string> { ex.Message };
+            }
+
+            return response;
+        }
 
 
 
