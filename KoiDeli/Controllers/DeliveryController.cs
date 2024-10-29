@@ -53,11 +53,12 @@ namespace KoiDeli.Controllers
         [HttpGet("suitable-timelines")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetSuitableTimelines(int orderDetailID, int startBranch, int endBranch, DateTime? startDay)
+        public async Task<IActionResult> GetSuitableTimelines([FromQuery] FillterSuitableTimeline fillter)
         {
-            var result = await _deliveryService.GetSuitableTimelines(orderDetailID, startBranch, endBranch, startDay);
+            var result = await _deliveryService.GetSuitableTimelines(fillter);
             return Ok(result);
         }
+
         /*
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
