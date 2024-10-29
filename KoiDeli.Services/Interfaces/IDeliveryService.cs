@@ -20,9 +20,6 @@ namespace KoiDeli.Services.Interfaces
         Task<ApiResult<bool>> UpdateTimelineStatusAsync(int timelineID);
         Task<ApiResult<de_ViewScheduleOfOrdetailDTO>> ViewScheduleOfOrdetail(int orderDetailID);
         Task<ApiResult<de_ViewOrderDetailInTimelineDTO>> ViewAllOrderDetailInTimeline(int timelineID);
-
-        Task<ApiResult<List<de_SuitableTimelineDTO>>> GetSuitableTimelines (int orderDetailID, int startBranch, int endBranch, DateTime? startDay);
-
-
+        Task<ApiResult<List<de_SuitableTimelineDTO>>> GetSuitableTimelines (FillterSuitableTimeline filter);
     }
 }
