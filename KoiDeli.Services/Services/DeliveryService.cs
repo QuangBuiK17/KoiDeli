@@ -769,6 +769,7 @@ namespace KoiDeli.Services.Services
                 var firstTimeline = await _context.TimelineDelivery
                             .Include(t => t.Vehicle)
                             .Where(t => t.StartDay.Date == filter.startDay
+                                        && t.IsCompleted == StatusEnum.Pending.ToString()
                                         && t.BranchId == startBranch
                                         && !t.IsDeleted
                                         && t.Vehicle.VehicleVolume -
@@ -816,6 +817,7 @@ namespace KoiDeli.Services.Services
                     .Where(t => t.Description == timelineDescription
                                 && (    (t.BranchId >= startBranch && t.BranchId <= endBranch) 
                                      || (t.BranchId <= startBranch && t.BranchId >= endBranch) )
+                                && t.IsCompleted == StatusEnum.Pending.ToString()
                                 && !t.IsDeleted
                                 && t.Vehicle.VehicleVolume -
                                    _context.OrderTimeline
