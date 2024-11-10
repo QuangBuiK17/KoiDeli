@@ -84,7 +84,7 @@ namespace KoiDeli.Controllers
         }
 
         [HttpPost("wallets/deposit")]
-        public async Task<IActionResult> DepositAsync(long amount)
+        public async Task<IActionResult> DepositAsync(long amount, int CommonId)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace KoiDeli.Controllers
                 {
                     Amount = amount,
                     Description = "Deposit for Wallet",
-                    CommonId = new Random().Next(100000, 999999) // Generate a unique transaction reference (you may want to replace this with a more reliable ID generation logic)
+                    CommonId = CommonId//new Random().Next(100000, 999999)  Generate a unique transaction reference (you may want to replace this with a more reliable ID generation logic)
                 };
 
                 // Generate the VNPay payment link
