@@ -33,4 +33,10 @@
     <ProjectReference Include="..\KoiDeli.Services\KoiDeli.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
