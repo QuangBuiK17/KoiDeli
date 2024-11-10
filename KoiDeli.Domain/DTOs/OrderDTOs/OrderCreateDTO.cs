@@ -18,6 +18,7 @@ namespace KoiDeli.Domain.DTOs.OrderDTOs
         public string? ReceiverPhone { get; set; }
         public Int64 TotalFee { get; set; }
         public StatusEnum? IsShipping { get; set; }
+        public bool IsPayment { get; set; }
         // File URL
         public string? URLCer1 { get; set; }
         public string? URLCer2 { get; set; }

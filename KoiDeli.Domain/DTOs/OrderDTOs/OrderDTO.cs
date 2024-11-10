@@ -24,6 +24,7 @@ namespace KoiDeli.Domain.DTOs.OrderDTOs
         public Int64 TotalFee { get; set; }
         // time shiping
         public StatusEnum? IsShipping { get; set; }
+        public bool IsPayment { get; set; }
 
         // File URL
         public string? URLCer1 { get; set; }

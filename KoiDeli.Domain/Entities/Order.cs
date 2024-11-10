@@ -21,6 +21,7 @@ namespace KoiDeli.Domain.Entities
         public Int64 TotalFee { get; set; }
         // time shiping
         public string? IsShipping { get; set; }
+        public bool IsPayment { get; set; } = false;
         // File URL
         public string? URLCer1 { get; set; }
         public string? URLCer2 { get; set; }
