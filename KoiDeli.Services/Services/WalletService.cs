@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
+using Azure;
 using KoiDeli.Domain.DTOs.DistanceDTOs;
+using KoiDeli.Domain.DTOs.VnPayDTOs;
 using KoiDeli.Domain.DTOs.WalletDTOs;
 using KoiDeli.Domain.Entities;
+using KoiDeli.Domain.Enums;
 using KoiDeli.Repositories.Common;
 using KoiDeli.Repositories.Interfaces;
 using KoiDeli.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,11 +20,13 @@ namespace KoiDeli.Services.Services
     public class WalletService : IWalletService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public WalletService(IUnitOfWork unitOfWork, IMapper mapper)
+        public WalletService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<ApiResult<WalletDTO>> CreateWalletAsync(WalletCreateDTO creaeDTO)
@@ -88,6 +94,8 @@ namespace KoiDeli.Services.Services
                 }
             }
         }
+
+        
 
         public async Task<ApiResult<List<WalletDTO>>> GetWalletAsync()
         {

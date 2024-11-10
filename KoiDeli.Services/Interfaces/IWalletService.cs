@@ -1,4 +1,5 @@
-﻿using KoiDeli.Domain.DTOs.WalletDTOs;
+﻿using KoiDeli.Domain.DTOs.VnPayDTOs;
+using KoiDeli.Domain.DTOs.WalletDTOs;
 using KoiDeli.Repositories.Common;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,6 @@ namespace KoiDeli.Services.Interfaces
         Task<ApiResult<WalletDTO>> DeleteWalletAsync(int id);
         Task<ApiResult<WalletDTO>> UpdateWalletAsync(int id,WalletUpdateDTO updateDto);
         Task<ApiResult<WalletDTO>> CreateWalletAsync(WalletCreateDTO creaeDTO);
+       // Task<ApiResult<DepositResponseDTO>> Deposit(long amount, int id);
     }
 }

@@ -115,6 +115,15 @@ var scope = app.Services.CreateScope();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 //app.ApplyMigrations(logger);
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(config =>
+    {
+        config.InjectJavascript("/custom-swagger.js");
+    });
+}
+
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<PerformanceTimeMiddleware>();
@@ -138,6 +147,8 @@ catch (Exception ex)
 //}
 
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

@@ -7,15 +7,14 @@ using System.Transactions;
 
 namespace KoiDeli.Domain.Entities
 {
-    public class Wallet: BaseEntity
+    public class Wallet : BaseEntity
     {
         public int UserId { get; set; }
-        public string? WalletType { get; set; }
         public Int64 Balance { get; set; } = 0;
 
-        //relations
-
+        // Relations
         public virtual User? User { get; set; }
-        public virtual ICollection<Transaction>? Transactions{ get; set; }
+        public virtual ICollection<Transaction>? Transactions { get; set; }
     }
+
 }

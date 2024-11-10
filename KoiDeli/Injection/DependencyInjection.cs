@@ -110,7 +110,7 @@ namespace KoiDeli.Injection
             services.AddScoped<IFeedbackService, FeedbackService>();
 
             services.AddScoped<IDeliveryService, DeliveryService>();
-
+            services.AddScoped<IVnPayService, VnPayService>();
 
             // add unitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
